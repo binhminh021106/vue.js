@@ -1,8 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
-import Swal from 'sweetalert2'
-import { computed } from 'vue'
 
 const user = ref({
     id: null,
@@ -14,9 +12,7 @@ const user = ref({
     password: ''
 })
 
-const cartCount = ref(0)
 const cart = ref([])
-
 
 const readUser = async () => {
     const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
@@ -31,15 +27,11 @@ const readUser = async () => {
 }
 
 const readCart = async () => {
-    const stogedUser = JSON.parse(localStorage.getItem('loggedInUser'))
-
-    if (!stogedUser) {
-        cartCount.value = 0;
-        return;
-    }
+    const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
+    if (!storedUser) return
 
     try {
-        const res = await axios.get(`http://localhost:3000/cart?userId=${stogedUser.id}`)
+        const res = await axios.get(`http://localhost:3000/cart?userId=${storedUser.id}`)
         cart.value = res.data
     } catch (err) {
         console.error("Err: ", err)
@@ -110,7 +102,7 @@ onMounted(() => {
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                     <h5 class="fw-semibold mb-3">Order Summary</h5>
 
-                    <!-- Example product -->
+                    <!-- Cart items -->
                     <div v-for="value in cart" :key="value.id"
                         class="d-flex align-items-center mb-3 border-bottom pb-2">
                         <img :src="value.image" alt="Product" class="rounded border me-3" width="60" height="60"
@@ -121,7 +113,7 @@ onMounted(() => {
                                 {{ Number(value.discount).toLocaleString('vi-VN') }} ₫</small>
                         </div>
                         <span class="fw-bold text-danger">{{ (value.discount * value.quantity).toLocaleString('vi-VN')
-                        }} ₫</span>
+                            }} ₫</span>
                     </div>
                     <hr />
 
@@ -142,7 +134,38 @@ onMounted(() => {
                         <span class="text-danger fs-5">{{ total.toLocaleString('vi-VN') }} ₫</span>
                     </div>
 
-                    <button class="btn btn-dark w-100 py-2 fw-semibold">Place Order</button>
+                    <!-- Payment Methods -->
+                    <div class="mt-4">
+                        <h6 class="fw-semibold mb-3">Select Payment Method 💳</h6>
+                        <div class="payment-options">
+                            <label class="payment-option p-3 mb-2 rounded-3 border d-flex align-items-center gap-3">
+                                <input type="radio" name="payment" value="cod" class="form-check-input" />
+                                <i class="fa-solid fa-truck-fast text-primary fs-5"></i>
+                                <span>Cash on Delivery (COD)</span>
+                            </label>
+
+                            <label class="payment-option p-3 mb-2 rounded-3 border d-flex align-items-center gap-3">
+                                <input type="radio" name="payment" value="momo" class="form-check-input" />
+                                <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" width="30" />
+                                <span>MoMo E-Wallet</span>
+                            </label>
+
+                            <label class="payment-option p-3 mb-2 rounded-3 border d-flex align-items-center gap-3">
+                                <input type="radio" name="payment" value="bank" class="form-check-input" />
+                                <i class="fa-solid fa-building-columns text-success fs-5"></i>
+                                <span>Bank Transfer</span>
+                            </label>
+
+                            <label class="payment-option p-3 rounded-3 border d-flex align-items-center gap-3">
+                                <input type="radio" name="payment" value="card" class="form-check-input" />
+                                <i class="fa-brands fa-cc-visa text-info fs-5"></i>
+                                <span>Credit / Debit Card</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <router-link to="/checkoutsuccess" class="btn btn-dark w-100 py-2 fw-semibold mt-4">Place
+                        Order</router-link>
                 </div>
             </div>
         </div>
@@ -162,6 +185,20 @@ onMounted(() => {
 
 textarea {
     resize: none;
+}
+
+.payment-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    background-color: #f8f9fa;
+    border-color: #000;
+}
+
+.payment-option input {
+    transform: scale(1.2);
 }
 
 h2 {
