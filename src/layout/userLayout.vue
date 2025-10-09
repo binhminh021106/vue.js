@@ -8,9 +8,21 @@ const user = ref(null)
 const cartCount = ref(0)
 
 const readCart = async () => {
-  const res = await axios.get('http://localhost:3000/cart/')
-  cartCount.value = res.data.reduce((sum, item) => sum + item.quantity, 0)
-}
+  const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+  if (!storedUser) {
+    cartCount.value = 0;
+    return;
+  }
+
+  try {
+    const res = await axios.get(`http://localhost:3000/cart?userId=${storedUser.id}`);
+
+    cartCount.value = res.data.reduce((sum, item) => sum + item.quantity, 0);
+  } catch (err) {
+    console.error('Error reading cart:', err);
+  }
+};
 
 onMounted(async () => {
   await readCart();

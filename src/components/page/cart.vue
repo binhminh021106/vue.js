@@ -7,14 +7,26 @@ import { computed } from 'vue'
 const cart = ref([])
 
 const readCart = async () => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"))
+
+    if (!user) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Please log in',
+            text: 'You must be logged in to view your cart.',
+            confirmButtonColor: '#000'
+        })
+        router.push('/login')
+        return
+    }
+
     try {
-        const res = await axios.get('http://localhost:3000/cart')
+        const res = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
         cart.value = res.data
     } catch (err) {
         console.error("Err: ", err)
     }
 }
-
 
 const decrease = async (item) => {
     if (item.quantity > 1) {
@@ -143,7 +155,7 @@ onMounted(readCart)
                                         </div>
                                     </td>
                                     <td class="fw-semibold">{{ (items.discount * items.quantity).toLocaleString('vi-VN')
-                                    }} ₫</td>
+                                        }} ₫</td>
                                     <td>
                                         <button @click="deleteCart(items.id)" class="btn btn-sm btn-danger">
                                             <i class="fa fa-trash"></i>

@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { computed } from 'vue'
 
 const user = ref({
     id: null,
@@ -12,7 +13,10 @@ const user = ref({
     role: '',
     password: ''
 })
+
+const cartCount = ref(0)
 const cart = ref([])
+
 
 const readUser = async () => {
     const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
@@ -27,13 +31,27 @@ const readUser = async () => {
 }
 
 const readCart = async () => {
+    const stogedUser = JSON.parse(localStorage.getItem('loggedInUser'))
+
+    if (!stogedUser) {
+        cartCount.value = 0;
+        return;
+    }
+
     try {
-        const res = await axios.get('http://localhost:3000/cart')
+        const res = await axios.get(`http://localhost:3000/cart?userId=${stogedUser.id}`)
         cart.value = res.data
     } catch (err) {
         console.error("Err: ", err)
     }
 }
+
+const total = computed(() => {
+    return cart.value.reduce((sum, item) => {
+        const price = item.discount || item.price
+        return sum + price * item.quantity
+    }, 0)
+})
 
 onMounted(() => {
     readUser()
@@ -60,15 +78,17 @@ onMounted(() => {
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email Address</label>
-                                <input v-model="user.email" type="email" class="form-control" placeholder="Enter your email" />
+                                <input v-model="user.email" type="email" class="form-control"
+                                    placeholder="Enter your email" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number</label>
-                                <input v-model="user.phone" type="text" class="form-control" placeholder="Enter your phone number" />
+                                <input v-model="user.phone" type="text" class="form-control"
+                                    placeholder="Enter your phone number" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">City</label>
-                                <input  type="text" class="form-control" placeholder="Enter your city" />
+                                <input type="text" class="form-control" placeholder="Enter your city" />
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label">Full Address</label>
@@ -76,8 +96,8 @@ onMounted(() => {
                                     placeholder="Street, district, apartment number..." />
                             </div>
                             <div class="col-md-12">
-                                <label class="form-label">Order Notes</label>       
-                                <textarea  class="form-control" rows="3"
+                                <label class="form-label">Order Notes</label>
+                                <textarea class="form-control" rows="3"
                                     placeholder="Notes for delivery (optional)"></textarea>
                             </div>
                         </div>
@@ -91,33 +111,23 @@ onMounted(() => {
                     <h5 class="fw-semibold mb-3">Order Summary</h5>
 
                     <!-- Example product -->
-                    <div class="d-flex align-items-center mb-3 border-bottom pb-2">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/289707/iphone-15-plus-blue-thumbtz-650x650.png"
-                            alt="Product" class="rounded border me-3" width="60" height="60"
+                    <div v-for="value in cart" :key="value.id"
+                        class="d-flex align-items-center mb-3 border-bottom pb-2">
+                        <img :src="value.image" alt="Product" class="rounded border me-3" width="60" height="60"
                             style="object-fit: cover;" />
                         <div class="flex-grow-1">
-                            <p class="mb-1 fw-semibold">Nike Air Force 1</p>
-                            <small class="text-muted">x2 — 2,200,000 ₫</small>
+                            <p class="mb-1 fw-semibold">{{ value.name }}</p>
+                            <small class="text-muted">x{{ value.quantity }} —
+                                {{ Number(value.discount).toLocaleString('vi-VN') }} ₫</small>
                         </div>
-                        <span class="fw-bold text-danger">4,400,000 ₫</span>
+                        <span class="fw-bold text-danger">{{ (value.discount * value.quantity).toLocaleString('vi-VN')
+                        }} ₫</span>
                     </div>
-
-                    <div class="d-flex align-items-center mb-3 border-bottom pb-2">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/289708/iphone-15-pro-max-blue-thumbtz-650x650.png"
-                            alt="Product" class="rounded border me-3" width="60" height="60"
-                            style="object-fit: cover;" />
-                        <div class="flex-grow-1">
-                            <p class="mb-1 fw-semibold">Adidas Stan Smith</p>
-                            <small class="text-muted">x1 — 1,950,000 ₫</small>
-                        </div>
-                        <span class="fw-bold text-danger">1,950,000 ₫</span>
-                    </div>
-
                     <hr />
 
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal</span>
-                        <span>6,350,000 ₫</span>
+                        <span>{{ total.toLocaleString('vi-VN') }} ₫</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2">
@@ -129,7 +139,7 @@ onMounted(() => {
 
                     <div class="d-flex justify-content-between fw-bold mb-3">
                         <span>Total</span>
-                        <span class="text-danger fs-5">6,350,000 ₫</span>
+                        <span class="text-danger fs-5">{{ total.toLocaleString('vi-VN') }} ₫</span>
                     </div>
 
                     <button class="btn btn-dark w-100 py-2 fw-semibold">Place Order</button>

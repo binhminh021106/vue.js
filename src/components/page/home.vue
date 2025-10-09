@@ -35,15 +35,30 @@ const readProduct = async () => {
 }
 
 const addtocart = async (product) => {
-  try {
-    const { data: cart } = await axios.get("http://localhost:3000/cart")
+  const user = JSON.parse(localStorage.getItem("loggedInUser"))
 
+  if (!user) {
+    Swal.fire({
+      icon: "warning",
+      title: "Please log in",
+      text: "You must be logged in to add products to your cart.",
+      confirmButtonColor: "#000"
+    })
+    router.push("/login")
+    return
+  }
+
+  try {
+    const { data: cart } = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
     const existingItem = cart.find(item => item.productId === product.id)
 
     if (existingItem) {
-      await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, { quantity: existingItem.quantity + 1 })
+      await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, {
+        quantity: existingItem.quantity + 1
+      })
     } else {
       await axios.post("http://localhost:3000/cart", {
+        userId: user.id,
         productId: product.id,
         name: product.name,
         price: product.price,
@@ -56,9 +71,9 @@ const addtocart = async (product) => {
     Swal.fire({
       icon: 'success',
       title: 'Product added to cart',
-      text: 'Your product has just been added to your cart.',
-      showConfirmButton: true,
-      confirmButtonColor: '#000'
+      text: 'Your product has been added to your cart successfully!',
+      showConfirmButton: false,
+      timer: 1500
     })
   } catch (err) {
     console.error("Err: ", err)
@@ -70,6 +85,7 @@ onMounted(() => {
   readProduct()
 })
 </script>
+
 
 <template>
   <div class="home">
