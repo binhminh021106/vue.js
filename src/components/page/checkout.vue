@@ -1,3 +1,46 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+
+const user = ref({
+    id: null,
+    fullname: '',
+    email: '',
+    phone: '',
+    address: '',
+    role: '',
+    password: ''
+})
+const cart = ref([])
+
+const readUser = async () => {
+    const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
+    if (storedUser) {
+        try {
+            const res = await axios.get(`http://localhost:3000/user/${storedUser.id}`)
+            user.value = res.data
+        } catch (err) {
+            console.error("Error reading user:", err)
+        }
+    }
+}
+
+const readCart = async () => {
+    try {
+        const res = await axios.get('http://localhost:3000/cart')
+        cart.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
+onMounted(() => {
+    readUser()
+    readCart()
+})
+</script>
+
 <template>
     <div class="container my-5">
         <h2 class="fw-bold text-center mb-4">🛒 Checkout</h2>
@@ -12,28 +55,29 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" placeholder="Enter your full name" />
+                                <input v-model="user.fullname" type="text" class="form-control"
+                                    placeholder="Enter your full name" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control" placeholder="Enter your email" />
+                                <input v-model="user.email" type="email" class="form-control" placeholder="Enter your email" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number</label>
-                                <input type="text" class="form-control" placeholder="Enter your phone number" />
+                                <input v-model="user.phone" type="text" class="form-control" placeholder="Enter your phone number" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">City</label>
-                                <input type="text" class="form-control" placeholder="Enter your city" />
+                                <input  type="text" class="form-control" placeholder="Enter your city" />
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label">Full Address</label>
-                                <input type="text" class="form-control"
+                                <input v-model="user.address" type="text" class="form-control"
                                     placeholder="Street, district, apartment number..." />
                             </div>
                             <div class="col-md-12">
-                                <label class="form-label">Order Notes</label>
-                                <textarea class="form-control" rows="3"
+                                <label class="form-label">Order Notes</label>       
+                                <textarea  class="form-control" rows="3"
                                     placeholder="Notes for delivery (optional)"></textarea>
                             </div>
                         </div>
