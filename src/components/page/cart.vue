@@ -143,7 +143,7 @@ onMounted(readCart)
                                         </div>
                                     </td>
                                     <td class="fw-semibold">{{ (items.discount * items.quantity).toLocaleString('vi-VN')
-                                        }} ₫</td>
+                                    }} ₫</td>
                                     <td>
                                         <button @click="deleteCart(items.id)" class="btn btn-sm btn-danger">
                                             <i class="fa fa-trash"></i>
@@ -184,7 +184,7 @@ onMounted(readCart)
                             <span>{{ total.toLocaleString('vi-VN') }} ₫</span>
                         </div>
 
-                        <button class="btn btn-dark w-100 mt-4 fw-semibold">Pay Now</button>
+                        <router-link to="/checkout" class="btn btn-dark w-100 mt-4 fw-semibold">Pay Now</router-link>
                     </div>
                 </div>
             </div>
