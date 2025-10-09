@@ -5,8 +5,16 @@ import axios from 'axios';
 
 const router = useRouter()
 const user = ref(null)
+const cartCount = ref(0)
+
+const readCart = async () => {
+  const res = await axios.get('http://localhost:3000/cart/')
+  cartCount.value = res.data.reduce((sum, item) => sum + item.quantity, 0)
+}
 
 onMounted(async () => {
+  await readCart();
+
   const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
   if (storedUser) {
     try {
@@ -23,6 +31,7 @@ const handleLogout = () => {
   user.value = null
   router.push('/login')
 }
+
 </script>
 
 <template>
@@ -79,9 +88,10 @@ const handleLogout = () => {
 
             <div class="position-relative">
               <router-link to="/cart"><i class="fa-solid fa-cart-shopping fs-5 text-dark"></i></router-link>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              <span v-if="cartCount > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                 style="font-size: 10px;">
-                2
+                {{ cartCount }}
               </span>
             </div>
 

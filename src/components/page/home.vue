@@ -1,9 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
 
 const category = ref([])
 const products = ref([])
+const router = useRouter()
 
 const scrollContainer = ref(null)
 const scrollLeft = () => scrollContainer.value.scrollBy({ left: -350, behavior: 'smooth' })
@@ -28,6 +31,37 @@ const readProduct = async () => {
     products.value = res.data
   } catch (err) {
     console.error("Error: ", err)
+  }
+}
+
+const addtocart = async (product) => {
+  try {
+    const { data: cart } = await axios.get("http://localhost:3000/cart")
+
+    const existingItem = cart.find(item => item.productId === product.id)
+
+    if (existingItem) {
+      await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, { quantity: existingItem.quantity + 1 })
+    } else {
+      await axios.post("http://localhost:3000/cart", {
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        discount: product.discount,
+        image: product.image[0],
+        quantity: 1
+      })
+    }
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Product added to cart',
+      text: 'Your product has just been added to your cart.',
+      showConfirmButton: true,
+      confirmButtonColor: '#000'
+    })
+  } catch (err) {
+    console.error("Err: ", err)
   }
 }
 
@@ -95,32 +129,34 @@ onMounted(() => {
               <img :src="item.image[0]" alt="product" class="product-img" />
               <span v-if="item.discount < item.price"
                 class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
-                Giảm giá!
+                Discount
               </span>
             </div>
-
-            <div class="p-3">
-              <h6 class="fw-semibold mb-1">{{ item.name }}</h6>
-
-              <template v-if="item.discount < item.price">
-                <p class="text-muted text-decoration-line-through small mb-1">
-                  {{ Number(item.price).toLocaleString('vi-VN') }} ₫
-                </p>
-                <p class="fw-bold mb-1 text-danger">
-                  {{ Number(item.discount).toLocaleString('vi-VN') }} ₫
-                </p>
-                <p class="text-success small mb-2">
-                  -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
-                </p>
-              </template>
-
-              <template v-else>
-                <p class="fw-bold mb-2">{{ Number(item.price).toLocaleString('vi-VN') }} ₫</p>
-              </template>
-
-              <button class="btn btn-dark btn-sm mt-1">Add to Cart</button>
-            </div>
           </router-link>
+
+          <div class="p-3">
+            <h6 class="fw-semibold mb-1">{{ item.name }}</h6>
+
+            <template v-if="item.discount < item.price">
+              <p class="text-muted text-decoration-line-through small mb-1">
+                {{ Number(item.price).toLocaleString('vi-VN') }} ₫
+              </p>
+              <p class="fw-bold mb-1 text-danger">
+                {{ Number(item.discount).toLocaleString('vi-VN') }} ₫
+              </p>
+              <p class="text-success small mb-2">
+                -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
+              </p>
+            </template>
+
+            <template v-else>
+              <p class="fw-bold mb-2">{{ Number(item.price).toLocaleString('vi-VN') }} ₫</p>
+            </template>
+
+            <button @click="addtocart(item)" class="btn btn-dark btn-sm mt-1">
+              <i class="fa fa-shopping-cart me-1"></i> Add to cart
+            </button>
+          </div>
         </div>
       </div>
     </section>

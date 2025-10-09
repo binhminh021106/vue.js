@@ -2,10 +2,12 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const product = ref(null)
 const route = useRoute()
 const categories = ref([])
+const userQuantity = ref(1)
 
 const readProductDetail = async () => {
     try {
@@ -25,6 +27,45 @@ const readCategories = async () => {
     }
 }
 
+const addtocart = async () => {
+    if (!product.value) return;
+
+    try {
+        const { data: cart } = await axios.get("http://localhost:3000/cart");
+
+        const existingItem = cart.find(item => item.productId === product.value.id);
+
+        if (existingItem) {
+            await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, { quantity: existingItem.quantity + userQuantity.value });
+        } else {
+            await axios.post("http://localhost:3000/cart", {
+                productId: product.value.id,
+                name: product.value.name,
+                price: product.value.price || product.value.price,
+                discount: product.value.discount || product.value.discount,
+                image: product.value.image[0],
+                quantity: userQuantity.value
+            })
+        }
+        Swal.fire({
+            icon: 'success',
+            title: 'Product added to cart',
+            text: 'Your product has just been added to your cart.',
+            showConfirmButton: true,
+            confirmButtonColor: '#000'
+        })
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
+const decrease = () => {
+    if (userQuantity.value > 1) userQuantity.value--
+}
+
+const increase = () => {
+    if (userQuantity.value < 100) userQuantity.value++
+}
 
 onMounted(() => {
     readProductDetail()
@@ -72,18 +113,17 @@ onMounted(() => {
                     </p>
 
                     <div class="mt-4">
-                        <p class="fw-semibold mb-2">Choose size:</p>
-                        <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-outline-dark rounded-pill px-3 py-1">38</button>
-                            <button class="btn btn-outline-dark rounded-pill px-3 py-1">39</button>
-                            <button class="btn btn-outline-dark rounded-pill px-3 py-1">40</button>
-                            <button class="btn btn-outline-dark rounded-pill px-3 py-1">41</button>
-                            <button class="btn btn-outline-dark rounded-pill px-3 py-1">42</button>
+                        <p class="fw-semibold mb-2">Choose Quantity:</p>
+                        <div class="input-group input-group-sm" style="width: 120px;">
+                            <button @click="decrease(product)" class="btn btn-outline-dark">-</button>
+                            <input v-model="userQuantity" type="number" class="form-control text-center" min="1"
+                                max="100" />
+                            <button @click="increase(product)" class="btn btn-outline-dark">+</button>
                         </div>
                     </div>
 
                     <div class="mt-4 d-flex gap-3">
-                        <button class="btn btn-dark px-4 py-2">
+                        <button @click="addtocart" class="btn btn-dark px-4 py-2">
                             <i class="fa fa-shopping-cart me-2"></i>Add to cart
                         </button>
                         <button class="btn btn-outline-dark px-4 py-2">
@@ -137,5 +177,11 @@ button.btn-outline-dark:hover {
     .main-img {
         height: 300px;
     }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 </style>

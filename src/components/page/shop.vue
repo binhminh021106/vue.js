@@ -105,41 +105,41 @@ watch(sortOption, () => {
         </div>
 
         <div class="row g-4">
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3" v-for="item in products" :key="item.id">
-              <router-link :to="`/productDetail/${item.id}`" class="text-decoration-none text-dark">
-                <div class="card border-0 shadow-sm h-100">
-                  <div class="position-relative">
-                    <img :src="item.image[0]" class="card-img-top" alt="product" />
-                    <span v-if="item.discount < item.price"
-                      class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
-                      Giảm giá!
-                    </span>
-                  </div>
-
-                  <div class="card-body text-center">
-                    <p class="text-secondary small mb-1">
-                      {{category.find(c => c.id === item.categoryId)?.nameCategory || 'Không có'}}
-                    </p>
-                    <h6 class="fw-semibold">{{ item.name }}</h6>
-
-                    <template v-if="item.discount < item.price">
-                      <p class="text-muted text-decoration-line-through small mb-1">
-                        {{ Number(item.price).toLocaleString('vi-VN') }} ₫
-                      </p>
-                      <p class="fw-bold mb-1 text-danger">
-                        {{ Number(item.discount).toLocaleString('vi-VN') }} ₫
-                      </p>
-                    </template>
-
-                    <template v-else>
-                      <p class="fw-bold text-danger mb-0">
-                        {{ Number(item.price).toLocaleString('vi-VN') }} ₫
-                      </p>
-                    </template>
-                  </div>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3" v-for="item in products" :key="item.id">
+            <router-link :to="`/productDetail/${item.id}`" class="text-decoration-none text-dark">
+              <div class="card border-0 shadow-sm h-100">
+                <div class="position-relative">
+                  <img :src="item.image[0]" class="card-img-top" alt="product" />
+                  <span v-if="item.discount < item.price"
+                    class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
+                    Discount
+                  </span>
                 </div>
-              </router-link>
-            </div>
+
+                <div class="card-body text-center">
+                  <p class="text-secondary small mb-1">
+                    {{category.find(c => c.id === item.categoryId)?.nameCategory || 'Không có'}}
+                  </p>
+                  <h6 class="fw-semibold">{{ item.name }}</h6>
+
+                  <template v-if="item.discount < item.price">
+                    <p class="text-muted text-decoration-line-through small mb-1">
+                      {{ Number(item.price).toLocaleString('vi-VN') }} ₫
+                    </p>
+                    <p class="fw-bold mb-1 text-danger">
+                      {{ Number(item.discount).toLocaleString('vi-VN') }} ₫
+                    </p>
+                  </template>
+
+                  <template v-else>
+                    <p class="fw-bold text-danger mb-0">
+                      {{ Number(item.price).toLocaleString('vi-VN') }} ₫
+                    </p>
+                  </template>
+                </div>
+              </div>
+            </router-link>
+          </div>
         </div>
 
         <p v-if="products.length === 0" class="text-center text-muted mt-4">

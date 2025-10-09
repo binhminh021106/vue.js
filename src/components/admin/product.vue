@@ -85,6 +85,18 @@ const addProduct = async () => {
             timer: 2000
         })
         return
+    } else if (
+        form.value.quantity < 0 ||
+        form.value.price < 0 ||
+        form.value.discount < 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bạn nhập sai thông tin',
+            text: `Bạn không được nhập số nhỏ hơn 0 hãy nhập lại`,
+            showConfirmButton: false,
+            timer: 2000
+        })
+        return
     }
 
     try {

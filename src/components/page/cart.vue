@@ -1,24 +1,105 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import { computed } from 'vue'
 
-const decrease = (item) => {
-    if (item.quantity > 1) item.quantity--
+const cart = ref([])
+
+const readCart = async () => {
+    try {
+        const res = await axios.get('http://localhost:3000/cart')
+        cart.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
+    }
 }
 
-const increase = (item) => {
-    if (item.quantity < 100) item.quantity++
+
+const decrease = async (item) => {
+    if (item.quantity > 1) {
+        item.quantity--
+        await axios.patch(`http://localhost:3000/cart/${item.id}`, { quantity: item.quantity })
+    }
 }
+
+const increase = async (item) => {
+    if (item.quantity < 100) {
+        item.quantity++
+        await axios.patch(`http://localhost:3000/cart/${item.id}`, { quantity: item.quantity })
+    }
+}
+
+const deleteCart = async (id) => {
+    Swal.fire({
+        title: 'Delete this product?',
+        text: "This action cannot be undone.!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'OK!',
+        cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`http://localhost:3000/cart/${id}`);
+                cart.value = cart.value.filter(c => c.id !== id)
+                Swal.fire('Deleted!', 'The product has been removed from the cart.', 'success');
+            } catch (err) {
+                console.error("Err: ", err)
+            }
+        }
+    });
+}
+
+const deleteAllCart = async () => {
+    if (cart.value.length === 0) return
+
+    Swal.fire({
+        title: 'Clear all cart?',
+        text: 'All products will be deleted.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Delete All',
+        cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                for (const items of cart.value) {
+                    await axios.delete(`http://localhost:3000/cart/${items.id}`)
+                }
+                cart.value = []
+                Swal.fire('Deleted!', 'The entire cart has been cleared.', 'success')
+            } catch (err) {
+                console.error("Err: ", err)
+            }
+        }
+    })
+}
+
+const total = computed(() => {
+    return cart.value.reduce((sum, item) => {
+        const price = item.discount || item.price
+        return sum + price * item.quantity
+    }, 0)
+})
+
+onMounted(readCart)
 </script>
+
 
 <template>
     <div class="container my-5">
         <h2 class="fw-bold mb-4 text-center">🛒 Your Cart</h2>
 
         <!-- Nếu giỏ hàng trống -->
-        <div class="text-center text-muted py-5" v-if="false">
+        <div class="text-center text-muted py-5" v-if="cart.length === 0">
             <i class="fa fa-shopping-cart fa-3x mb-3"></i>
-            <p>Giỏ hàng của bạn đang trống</p>
-            <button class="btn btn-dark">Continue Shopping</button>
+            <p>Your cart is empty</p>
+            <router-link to="/" class="btn btn-dark">Continue Shopping</router-link>
         </div>
 
         <!-- Danh sách sản phẩm -->
@@ -37,32 +118,34 @@ const increase = (item) => {
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr v-for="item in 3" :key="n">
+                                <tr v-for="items in cart" :key="items.id">
                                     <td>
                                         <div class="d-flex align-items-center text-start">
-                                            <img src="https://down-vn.img.susercontent.com/file/sg-11134201-7rbmj-m1cj7n2e9b2g8c"
-                                                class="rounded me-3 border" width="70" />
+                                            <img :src="items.image" class="rounded me-3 border" width="70" />
                                             <div>
-                                                <h6 class="mb-0">Áo Thun Nam Basic</h6>
+                                                <h6 class="mb-0">{{ items.name }}</h6>
                                                 <small class="text-muted">Danh mục: Thời trang</small>
                                             </div>
                                         </div>
                                     </td>
-                                    <td> 
-                                        <span class="text-danger fw-semibold">150.000 ₫</span><br />
-                                        <small class="text-muted text-decoration-line-through">200.000 ₫</small>
+                                    <td>
+                                        <span class="text-danger fw-semibold">{{
+                                            Number(items.discount).toLocaleString('vi-VN') }} ₫</span><br />
+                                        <small class="text-muted text-decoration-line-through">{{
+                                            Number(items.price).toLocaleString('vi-VN') }} ₫</small>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm mx-auto" style="width: 120px;">
-                                            <button @click="decrease(item)" class="btn btn-outline-dark">-</button>
-                                            <input v-model="item.quantity" type="number"
+                                            <button @click="decrease(items)" class="btn btn-outline-dark">-</button>
+                                            <input v-model="items.quantity" type="number"
                                                 class="form-control text-center" min="0" max="100" value="1" />
-                                            <button @click="increase(item)" class="btn btn-outline-dark">+</button>
+                                            <button @click="increase(items)" class="btn btn-outline-dark">+</button>
                                         </div>
                                     </td>
-                                    <td class="fw-semibold">150.000 ₫</td>
+                                    <td class="fw-semibold">{{ (items.discount * items.quantity).toLocaleString('vi-VN')
+                                        }} ₫</td>
                                     <td>
-                                        <button class="btn btn-sm btn-danger">
+                                        <button @click="deleteCart(items.id)" class="btn btn-sm btn-danger">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -73,7 +156,7 @@ const increase = (item) => {
                 </div>
 
                 <div class="text-end mt-3">
-                    <button class="btn btn-outline-danger btn-sm">
+                    <button @click="deleteAllCart" class="btn btn-outline-danger btn-sm">
                         <i class="fa fa-trash me-1"></i> Delete All
                     </button>
                 </div>
@@ -86,19 +169,19 @@ const increase = (item) => {
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Provisional</span>
-                            <span>450.000 ₫</span>
+                            <span>{{ total.toLocaleString('vi-VN') }} ₫</span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Shipping Fee</span>
-                            <span class="text-success">Miễn phí</span>
+                            <span class="text-success">Free</span>
                         </div>
 
                         <hr />
 
                         <div class="d-flex justify-content-between fw-bold">
                             <span>Total</span>
-                            <span class="text-danger">450.000 ₫</span>
+                            <span>{{ total.toLocaleString('vi-VN') }} ₫</span>
                         </div>
 
                         <button class="btn btn-dark w-100 mt-4 fw-semibold">Pay Now</button>
