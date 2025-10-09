@@ -7,16 +7,16 @@ const router = useRouter()
 const user = ref(null)
 
 onMounted(async () => {
-  const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
+  const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
   if (storedUser) {
     try {
-      const res = await axios.get(`http://localhost:3000/user/${storedUser.id}`)
-      user.value = res.data
+      const res = await axios.get(`http://localhost:3000/user/${storedUser.id}`);
+      user.value = res.data;
     } catch (err) {
-      console.error(err)
+      console.error('API error:', err);
     }
   }
-})
+});
 
 const handleLogout = () => {
   localStorage.removeItem('loggedInUser')

@@ -48,7 +48,7 @@ const increase = (item) => {
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td> 
                                         <span class="text-danger fw-semibold">150.000 ₫</span><br />
                                         <small class="text-muted text-decoration-line-through">200.000 ₫</small>
                                     </td>
