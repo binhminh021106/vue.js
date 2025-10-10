@@ -41,7 +41,7 @@ onMounted(readview)
     <div class="container my-5">
         <h2 class="fw-bold text-center mb-4">📦 My Orders</h2>
 
-        <div class="order-list">
+        <div v-if="vieworder.length > 0" class="order-list">
             <!-- Order card -->
             <div v-for="value in vieworder" :key="value.id" class="card border-0 shadow-sm rounded-4 mb-4 p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -80,15 +80,24 @@ onMounted(readview)
                 </div>
 
                 <div class="text-end mt-3">
-                    <router-link :to="`/orderdetail/${value.id}`" class="btn btn-outline-dark btn-sm">View Details</router-link>
+                    <router-link :to="`/orderdetail/${value.id}`" class="btn btn-outline-dark btn-sm">View
+                        Details</router-link>
                 </div>
             </div>
+        </div>
+        <div v-else class="text-center py-5">
+            <img src="https://cdn-icons-png.flaticon.com/512/4076/4076505.png" alt="No orders" width="120"
+                class="mb-3 opacity-75" />
+            <h5 class="text-muted">You haven’t placed any orders yet</h5>
+            <router-link to="/" class="btn btn-dark mt-3 px-4 py-2">
+                <i class="fa fa-shopping-bag me-2"></i>Start Shopping
+            </router-link>
         </div>
     </div>
 </template>
 
 <style scoped>
-.card { 
+.card {
     transition: 0.3s ease;
 }
 
