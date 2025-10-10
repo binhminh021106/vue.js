@@ -98,6 +98,7 @@ const placeOrder = async () => {
       orderNote: formOrder.value.orderNote,
       payment: selectPayment.value,
       total: total.value,
+      status: "Pending",
       date: new Date().toLocaleString('vi-VN'),
       products: cart.value
     }

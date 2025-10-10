@@ -23,6 +23,8 @@ import categories from "../src/components/admin/categories.vue";
 import CRUDUser from "../src/components/admin/CRUDUser.vue";
 import product from "../src/components/admin/product.vue";
 import readProduct from "../src/components/admin/readProduct.vue";
+import adminorder from "../src/components/admin/adminorder.vue";
+import AdminOrderView from "../src/components/admin/AdminOrderView.vue";
 
 import NotFound from "../src/components/page/NotFound.vue";
 
@@ -55,6 +57,8 @@ const routes = [
       { path: "categories", component: categories },
       { path: "product", component: product },
       { path: "readProduct/:id", component: readProduct },
+      { path: "adminorder", component: adminorder },
+      { path: "AdminOrderView", component: AdminOrderView },
     ],
   },
   {
