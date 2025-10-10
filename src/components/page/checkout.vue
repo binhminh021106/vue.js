@@ -102,7 +102,8 @@ const placeOrder = async () => {
       products: cart.value
     }
 
-    await axios.post('http://localhost:3000/order', orderData)
+    const res = await axios.post('http://localhost:3000/order', orderData)
+    localStorage.setItem("lastOrder", JSON.stringify(res.data))
 
     await Promise.all(
       cart.value.map(item => axios.delete(`http://localhost:3000/cart/${item.id}`))
@@ -209,25 +210,25 @@ onMounted(() => {
             <h6 class="fw-semibold mb-3">Select Payment Method 💳</h6>
             <div class="payment-options">
               <label class="payment-option p-3 mb-2 rounded-3 border d-flex align-items-center gap-3">
-                <input v-model="selectPayment" type="radio" value="cod" class="form-check-input" />
+                <input v-model="selectPayment" type="radio" value="Cash on Delivery (COD)" class="form-check-input" />
                 <i class="fa-solid fa-truck-fast text-primary fs-5"></i>
                 <span>Cash on Delivery (COD)</span>
               </label>
 
               <label class="payment-option p-3 mb-2 rounded-3 border d-flex align-items-center gap-3">
-                <input v-model="selectPayment" type="radio" value="momo" class="form-check-input" />
+                <input v-model="selectPayment" type="radio" value="MoMo E-Wallet" class="form-check-input" />
                 <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" width="30" />
                 <span>MoMo E-Wallet</span>
               </label>
 
               <label class="payment-option p-3 mb-2 rounded-3 border d-flex align-items-center gap-3">
-                <input v-model="selectPayment" type="radio" value="bank" class="form-check-input" />
+                <input v-model="selectPayment" type="radio" value="Bank Transfer" class="form-check-input" />
                 <i class="fa-solid fa-building-columns text-success fs-5"></i>
                 <span>Bank Transfer</span>
               </label>
 
               <label class="payment-option p-3 rounded-3 border d-flex align-items-center gap-3">
-                <input v-model="selectPayment" type="radio" value="card" class="form-check-input" />
+                <input v-model="selectPayment" type="radio" value="Credit / Debit Card" class="form-check-input" />
                 <i class="fa-brands fa-cc-visa text-info fs-5"></i>
                 <span>Credit / Debit Card</span>
               </label>

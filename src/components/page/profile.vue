@@ -55,31 +55,40 @@ const saveChanges = async () => {
 
 <template>
   <div class="container py-5">
-    <div class="card shadow-lg border-0 rounded-4 p-4 profile-card mx-auto" style="max-width: 800px;">
-      <div class="d-flex align-items-center gap-4 flex-wrap">
-        <div class="text-center flex-shrink-0">
-          <img :src="user.image || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" alt="avatar"
-            class="rounded-circle border shadow-sm" width="140" height="140" />
-          <div class="mt-3">
-            <button class="btn btn-outline-dark btn-sm px-3">
-              <i class="fa fa-camera me-2"></i>Choose image
-            </button>
+    <div class="card shadow-lg border-0 rounded-4 p-4 profile-card mx-auto" style="max-width: 850px;">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-4">
+        <!-- Avatar + Basic Info -->
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+          <div class="text-center flex-shrink-0">
+            <img :src="user.image || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" alt="avatar"
+              class="rounded-circle border shadow-sm" width="140" height="140" />
+            <div class="mt-3">
+              <button class="btn btn-outline-dark btn-sm px-3">
+                <i class="fa fa-camera me-2"></i>Choose image
+              </button>
+            </div>
+          </div>
+
+          <div class="flex-grow-1">
+            <h3 class="fw-bold mb-2">{{ user.fullname }}</h3>
+            <p class="text-muted mb-1"><i class="fa fa-envelope me-2"></i>{{ user.email }}</p>
+            <p class="text-muted mb-1"><i class="fa fa-phone me-2"></i>{{ user.phone }}</p>
+            <p class="text-muted mb-1"><i class="fa fa-map-marker me-2"></i>{{ user.address }}</p>
+            <span class="badge bg-dark mt-2 text-uppercase">{{ user.role }}</span>
           </div>
         </div>
 
-        <!-- Thông tin -->
-        <div class="flex-grow-1">
-          <h3 class="fw-bold mb-2">{{ user.fullname }}</h3>
-          <p class="text-muted mb-1"><i class="fa fa-envelope me-2"></i>{{ user.email }}</p>
-          <p class="text-muted mb-1"><i class="fa fa-phone me-2"></i>{{ user.phone }}</p>
-          <p class="text-muted mb-1"><i class="fa fa-map-marker me-2"></i>{{ user.address }}</p>
-          <span class="badge bg-dark mt-2 text-uppercase">{{ user.role }}</span>
+        <!-- View Orders Button -->
+        <div class="text-center ms-auto">
+          <router-link to="/vieworder" class="btn btn-dark fw-semibold px-4 py-2">
+            <i class="fa fa-box me-2"></i>View Orders
+          </router-link>
         </div>
       </div>
 
       <hr class="my-4" />
 
-      <!-- Form chỉnh sửa -->
+      <!-- Edit Form -->
       <div>
         <h5 class="fw-bold mb-3">Edit Profile</h5>
         <div class="row g-3">
@@ -107,7 +116,7 @@ const saveChanges = async () => {
 
         <div class="mt-4 d-flex gap-3">
           <button class="btn btn-dark px-4 py-2" @click="saveChanges">
-            <i class="fa fa-save me-2"></i>Save Proflie
+            <i class="fa fa-save me-2"></i>Save Profile
           </button>
           <button class="btn btn-outline-dark px-4 py-2">
             <i class="fa fa-times me-2"></i>Cancel
@@ -139,5 +148,14 @@ input:focus {
 
 .btn-dark:hover {
   background-color: #222 !important;
+}
+
+.btn {
+  border-radius: 10px;
+  transition: 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
 }
 </style>
