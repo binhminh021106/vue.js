@@ -1,8 +1,28 @@
+<script setup>
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import { useRoute } from 'vue-router';
+import Swal from 'sweetalert2';
+
+const order = ref(null)
+const route = useRoute()
+
+const readorder = async () => {
+  try {
+    const res = await axios.get(`http://localhost:3000/order/${route.params.id}`)
+    order.value = res.data
+  } catch (err) {
+    console.error("Err: ", err)
+  }
+}
+
+onMounted(readorder)
+</script>
+
 <template>
-  <div class="container my-5">
-    <button class="btn btn-outline-dark mb-4">
-      <i class="fa fa-arrow-left me-2"></i> Quay lại danh sách
-    </button>
+  <div v-if="order" class="container my-5">
+    <router-link class="btn btn-outline-dark mb-4" to="/admin/adminorder"><i class="fa fa-arrow-left me-2"></i> Quay lại
+      giỏ hàng</router-link>
 
     <div class="card shadow-sm border-0 rounded-4 p-4">
       <h3 class="fw-bold mb-4 text-center">📄 Chi Tiết Đơn Hàng</h3>
@@ -11,21 +31,21 @@
       <div class="row mb-4">
         <div class="col-md-6">
           <h5 class="fw-semibold mb-3">👤 Thông Tin Khách Hàng</h5>
-          <p><strong>Tên:</strong> Trần Thị B</p>
-          <p><strong>Email:</strong> thib@example.com</p>
-          <p><strong>Điện thoại:</strong> 0912345678</p>
-          <p><strong>Địa chỉ:</strong> TP. Hồ Chí Minh, BMT</p>
+          <p><strong>Tên:</strong> {{ order.fullname }}</p>
+          <p><strong>Email:</strong> {{ order.email }}</p>
+          <p><strong>Điện thoại:</strong> {{ order.phone }}</p>
+          <p><strong>Địa chỉ:</strong> {{ order.fulladdress }}</p>
         </div>
 
         <div class="col-md-6">
           <h5 class="fw-semibold mb-3">💳 Thanh Toán & Trạng Thái</h5>
-          <p><strong>Phương thức:</strong> Cash on Delivery (COD)</p>
-          <p><strong>Ngày đặt:</strong> 22:11:23 9/10/2025</p>
+          <p><strong>Phương thức:</strong> {{ order.payment }}</p>
+          <p><strong>Ngày đặt:</strong> {{ order.date }}</p>
 
           <!-- Trạng thái hiện tại -->
           <div class="mb-3">
             <strong>Trạng thái hiện tại:</strong>
-            <span class="badge bg-warning text-dark px-3 py-2 rounded-3">Đang chờ</span>
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-3"> Đang chờ</span>
           </div>
 
           <!-- Khu chọn trạng thái -->
@@ -79,13 +99,8 @@
           <tbody>
             <tr>
               <td>
-                <img
-                  src="https://down-vn.img.susercontent.com/file/sg-11134201-23020-nvubjhthk6mv5b"
-                  class="rounded border"
-                  width="60"
-                  height="60"
-                  style="object-fit: cover;"
-                />
+                <img src="https://down-vn.img.susercontent.com/file/sg-11134201-23020-nvubjhthk6mv5b"
+                  class="rounded border" width="60" height="60" style="object-fit: cover;" />
               </td>
               <td>Áo thun basic nam</td>
               <td>2</td>
@@ -94,13 +109,8 @@
             </tr>
             <tr>
               <td>
-                <img
-                  src="https://down-vn.img.susercontent.com/file/sg-11134201-23020-nvubjhthk6mv5b"
-                  class="rounded border"
-                  width="60"
-                  height="60"
-                  style="object-fit: cover;"
-                />
+                <img src="https://down-vn.img.susercontent.com/file/sg-11134201-23020-nvubjhthk6mv5b"
+                  class="rounded border" width="60" height="60" style="object-fit: cover;" />
               </td>
               <td>Quần jean slim fit</td>
               <td>1</td>
@@ -125,6 +135,7 @@
       </div>
     </div>
   </div>
+  <p v-else class="text-center text-muted mt-5">Loading Order...</p>
 </template>
 
 <style scoped>
@@ -195,37 +206,37 @@
   background-color: #eee;
 }
 
-.status-pill input:checked + span {
+.status-pill input:checked+span {
   color: #fff;
   font-weight: 600;
 }
 
 /* Màu riêng từng trạng thái */
-.status-pill input[value="Đang chờ"]:checked + span {
+.status-pill input[value="Đang chờ"]:checked+span {
   background-color: #ffc107;
   padding: 4px 10px;
   border-radius: 20px;
 }
 
-.status-pill input[value="Đã xác nhận"]:checked + span {
+.status-pill input[value="Đã xác nhận"]:checked+span {
   background-color: #17a2b8;
   padding: 4px 10px;
   border-radius: 20px;
 }
 
-.status-pill input[value="Đang giao hàng"]:checked + span {
+.status-pill input[value="Đang giao hàng"]:checked+span {
   background-color: #007bff;
   padding: 4px 10px;
   border-radius: 20px;
 }
 
-.status-pill input[value="Đã giao hàng"]:checked + span {
+.status-pill input[value="Đã giao hàng"]:checked+span {
   background-color: #28a745;
   padding: 4px 10px;
   border-radius: 20px;
 }
 
-.status-pill input[value="Đã huỷ"]:checked + span {
+.status-pill input[value="Đã huỷ"]:checked+span {
   background-color: #dc3545;
   padding: 4px 10px;
   border-radius: 20px;

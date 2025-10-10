@@ -58,7 +58,7 @@ const routes = [
       { path: "product", component: product },
       { path: "readProduct/:id", component: readProduct },
       { path: "adminorder", component: adminorder },
-      { path: "AdminOrderView", component: AdminOrderView },
+      { path: "AdminOrderView/:id", component: AdminOrderView },
     ],
   },
   {
