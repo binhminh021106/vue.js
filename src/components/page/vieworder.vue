@@ -1,144 +1,122 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const vieworder = ref([])
+const user = ref(null)
+
+const readview = async () => {
+    const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
+    if (!storedUser) return
+    user.value = storedUser
+
+    try {
+        const res = await axios.get(`http://localhost:3000/order?userId=${storedUser.id}`)
+        vieworder.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
+const getStatusClass = (status) => {
+    switch (status) {
+        case 'Delivered':
+            return 'bg-success text-white'
+        case 'Pending':
+            return 'bg-warning text-dark'
+        case 'Cancelled':
+            return 'bg-danger text-white'
+        case 'Processing':
+            return 'bg-info text-dark'
+        default:
+            return 'bg-secondary text-white'
+    }
+}
+
+
+onMounted(readview)
+</script>
+
 <template>
-  <div class="container my-5">
-    <h2 class="fw-bold text-center mb-4">📦 My Orders</h2>
+    <div class="container my-5">
+        <h2 class="fw-bold text-center mb-4">📦 My Orders</h2>
 
-    <div class="order-list">
-      <!-- Order card -->
-      <div class="card border-0 shadow-sm rounded-4 mb-4 p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h5 class="fw-semibold mb-1">Order #ODR2025-001</h5>
-            <small class="text-muted">Placed on October 10, 2025</small>
-          </div>
-          <span class="badge bg-success px-3 py-2">Delivered</span>
-        </div>
+        <div class="order-list">
+            <!-- Order card -->
+            <div v-for="value in vieworder" :key="value.id" class="card border-0 shadow-sm rounded-4 mb-4 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-semibold mb-1">Order #ODR2025-{{ value.id }}</h5>
+                        <small class="text-muted">Placed on {{ value.date }}</small>
+                    </div>
+                    <span :class="['badge px-3 py-2', getStatusClass(value.status)]">
+                        {{ value.status || 'Processing' }}
+                    </span>
+                </div>
 
-        <!-- Product list -->
-        <div class="d-flex align-items-center mb-3 border-bottom pb-2">
-          <img
-            src="https://static.nike.com/a/images/t_default/1/Nike-Air-Force-1-07-White.jpg"
-            alt="Nike Air Force 1"
-            width="60"
-            height="60"
-            class="rounded border me-3"
-          />
-          <div class="flex-grow-1">
-            <p class="mb-1 fw-semibold">Nike Air Force 1</p>
-            <small class="text-muted">x1 — 1,250,000 ₫</small>
-          </div>
-          <span class="fw-bold text-danger">1,250,000 ₫</span>
-        </div>
+                <!-- Product list -->
+                <div v-for="items in value.products" :key="items.productId"
+                    class="d-flex align-items-center mb-3 border-bottom pb-2">
+                    <img :src="items.image" :alt="items.name" width="60" height="60" class="rounded border me-3" />
+                    <div class="flex-grow-1">
+                        <p class="mb-1 fw-semibold">{{ items.name }}</p>
+                        <small class="text-muted">x{{ items.quantity }} — {{
+                            Number(items.discount).toLocaleString('vi-VN') }}₫</small>
+                    </div>
+                    <span class="fw-bold text-danger">{{ (items.discount * items.quantity).toLocaleString('vi-VN') }}
+                        ₫</span>
+                </div>
 
-        <div class="d-flex align-items-center mb-3 border-bottom pb-2">
-          <img
-            src="https://assets.adidas.com/images/w_600,f_auto,q_auto/1a7b0e02c9264b14a3d4aafd0094a72a_9366/Giay_Superstar_trang_FV3284_01_standard.jpg"
-            alt="Adidas Superstar"
-            width="60"
-            height="60"
-            class="rounded border me-3"
-          />
-          <div class="flex-grow-1">
-            <p class="mb-1 fw-semibold">Adidas Superstar</p>
-            <small class="text-muted">x1 — 1,100,000 ₫</small>
-          </div>
-          <span class="fw-bold text-danger">1,100,000 ₫</span>
-        </div>
+                <!-- Footer info -->
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <small class="text-muted">Payment:</small>
+                        <p class="mb-0 fw-semibold">{{ value.payment }}</p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted">Total:</small>
+                        <p class="mb-0 fw-bold text-danger">{{ Number(value.total).toLocaleString('vi-VN') }}₫</p>
+                    </div>
+                </div>
 
-        <!-- Footer info -->
-        <div class="d-flex justify-content-between mt-3">
-          <div>
-            <small class="text-muted">Payment:</small>
-            <p class="mb-0 fw-semibold">Cash on Delivery (COD)</p>
-          </div>
-          <div class="text-end">
-            <small class="text-muted">Total:</small>
-            <p class="mb-0 fw-bold text-danger">2,350,000 ₫</p>
-          </div>
+                <div class="text-end mt-3">
+                    <router-link :to="`/orderdetail/${value.id}`" class="btn btn-outline-dark btn-sm">View Details</router-link>
+                </div>
+            </div>
         </div>
-
-        <div class="text-end mt-3">
-          <button class="btn btn-outline-dark btn-sm">
-            View Details
-          </button>
-        </div>
-      </div>
-
-      <!-- Another Order -->
-      <div class="card border-0 shadow-sm rounded-4 mb-4 p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h5 class="fw-semibold mb-1">Order #ODR2025-002</h5>
-            <small class="text-muted">Placed on October 5, 2025</small>
-          </div>
-          <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
-        </div>
-
-        <div class="d-flex align-items-center mb-3 border-bottom pb-2">
-          <img
-            src="https://converse.com.vn/wp-content/uploads/2022/10/Converse-Chuck-70-Classic-Black-162050C-1.jpg"
-            alt="Converse Chuck 70"
-            width="60"
-            height="60"
-            class="rounded border me-3"
-          />
-          <div class="flex-grow-1">
-            <p class="mb-1 fw-semibold">Converse Chuck 70</p>
-            <small class="text-muted">x1 — 950,000 ₫</small>
-          </div>
-          <span class="fw-bold text-danger">950,000 ₫</span>
-        </div>
-
-        <div class="d-flex justify-content-between mt-3">
-          <div>
-            <small class="text-muted">Payment:</small>
-            <p class="mb-0 fw-semibold">MoMo E-Wallet</p>
-          </div>
-          <div class="text-end">
-            <small class="text-muted">Total:</small>
-            <p class="mb-0 fw-bold text-danger">950,000 ₫</p>
-          </div>
-        </div>
-
-        <div class="text-end mt-3">
-          <button class="btn btn-outline-dark btn-sm">
-            View Details
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
-.card {
-  transition: 0.3s ease;
+.card { 
+    transition: 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .order-list {
-  max-width: 800px;
-  margin: auto;
+    max-width: 800px;
+    margin: auto;
 }
 
 .badge {
-  font-size: 0.85rem;
-  border-radius: 12px;
+    font-size: 0.85rem;
+    border-radius: 12px;
 }
 
 img {
-  object-fit: cover;
+    object-fit: cover;
 }
 
 .btn {
-  border-radius: 10px;
-  transition: all 0.3s ease;
+    border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
+    transform: translateY(-2px);
 }
 </style>

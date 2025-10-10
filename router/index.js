@@ -16,6 +16,7 @@ import cart from "../src/components/page/cart.vue";
 import checkout from "../src/components/page/checkout.vue";
 import checkoutsuccess from "../src/components/page/checkoutsuccess.vue";
 import vieworder from "../src/components/page/vieworder.vue";
+import orderdetail from "../src/components/page/orderdetail.vue";
 
 // admin pages
 import categories from "../src/components/admin/categories.vue";
@@ -41,6 +42,7 @@ const routes = [
       { path: "checkout", component: checkout },
       { path: "checkoutsuccess", component: checkoutsuccess },
       { path: "vieworder", component: vieworder },
+      { path: "orderdetail/:id", component: orderdetail },
     ],
   },
   {
