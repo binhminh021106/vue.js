@@ -18,7 +18,7 @@ const readCart = async () => {
   try {
     const res = await axios.get(`http://localhost:3000/cart?userId=${storedUser.id}`);
 
-    cartCount.value = res.data.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.value = res.data.length;
   } catch (err) {
     console.error('Error reading cart:', err);
   }

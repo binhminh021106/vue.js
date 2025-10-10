@@ -137,7 +137,7 @@ onMounted(() => {
                     </div>
 
                     <div class="mt-4 d-flex gap-3">
-                        <button @click="addtocart" class="btn btn-dark px-4 py-2">
+                        <button @click="addtocart(product)" class="btn btn-dark px-4 py-2">
                             <i class="fa fa-shopping-cart me-2"></i>Add to cart
                         </button>
                         <button class="btn btn-outline-dark px-4 py-2">
