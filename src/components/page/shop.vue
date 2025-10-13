@@ -112,7 +112,7 @@ watch(sortOption, () => {
                   <img :src="item.image[0]" class="card-img-top" alt="product" />
                   <span v-if="item.discount < item.price"
                     class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
-                    Discount
+                    -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
                   </span>
                 </div>
 

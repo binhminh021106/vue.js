@@ -6,6 +6,8 @@ import Swal from 'sweetalert2'
 const user = ref({
   id: null,
   fullname: '',
+  gender: '',
+  date_birth: '',
   email: '',
   phone: '',
   address: '',
@@ -29,6 +31,19 @@ onMounted(() => {
     })
   }
 })
+
+const getAge = (dateString) => {
+  if (!dateString) return ''
+  const today = new Date()
+  const birthDate = new Date(dateString)
+  let age = today.getFullYear() - birthDate.getFullYear()
+  const m = today.getMonth() - birthDate.getMonth()
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--
+  }
+  return age
+}
+
 
 const saveChanges = async () => {
   try {
@@ -71,6 +86,9 @@ const saveChanges = async () => {
 
           <div class="flex-grow-1">
             <h3 class="fw-bold mb-2">{{ user.fullname }}</h3>
+            <p class="text-muted mb-1">
+              <i class="fa fa-birthday-cake me-2"></i>Tuổi: {{ getAge(user.date_birth) }}
+            </p>
             <p class="text-muted mb-1"><i class="fa fa-envelope me-2"></i>{{ user.email }}</p>
             <p class="text-muted mb-1"><i class="fa fa-phone me-2"></i>{{ user.phone }}</p>
             <p class="text-muted mb-1"><i class="fa fa-map-marker me-2"></i>{{ user.address }}</p>
@@ -95,6 +113,18 @@ const saveChanges = async () => {
           <div class="col-md-6">
             <label class="form-label">Full Name</label>
             <input v-model="user.fullname" type="text" class="form-control" placeholder="Nhập họ tên" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Gender</label>
+            <select class="form-select" v-model="user.gender">
+              <option>-- Choose Gender --</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Date of Birth</label>
+            <input v-model="user.date_birth" type="date" class="form-control" />
           </div>
           <div class="col-md-6">
             <label class="form-label">Email</label>

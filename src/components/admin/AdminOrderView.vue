@@ -97,25 +97,14 @@ onMounted(readorder)
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr v-for="items in order.products" :key="items.productId">
               <td>
-                <img src="https://down-vn.img.susercontent.com/file/sg-11134201-23020-nvubjhthk6mv5b"
-                  class="rounded border" width="60" height="60" style="object-fit: cover;" />
+                <img :src="items.image" class="rounded border" width="60" height="60" style="object-fit: cover;" />
               </td>
-              <td>Áo thun basic nam</td>
-              <td>2</td>
-              <td>250.000 ₫</td>
-              <td class="text-danger fw-semibold">500.000 ₫</td>
-            </tr>
-            <tr>
-              <td>
-                <img src="https://down-vn.img.susercontent.com/file/sg-11134201-23020-nvubjhthk6mv5b"
-                  class="rounded border" width="60" height="60" style="object-fit: cover;" />
-              </td>
-              <td>Quần jean slim fit</td>
-              <td>1</td>
-              <td>750.000 ₫</td>
-              <td class="text-danger fw-semibold">750.000 ₫</td>
+              <td>{{ items.name }}</td>
+              <td>{{ items.quantity }}</td>
+              <td>{{ Number(items.discount).toLocaleString('vi-VN') }}</td>
+              <td class="text-danger fw-semibold">{{ (items.discount * items.quantity).toLocaleString('vi-VN') }} ₫</td>
             </tr>
           </tbody>
         </table>
@@ -124,7 +113,7 @@ onMounted(readorder)
       <!-- Tổng kết -->
       <div class="text-end">
         <h5>Tổng cộng:</h5>
-        <h3 class="text-danger fw-bold">1.250.000 ₫</h3>
+        <h3 class="text-danger fw-bold">{{ order.total.toLocaleString('vi-VN') }} ₫</h3>
       </div>
 
       <!-- Nút lưu -->

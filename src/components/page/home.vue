@@ -72,7 +72,8 @@ const addtocart = async (product) => {
       icon: 'success',
       title: 'Product added to cart',
       text: 'Your product has been added to your cart successfully!',
-      showConfirmButton: false,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#000',
       timer: 1500
     })
   } catch (err) {
@@ -145,7 +146,7 @@ onMounted(() => {
               <img :src="item.image[0]" alt="product" class="product-img" />
               <span v-if="item.discount < item.price"
                 class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
-                Discount
+                -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
               </span>
             </div>
           </router-link>
@@ -159,9 +160,6 @@ onMounted(() => {
               </p>
               <p class="fw-bold mb-1 text-danger">
                 {{ Number(item.discount).toLocaleString('vi-VN') }} ₫
-              </p>
-              <p class="text-success small mb-2">
-                -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
               </p>
             </template>
 
