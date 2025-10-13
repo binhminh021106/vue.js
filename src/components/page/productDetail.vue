@@ -140,7 +140,7 @@ onMounted(() => {
                         <button @click="addtocart(product)" class="btn btn-dark px-4 py-2">
                             <i class="fa fa-shopping-cart me-2"></i>Add to cart
                         </button>
-                        <button class="btn btn-outline-dark px-4 py-2">
+                        <button class="btn btn-outline-danger px-4 py-2">
                             <i class="fa fa-heart me-2"></i>Favorite
                         </button>
                     </div>

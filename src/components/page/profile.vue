@@ -96,10 +96,13 @@ const saveChanges = async () => {
           </div>
         </div>
 
-        <!-- View Orders Button -->
-        <div class="text-center ms-auto">
-          <router-link to="/vieworder" class="btn btn-dark fw-semibold px-4 py-2">
+        <div class="text-center ms-auto d-flex flex-column align-items-center gap-3">
+          <router-link to="/vieworder" class="btn btn-dark fw-semibold px-4 py-2 w-100">
             <i class="fa fa-box me-2"></i>View Orders
+          </router-link>
+
+          <router-link to="/wishlist" class="btn btn-outline-danger px-4 py-2 w-100">
+            <i class="fa fa-heart me-2"></i>My Wishlist
           </router-link>
         </div>
       </div>

@@ -455,5 +455,34 @@
         }
       ]
     }
+  ],
+  "wishlist": [
+    {
+      "id": 1,
+      "userId": 1,
+      "productId": 1,
+      "name": "Nike Air Max 270",
+      "price": 180,
+      "image": "https://images.unsplash.com/photo-1618354691373-d851c6c4e5c1",
+      "addedAt": "2025-10-13T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "productId": 3,
+      "name": "Converse Chuck 70",
+      "price": 95,
+      "image": "https://images.unsplash.com/photo-1606813902912-0c9e02e38d8a",
+      "addedAt": "2025-10-13T10:05:00Z"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "productId": 2,
+      "name": "Adidas Ultraboost 23",
+      "price": 220,
+      "image": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a",
+      "addedAt": "2025-10-13T11:20:00Z"
+    }
   ]
 }
