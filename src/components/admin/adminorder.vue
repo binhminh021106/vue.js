@@ -80,10 +80,10 @@
                                 </span>
                             </td>
                             <td class="text-center">
-                                <router-link class="btn btn-outline-dark btn-sm me-2"
-                                    :to="`/admin/AdminOrderView/${order.id}`">Xem</router-link>
+                                <router-link class="btn btn-outline-info btn-sm me-2"
+                                    :to="`/admin/AdminOrderView/${order.id}`"><i class="fa fa-eye"></i></router-link>
                                 <button class="btn btn-outline-danger btn-sm">
-                                    <i class="fa fa-trash me-1"></i> Xóa
+                                    <i class="fa fa-trash me-1"></i>
                                 </button>
                             </td>
                         </tr>

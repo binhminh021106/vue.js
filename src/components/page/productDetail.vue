@@ -1,13 +1,16 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const product = ref(null)
 const route = useRoute()
+const router = useRouter()
 const categories = ref([])
 const userQuantity = ref(1)
+const relatedProducts = ref([])
 
 const readProductDetail = async () => {
     try {
@@ -24,6 +27,16 @@ const readCategories = async () => {
         categories.value = res.data
     } catch (err) {
         console.error('Err: ', err)
+    }
+}
+
+const readRelatedProducts = async () => {
+    try {
+        if (!product.value) return
+        const res = await axios.get(`http://localhost:3000/products?categoryId=${product.value.categoryId}&_limit=4`)
+        relatedProducts.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
     }
 }
 
@@ -81,15 +94,17 @@ const increase = () => {
     if (userQuantity.value < 100) userQuantity.value++
 }
 
-onMounted(() => {
-    readProductDetail()
-    readCategories()
+onMounted(async () => {
+    await readProductDetail()
+    await readCategories()
+    await readRelatedProducts()
 })
 </script>
 
 <template>
     <div v-if="product" class="container my-5">
         <div class="row g-4">
+            <!-- Hình ảnh & thông tin chi tiết -->
             <div class="col-md-6">
                 <div class="border rounded p-3 bg-white shadow-sm">
                     <img :src="product.image[0]" class="img-fluid w-100 rounded mb-3 main-img" alt="product" />
@@ -156,10 +171,31 @@ onMounted(() => {
                 </div>
             </div>
         </div>
+
+        <div class="related-products mt-5 pt-4 border-top">
+            <h4 class="fw-bold mb-4 text-center">Related Products</h4>
+
+            <div v-if="relatedProducts.length > 0" class="row g-4 justify-content-center">
+                <div v-for="items in relatedProducts" :key="items.id" class="col-md-3 col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden hover-card">
+                        <img :src="items.image[0]" class="card-img-top" :alt="items.name"
+                            style="height: 220px; object-fit: cover;" />
+                        <div class="card-body text-center">
+                            <h6 class="fw-semibold mb-1">{{ items.name }}</h6>
+                            <p class="text-danger fw-bold mb-2"> {{ Number(items.discount).toLocaleString('vi-VN') }} ₫
+                            </p>
+                            <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
+                                <i class="fa fa-shopping-cart me-2"></i>View Details
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="text-center text-muted mt-5">No related products</div>
+        </div>
     </div>
 
     <p v-else class="text-center text-muted mt-5">Loading Product...</p>
-
 </template>
 
 <style scoped>
@@ -187,14 +223,29 @@ button.btn-outline-dark:hover {
     transition: 0.3s;
 }
 
+.related-products {
+    background-color: #fafafa;
+    padding-bottom: 40px;
+    border-radius: 10px;
+}
+
+.hover-card {
+    transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 768px) {
     .main-img {
         height: 300px;
     }
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
