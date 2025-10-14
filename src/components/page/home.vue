@@ -52,6 +52,9 @@ const addtocart = async (product) => {
     const { data: cart } = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
     const existingItem = cart.find(item => item.productId === product.id)
 
+    const catObj = category.value.find(c => String(c.id) === String(product.categoryId))
+    const categoryName = catObj ? (catObj.nameCategory || catObj.name) : "Unknown"
+
     if (existingItem) {
       await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, {
         quantity: existingItem.quantity + 1
@@ -61,6 +64,7 @@ const addtocart = async (product) => {
         userId: user.id,
         productId: product.id,
         name: product.name,
+        category: categoryName,
         price: product.price,
         discount: product.discount,
         image: product.image[0],

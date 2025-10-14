@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 const myWishlist = ref([])
 const router = useRouter()
+const category = ref([])
 
 const readWishlist = async () => {
     try {
@@ -18,6 +19,15 @@ const readWishlist = async () => {
 
         const res = await axios.get(`http://localhost:3000/wishlist?userId=${user.id}`)
         myWishlist.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
+const readCategory = async () => {
+    try {
+        const res = await axios.get('http://localhost:3000/categories')
+        category.value = res.data
     } catch (err) {
         console.error("Err: ", err)
     }
@@ -53,7 +63,7 @@ const removeWishlist = async (id) => {
     })
 }
 
-const addtocart = async (product) => {
+const addtocart = async (wishlistItem) => {
     const user = JSON.parse(localStorage.getItem("loggedInUser"))
 
     if (!user) {
@@ -68,8 +78,31 @@ const addtocart = async (product) => {
     }
 
     try {
+        const prodId = wishlistItem.productId ?? wishlistItem.id
+        
+        let fullProduct = null
+        try {
+            const pRes = await axios.get(`http://localhost:3000/products/${prodId}`)
+            fullProduct = pRes.data
+        } catch (err) {
+            fullProduct = null
+        }
+
         const { data: cart } = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
-        const existingItem = cart.find(item => item.productId === product.id)
+        const existingItem = cart.find(item => String(item.productId) === String(prodId))
+
+        let categoryName = "Unknown"
+        if (fullProduct && (fullProduct.categoryId || fullProduct.categoryId === 0)) {
+            const catObj = category.value.find(c => String(c.id) === String(fullProduct.categoryId))
+            categoryName = catObj ? (catObj.nameCategory || catObj.name) : categoryName
+        } else if (wishlistItem.category) {
+            categoryName = wishlistItem.category
+        }
+
+        const imageToSave = fullProduct?.image?.[0] ?? (Array.isArray(wishlistItem.image) ? wishlistItem.image[0] : wishlistItem.image ?? "")
+
+        const priceToSave = fullProduct?.price ?? wishlistItem.price ?? 0
+        const discountToSave = fullProduct?.discount ?? wishlistItem.discount ?? priceToSave
 
         if (existingItem) {
             await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, {
@@ -78,11 +111,12 @@ const addtocart = async (product) => {
         } else {
             await axios.post("http://localhost:3000/cart", {
                 userId: user.id,
-                productId: product.id,
-                name: product.name,
-                price: product.price,
-                discount: product.discount,
-                image: product.image,
+                productId: prodId,
+                name: fullProduct?.name ?? wishlistItem.name ?? "Unknown product",
+                category: categoryName,
+                price: priceToSave,
+                discount: discountToSave,
+                image: imageToSave,
                 quantity: 1
             })
         }
@@ -100,7 +134,10 @@ const addtocart = async (product) => {
     }
 }
 
-onMounted(readWishlist)
+onMounted(async () => {
+    await readWishlist()
+    await readCategory()
+})
 </script>
 
 <template>
