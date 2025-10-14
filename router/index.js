@@ -18,6 +18,7 @@ import checkoutsuccess from "../src/components/page/checkoutsuccess.vue";
 import vieworder from "../src/components/page/vieworder.vue";
 import orderdetail from "../src/components/page/orderdetail.vue";
 import Wishlist from "../src/components/page/Wishlist.vue";
+import coupon from "../src/components/page/coupon.vue";
 
 // admin pages
 import categories from "../src/components/admin/categories.vue";
@@ -47,6 +48,7 @@ const routes = [
       { path: "vieworder", component: vieworder },
       { path: "orderdetail/:id", component: orderdetail },
       { path: "Wishlist", component: Wishlist },
+      { path: "coupon", component: coupon },
     ],
   },
   {

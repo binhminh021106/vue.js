@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
+import coupon from './coupon.vue'
 
 const category = ref([])
 const products = ref([])
@@ -129,6 +130,10 @@ onMounted(() => {
         </div>
       </div>
     </section>
+
+    <!-- Coupon -->
+     <h2 class="text-center fw-bold mb-4">HOT COUPONS</h2>
+     <coupon/>
 
     <!-- PRODUCTS -->
     <section class="container my-5 position-relative">
