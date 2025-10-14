@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router';
 import axios from 'axios';
@@ -33,8 +33,61 @@ const readCategories = async () => {
 const readRelatedProducts = async () => {
     try {
         if (!product.value) return
-        const res = await axios.get(`http://localhost:3000/products?categoryId=${product.value.categoryId}&_limit=4`)
+        const res = await axios.get(`http://localhost:3000/products?categoryId=${product.value.categoryId}&id_ne=${product.value.id}&_limit=4`)
         relatedProducts.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
+const addtoWishlist = async () => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"))
+
+    if (!user) {
+        Swal.fire({
+            icon: "warning",
+            title: "Please log in",
+            text: "You must be logged in to add products to your cart.",
+            confirmButtonColor: "#000"
+        })
+        router.push("/login")
+        return
+    }
+
+    try {
+        const { data: existingItems } = await axios.get(`http://localhost:3000/wishlist?userId=${user.id}&productId=${product.value.id}`)
+
+        if (existingItems.length > 0) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Already in Wishlist',
+                text: 'This product is already in your wishlist!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            return
+        }
+
+        const newWishlistItem = {
+            userId: user.id,
+            productId: product.value.id,
+            name: product.value.name,
+            price: product.value.price,
+            discount: product.value.discount,
+            image: product.value.image[0],
+            addedAt: new Date().toISOString()
+        }
+
+        await axios.post("http://localhost:3000/wishlist", newWishlistItem)
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Added to Wishlist!',
+            text: `${product.value.name} has been added to your wishlist.`,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#000',
+            timer: 1500
+        })
     } catch (err) {
         console.error("Err: ", err)
     }
@@ -78,13 +131,15 @@ const addtocart = async (product) => {
             icon: 'success',
             title: 'Product added to cart',
             text: 'Your product has been added to your cart successfully!',
-            showConfirmButton: false,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#000',
             timer: 1500
         })
     } catch (err) {
         console.error("Err: ", err)
     }
 }
+
 
 const decrease = () => {
     if (userQuantity.value > 1) userQuantity.value--
@@ -94,10 +149,24 @@ const increase = () => {
     if (userQuantity.value < 100) userQuantity.value++
 }
 
-onMounted(async () => {
+const loadProductData = async () => {
+    product.value = null
+    userQuantity.value = 1
+
     await readProductDetail()
     await readCategories()
     await readRelatedProducts()
+}
+
+watch(() => route.params.id, (newId, oldId) => {
+    if (newId && newId !== oldId) {
+        loadProductData()
+        window.scrollTo(0, 0)
+    }
+})
+
+onMounted(() => {
+    loadProductData()
 })
 </script>
 
@@ -155,7 +224,7 @@ onMounted(async () => {
                         <button @click="addtocart(product)" class="btn btn-dark px-4 py-2">
                             <i class="fa fa-shopping-cart me-2"></i>Add to cart
                         </button>
-                        <button class="btn btn-outline-danger px-4 py-2">
+                        <button @click="addtoWishlist" class="btn btn-outline-danger px-4 py-2">
                             <i class="fa fa-heart me-2"></i>Favorite
                         </button>
                     </div>

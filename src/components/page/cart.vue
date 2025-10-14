@@ -2,9 +2,11 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 
 const cart = ref([])
+const router = useRouter()
 
 const readCart = async () => {
     const user = JSON.parse(localStorage.getItem("loggedInUser"))
@@ -48,7 +50,7 @@ const deleteCart = async (id) => {
         text: "This action cannot be undone.!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33',
+        confirmButtonColor: '#000',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'OK!',
         cancelButtonText: 'Cancel'
@@ -73,7 +75,7 @@ const deleteAllCart = async () => {
         text: 'All products will be deleted.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33',
+        confirmButtonColor: '#000',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Delete All',
         cancelButtonText: 'Cancel'
@@ -136,7 +138,7 @@ onMounted(readCart)
                                             <img :src="items.image" class="rounded me-3 border" width="70" />
                                             <div>
                                                 <h6 class="mb-0">{{ items.name }}</h6>
-                                                <small class="text-muted">Danh mục: Thời trang</small>
+                                                <small class="text-muted">Danh mục: {{ items.category }}</small>
                                             </div>
                                         </div>
                                     </td>
@@ -154,8 +156,10 @@ onMounted(readCart)
                                             <button @click="increase(items)" class="btn btn-outline-dark">+</button>
                                         </div>
                                     </td>
-                                    <td class="fw-semibold">{{ (items.discount * items.quantity).toLocaleString('vi-VN')
-                                        }} ₫</td>
+                                    <td class="fw-semibold">
+                                        {{ ((items.discount || items.price) * items.quantity).toLocaleString('vi-VN') }}
+                                        ₫
+                                    </td>
                                     <td>
                                         <button @click="deleteCart(items.id)" class="btn btn-sm btn-danger">
                                             <i class="fa fa-trash"></i>
