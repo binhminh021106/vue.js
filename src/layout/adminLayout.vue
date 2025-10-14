@@ -46,6 +46,11 @@
               <i class="fa-solid fa-receipt me-2"></i>Đơn hàng
             </router-link>
           </li>
+          <li>
+            <router-link to="/admin/adminCoupon" class="nav-link" active-class="active-link">
+              <i class="fa-solid fa-receipt me-2"></i>Mã giảm giá
+            </router-link>
+          </li>
         </ul>
 
         <div class="mt-auto text-center pt-4 border-top">

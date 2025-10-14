@@ -30,16 +30,17 @@ onMounted(readCoupon)
 <template>
     <div class="coupon-section-wrapper">
         <div class="container">
-            <div class="coupons-grid">
-                <div v-for="(coupon, index) in coupons" :key="index" class="coupon-card">
+            <div v-if="coupons.length" class="coupons-grid">
+                <div v-for="coupon in coupons" :key="coupon.id" class="coupon-card">
                     <div class="coupon-icon">
                         <i :class="coupon.icon"></i>
                     </div>
                     <div class="coupon-info">
-                        <div class="discount">{{ coupon.discount }}</div>
-                        <div class="condition">{{ coupon.condition }}</div>
+                        <div class="discount">{{ coupon.title }}</div>
+                        <div class="condition">Minimum order: {{ Number(coupon.condition).toLocaleString('vi-VN') }} ₫
+                        </div>
                         <div class="expiry">
-                            <i class="fa-regular fa-clock"></i> {{ coupon.expiry }}
+                            <i class="fa-regular fa-clock"></i>Expires: {{ coupon.expiry }}
                         </div>
                     </div>
                     <div class="coupon-action">
@@ -49,6 +50,9 @@ onMounted(readCoupon)
                         </button>
                     </div>
                 </div>
+            </div>
+            <div v-else class="text-center text-muted py-5">
+                <i class="fa-regular fa-face-frown"></i> There are no coupon codes.
             </div>
         </div>
     </div>
