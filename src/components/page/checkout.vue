@@ -86,7 +86,7 @@ const applyDiscount = () => {
   }
 
   if (Subtotal.value < found.condition) {
-    discountMessage.value = `Minimum order value: ${Number(found.condition).toLocaleString('en-US')} ₫`
+    discountMessage.value = `Minimum order value: ${Number(found.condition).toLocaleString('vi-VN')} ₫`
     discountAmount.value = 0
     return
   }
@@ -246,18 +246,18 @@ onMounted(() => {
 
           <div class="d-flex justify-content-between mb-2">
             <span>Subtotal</span>
-            <span>{{ Subtotal.toLocaleString('en-US') }} ₫</span>
+            <span>{{ Subtotal.toLocaleString('vi-VN') }} ₫</span>
           </div>
 
           <div class="d-flex justify-content-between mb-2">
             <span>Shipping Fee</span>
             <span :class="{ 'text-success': shippingFee === 0 }">{{ shippingFee === 0 ? 'Free' :
-              shippingFee.toLocaleString('en-US') + ' ₫' }}</span>
+              shippingFee.toLocaleString('vi-VN') + ' ₫' }}</span>
           </div>
 
           <div class="d-flex justify-content-between mb-2">
             <span>Discount</span>
-            <span>-{{ discountAmount.toLocaleString('en-US') }} ₫</span>
+            <span>-{{ discountAmount.toLocaleString('vi-VN') }} ₫</span>
           </div>
 
           <hr>
@@ -272,7 +272,7 @@ onMounted(() => {
 
           <div class="d-flex justify-content-between fw-bold mb-3">
             <span>Total</span>
-            <span class="text-danger fs-5">{{ fullTotal.toLocaleString('en-US') }} ₫</span>
+            <span class="text-danger fs-5">{{ fullTotal.toLocaleString('vi-VN') }} ₫</span>
           </div>
 
           <!-- Payment Methods -->
