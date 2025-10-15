@@ -1,37 +1,13 @@
 <script setup>
-import { ref, onMounted, provide } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { useStore } from 'vuex';
 import Swal from 'sweetalert2';
 
-const myWishlist = ref([])
-const router = useRouter()
-const category = ref([])
+const router = useRouter();
+const store = useStore();
 
-const readWishlist = async () => {
-    try {
-        const user = JSON.parse(localStorage.getItem("loggedInUser"))
-        if (!user) {
-            router.push("/NotFound")
-            console.log("No user login")
-            return
-        }
-
-        const res = await axios.get(`http://localhost:3000/wishlist?userId=${user.id}`)
-        myWishlist.value = res.data
-    } catch (err) {
-        console.error("Err: ", err)
-    }
-}
-
-const readCategory = async () => {
-    try {
-        const res = await axios.get('http://localhost:3000/categories')
-        category.value = res.data
-    } catch (err) {
-        console.error("Err: ", err)
-    }
-}
+const category = ref([]);
 
 const removeWishlist = async (id) => {
     Swal.fire({
@@ -46,106 +22,37 @@ const removeWishlist = async (id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:3000/wishlist/${id}`)
-                myWishlist.value = myWishlist.value.filter(u => u.id !== id)
+                await store.dispatch('removeWishlist', id);
                 Swal.fire({
                     icon: 'success',
                     title: 'Removed!',
                     text: 'The product has been removed from your wishlist.',
                     timer: 1300,
-                    showConfirmButton: "OK",
-                    confirmButtonColor: '#000'
-                })
+                    showConfirmButton: false
+                });
             } catch (err) {
-                console.error("Err: ", err)
+                console.error(err);
+                Swal.fire('Error', 'Could not remove product.', 'error');
             }
         }
-    })
-}
-
-const addtocart = async (wishlistItem) => {
-    const user = JSON.parse(localStorage.getItem("loggedInUser"))
-
-    if (!user) {
-        Swal.fire({
-            icon: "warning",
-            title: "Please log in",
-            text: "You must be logged in to add products to your cart.",
-            confirmButtonColor: "#000"
-        })
-        router.push("/login")
-        return
-    }
-
-    try {
-        const prodId = wishlistItem.productId ?? wishlistItem.id
-
-        let fullProduct = null
-        try {
-            const pRes = await axios.get(`http://localhost:3000/products/${prodId}`)
-            fullProduct = pRes.data
-        } catch (err) {
-            fullProduct = null
-        }
-
-        const { data: cart } = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
-        const existingItem = cart.find(item => String(item.productId) === String(prodId))
-
-        let categoryName = "Unknown"
-        if (fullProduct && (fullProduct.categoryId || fullProduct.categoryId === 0)) {
-            const catObj = category.value.find(c => String(c.id) === String(fullProduct.categoryId))
-            categoryName = catObj ? (catObj.nameCategory || catObj.name) : categoryName
-        } else if (wishlistItem.category) {
-            categoryName = wishlistItem.category
-        }
-
-        const imageToSave = fullProduct?.image?.[0] ?? (Array.isArray(wishlistItem.image) ? wishlistItem.image[0] : wishlistItem.image ?? "")
-
-        const priceToSave = fullProduct?.price ?? wishlistItem.price ?? 0
-        const discountToSave = fullProduct?.discount ?? wishlistItem.discount ?? priceToSave
-
-        if (existingItem) {
-            await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, {
-                quantity: existingItem.quantity + 1
-            })
-        } else {
-            await axios.post("http://localhost:3000/cart", {
-                userId: user.id,
-                productId: prodId,
-                name: fullProduct?.name ?? wishlistItem.name ?? "Unknown product",
-                category: categoryName,
-                price: priceToSave,
-                discount: discountToSave,
-                image: imageToSave,
-                quantity: 1
-            })
-        }
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Product added to cart',
-            text: 'Your product has been added to your cart successfully!',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#000',
-            timer: 1500
-        })
-    } catch (err) {
-        console.error("Err: ", err)
-    }
-}
+    });
+};
 
 onMounted(async () => {
-    await readWishlist()
-    await readCategory()
-})
+    try {
+        await store.dispatch('fetchWishlist');
+    } catch {
+        router.push("/NotFound");
+    }
+});
 </script>
 
 <template>
     <div class="container py-5">
         <h2 class="fw-bold mb-5 text-center text-uppercase tracking-wide">💖 My Wishlist</h2>
 
-        <div v-if="myWishlist.length > 0" class="row g-4 justify-content-center">
-            <div class="col-lg-3 col-md-4 col-sm-6" v-for="items in myWishlist" :key="items.id">
+        <div v-if="store.getters.getWishlist.length > 0" class="row g-4 justify-content-center">
+            <div class="col-lg-3 col-md-4 col-sm-6" v-for="items in store.getters.getWishlist" :key="items.id">
                 <div class="card wishlist-card border-0 rounded-4 shadow-sm overflow-hidden">
                     <router-link :to="`/productDetail/${items.productId}`">
                         <div class="wishlist-img-wrapper position-relative">
@@ -170,11 +77,11 @@ onMounted(async () => {
                         </template>
 
                         <div class="mt-auto d-flex gap-2">
-                            <button @click="addtocart(items)"
+                            <router-link :to="`/productdetail/${items.productId}`"
                                 class="btn btn-dark flex-grow-1 d-flex align-items-center justify-content-center gap-2">
                                 <i class="fa fa-shopping-cart"></i>
-                                <span>Add to Cart</span>
-                            </button>
+                                <span>View Detail</span>
+                            </router-link>
                             <button @click="removeWishlist(items.id)"
                                 class="btn btn-light border shadow-sm rounded-circle p-2">
                                 <i class="fa fa-trash text-danger"></i>

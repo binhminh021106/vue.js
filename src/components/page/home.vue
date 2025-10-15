@@ -1,13 +1,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import coupon from './coupon.vue'
+import axios from 'axios'
+
+const store = useStore()
+const router = useRouter()
 
 const category = ref([])
 const products = ref([])
-const router = useRouter()
 
 const scrollContainer = ref(null)
 const scrollLeft = () => scrollContainer.value.scrollBy({ left: -350, behavior: 'smooth' })
@@ -22,7 +25,7 @@ const readCategory = async () => {
     const res = await axios.get('http://localhost:3000/categories')
     category.value = res.data
   } catch (err) {
-    console.error("Error: ", err)
+    console.error("Error fetching categories:", err)
   }
 }
 
@@ -31,58 +34,33 @@ const readProduct = async () => {
     const res = await axios.get('http://localhost:3000/products')
     products.value = res.data
   } catch (err) {
-    console.error("Error: ", err)
+    console.error("Error fetching products:", err)
   }
 }
 
 const addtocart = async (product) => {
-  const user = JSON.parse(localStorage.getItem("loggedInUser"))
-
-  if (!user) {
-    Swal.fire({
-      icon: "warning",
-      title: "Please log in",
-      text: "You must be logged in to add products to your cart.",
-      confirmButtonColor: "#000"
-    })
-    router.push("/login")
-    return
-  }
-
   try {
-    const { data: cart } = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
-    const existingItem = cart.find(item => item.productId === product.id)
-
-    const catObj = category.value.find(c => String(c.id) === String(product.categoryId))
-    const categoryName = catObj ? (catObj.nameCategory || catObj.name) : "Unknown"
-
-    if (existingItem) {
-      await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, {
-        quantity: existingItem.quantity + 1
-      })
-    } else {
-      await axios.post("http://localhost:3000/cart", {
-        userId: user.id,
-        productId: product.id,
-        name: product.name,
-        category: categoryName,
-        price: product.price,
-        discount: product.discount,
-        image: product.image[0],
-        quantity: 1
-      })
-    }
-
+    await store.dispatch('addToCart', { product, quantity: 1 })
     Swal.fire({
       icon: 'success',
       title: 'Product added to cart',
       text: 'Your product has been added to your cart successfully!',
-      confirmButtonText: 'OK',
       confirmButtonColor: '#000',
       timer: 1500
     })
   } catch (err) {
-    console.error("Err: ", err)
+    if (err.message === 'User not logged in') {
+      Swal.fire({
+        icon: "warning",
+        title: "Please log in",
+        text: "You must be logged in to add products to your cart.",
+        confirmButtonColor: "#000"
+      })
+      router.push("/login")
+    } else {
+      console.error("Error adding to cart:", err)
+      Swal.fire('Error', 'Could not add product to cart.', 'error')
+    }
   }
 }
 
@@ -91,6 +69,7 @@ onMounted(() => {
   readProduct()
 })
 </script>
+
 
 
 <template>

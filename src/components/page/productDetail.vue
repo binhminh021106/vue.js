@@ -53,8 +53,10 @@ const handleAddToWishlist = async () => {
         Swal.fire({
             icon: 'success',
             title: 'Added to Wishlist!',
+            text: 'Added to favorites list',
             timer: 1500,
-            showConfirmButton: false,
+            showConfirmButton: 'OK',
+            confirmButtonColor: '#000'
         });
     } catch (error) {
         if (error.message === "Product already in wishlist") {

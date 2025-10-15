@@ -1,49 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
-import axios from 'axios';
+import { computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-const router = useRouter()
-const user = ref(null)
-const cartCount = ref(0)
+const router = useRouter();
+const store = useStore();
 
-const readCart = async () => {
-  const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
-
-  if (!storedUser) {
-    cartCount.value = 0;
-    return;
-  }
-
-  try {
-    const res = await axios.get(`http://localhost:3000/cart?userId=${storedUser.id}`);
-
-    cartCount.value = res.data.length;
-  } catch (err) {
-    console.error('Error reading cart:', err);
-  }
-};
-
-onMounted(async () => {
-  await readCart();
-
-  const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
-  if (storedUser) {
-    try {
-      const res = await axios.get(`http://localhost:3000/user/${storedUser.id}`);
-      user.value = res.data;
-    } catch (err) {
-      console.error('API error:', err);
-    }
-  }
+const user = computed(() => {
+  const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  return storedUser || null;
 });
 
-const handleLogout = () => {
-  localStorage.removeItem('loggedInUser')
-  user.value = null
-  router.push('/login')
-}
+const cartCount = computed(() => store.getters.getCartCount);
 
+const handleLogout = () => {
+  localStorage.removeItem("loggedInUser");
+  router.push("/login");
+};
+
+onMounted(() => {
+  store.dispatch("fetchCartCount"); 
+});
 </script>
 
 <template>
