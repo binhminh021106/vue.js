@@ -27,7 +27,7 @@ const confirmDelete = async () => {
     try {
         await axios.delete(`http://localhost:3000/coupon/${selectedId.value}`)
         coupon.value = coupon.value.filter(c => c.id !== selectedId.value)
-        selectedId.value = null 
+        selectedId.value = null
         selectedCode.value = ""
         Swal.fire({
             icon: 'success',
@@ -164,7 +164,9 @@ onMounted(() => {
                     <tr v-if="coupon.length" v-for="items, index in coupon" :key="items.id">
                         <td>{{ index + 1 }}</td>
                         <td class="coupon-icon">
-                            <i :class="items.icon"></i>
+                            <i v-if="items.icon === 'giam%'" class="fa-solid fa-percent"></i>
+                            <i v-else-if="items.icon === 'giamthang'" class="fa-solid fa-tags"></i>
+                            <i v-else-if="items.icon === 'giamdacbiet'" class="fa-solid fa-star"></i>
                         </td>
                         <td>{{ items.code }}</td>
                         <td>{{ items.discount }}</td>
@@ -172,8 +174,8 @@ onMounted(() => {
                         <td>{{ Number(items.condition).toLocaleString('vi-VN') }} ₫</td>
                         <td>{{ items.expiry }}</td>
                         <td>
-                            <button @click="askEdit(items)" class="btn btn-outline-warning btn-sm me-2" data-bs-toggle="modal"
-                                data-bs-target="#editModal">
+                            <button @click="askEdit(items)" class="btn btn-outline-warning btn-sm me-2"
+                                data-bs-toggle="modal" data-bs-target="#editModal">
                                 <i class="fa fa-edit"></i>
                             </button>
                             <button @click="askDelete(items.id, items.code)" class="btn btn-outline-danger btn-sm"
@@ -228,12 +230,12 @@ onMounted(() => {
                                     <input v-model="form.expiry" type="date" class="form-control" />
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Icon</label>
-                                    <select v-model="form.icon" class="form-select">
-                                        <option disabled value="">-- Chọn icon --</option>
-                                        <option value="fa-solid fa-percent">Giảm giá theo %</option>
-                                        <option value="fa-solid fa-tags">Giảm giá thẳng</option>
-                                        <option value="fa-solid fa-star">Giảm giá đặc biệt</option>
+                                    <label class="form-label">Chọn phương thức giảm giá</label>
+                                     <select v-model="form.icon" class="form-select">
+                                        <option disabled value="">-- Chọn phương thức giảm giá --</option>
+                                        <option value="giam%">Giảm giá theo %</option>
+                                        <option value="giamthang">Giảm giá thẳng</option>
+                                        <option value="giamdacbiet">Giảm giá đặc biệt</option>
                                     </select>
                                 </div>
                             </div>
@@ -284,12 +286,12 @@ onMounted(() => {
                                     <input v-model="form.expiry" type="date" class="form-control" />
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Icon</label>
+                                    <label class="form-label">Phương thức giảm giá</label>
                                     <select v-model="form.icon" class="form-select">
-                                        <option disabled value="">-- Chọn Icon --</option>
-                                        <option value="fa-solid fa-percent">Giảm giá theo %</option>
-                                        <option value="fa-solid fa-tags">Giảm giá thẳng</option>
-                                        <option value="fa-solid fa-star">Giảm giá đặc biệt</option>
+                                        <option disabled value="">-- Chọn phương thức giảm giá --</option>
+                                        <option value="giam%">Giảm giá theo %</option>
+                                        <option value="giamthang">Giảm giá thẳng</option>
+                                        <option value="giamdacbiet">Giảm giá đặc biệt</option>
                                     </select>
                                 </div>
                             </div>

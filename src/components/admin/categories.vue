@@ -183,7 +183,7 @@ onMounted(fetchCategory)
                     </tr>
                     <tr v-else>
                         <td colspan="8" class="text-center text-muted py-3">
-                            Chưa có sản phẩm nào
+                            Chưa có danh mục nào
                         </td>
                     </tr>
                 </tbody>

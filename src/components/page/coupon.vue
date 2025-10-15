@@ -33,7 +33,9 @@ onMounted(readCoupon)
             <div v-if="coupons.length" class="coupons-grid">
                 <div v-for="coupon in coupons" :key="coupon.id" class="coupon-card">
                     <div class="coupon-icon">
-                        <i :class="coupon.icon"></i>
+                        <i v-if="coupon.icon === 'giam%'" class="fa-solid fa-percent"></i>
+                        <i v-else-if="coupon.icon === 'giamthang'" class="fa-solid fa-tags"></i>
+                        <i v-else-if="coupon.icon === 'giamdacbiet'" class="fa-solid fa-star"></i>
                     </div>
                     <div class="coupon-info">
                         <div class="discount">{{ coupon.title }}</div>

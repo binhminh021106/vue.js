@@ -6,23 +6,18 @@ import Swal from 'sweetalert2'
 
 const router = useRouter()
 
-const user = ref({
-  id: null,
-  fullname: '',
-  email: '',
-  phone: '',
-  address: '',
-  role: '',
-  password: ''
-})
-
+const cart = ref([])
+const user = ref({})
 const formOrder = ref({
   city: '',
   orderNote: ''
 })
-
 const selectPayment = ref('')
-const cart = ref([])
+
+const coupons = ref([])
+const discountCode = ref('')
+const discountAmount = ref(0)
+const discountMessage = ref('')
 
 const readUser = async () => {
   const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
@@ -43,24 +38,82 @@ const readCart = async () => {
     const res = await axios.get(`http://localhost:3000/cart?userId=${storedUser.id}`)
     cart.value = res.data
   } catch (err) {
-    console.error('Err: ', err)
+    console.error('Error reading cart:', err)
   }
 }
 
-const total = computed(() => {
-  return cart.value.reduce((sum, item) => {
-    const price = item.discount || item.price
-    return sum + price * item.quantity
-  }, 0)
+const readCoupon = async () => {
+  try {
+    const res = await axios.get('http://localhost:3000/coupon')
+    coupons.value = res.data
+  } catch (err) {
+    console.error('Error reading coupons:', err)
+  }
+}
+
+const Subtotal = computed(() => {
+  return cart.value.reduce((acc, item) => acc + (item.discount || item.price) * item.quantity, 0)
 })
+
+const total = computed(() => {
+  return Subtotal.value - discountAmount.value
+})
+
+const shippingFee = computed(() => {
+  return Subtotal.value >= 500000 ? 0 : 30000
+})
+
+const fullTotal = computed(() => {
+  return total.value + shippingFee.value
+})
+
+const applyDiscount = () => {
+  const code = discountCode.value.trim().toUpperCase()
+  const found = coupons.value.find(c => c.code.toUpperCase() === code)
+
+  if (!found) {
+    discountMessage.value = 'Invalid discount code!'
+    discountAmount.value = 0
+    return
+  }
+
+  const now = new Date()
+  const expiry = new Date(found.expiry)
+  if (now > expiry) {
+    discountMessage.value = 'This coupon has expired!'
+    discountAmount.value = 0
+    return
+  }
+
+  if (Subtotal.value < found.condition) {
+    discountMessage.value = `Minimum order value: ${Number(found.condition).toLocaleString('en-US')} ₫`
+    discountAmount.value = 0
+    return
+  }
+
+  if (found.icon === 'giam%') {
+    const percent = parseFloat(found.discount)
+    discountAmount.value = (Subtotal.value * percent) / 100
+  } else if (found.icon === 'giamthang') {
+    const flat = parseFloat(found.discount.replace(/[^\d]/g, '')) * 1000
+    discountAmount.value = flat
+  } else if (found.icon === 'giamdacbiet'){
+    const flat = parseFloat(found.discount.replace(/[^\d]/g, '')) * 1000
+    discountAmount.value = flat
+  } else {
+    discountAmount.value = 0
+  }
+
+  discountMessage.value = `Coupon ${found.code} applied successfully!`
+}
 
 const placeOrder = async () => {
   const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
   if (!storedUser) {
     Swal.fire({
       icon: 'warning',
-      title: 'Please log in',
-      text: 'You must be logged in to place an order!',
+      title: 'Please log in!',
+      text: 'You need to log in before placing an order!',
       confirmButtonColor: '#000'
     })
     router.push('/login')
@@ -70,8 +123,8 @@ const placeOrder = async () => {
   if (!user.value.fullname || !user.value.email || !user.value.phone || !user.value.address || !formOrder.value.city) {
     Swal.fire({
       icon: 'warning',
-      title: 'Please enter complete information',
-      text: 'You must enter complete information to place your order!',
+      title: 'Missing information!',
+      text: 'Please fill in all required shipping details!',
       confirmButtonColor: '#000'
     })
     return
@@ -80,8 +133,8 @@ const placeOrder = async () => {
   if (!selectPayment.value) {
     Swal.fire({
       icon: 'info',
-      title: 'Select Payment Method',
-      text: 'Please choose a payment method before continuing.',
+      title: 'Select a payment method!',
+      text: 'Please choose your payment method before proceeding.',
       confirmButtonColor: '#000'
     })
     return
@@ -97,9 +150,10 @@ const placeOrder = async () => {
       fulladdress: user.value.address,
       orderNote: formOrder.value.orderNote,
       payment: selectPayment.value,
-      total: total.value,
+      total: fullTotal.value,
+      discount: discountAmount.value,
       status: "Pending",
-      date: new Date().toLocaleString('vi-VN'),
+      date: new Date().toLocaleString('en-US'),
       products: cart.value
     }
 
@@ -125,6 +179,7 @@ const placeOrder = async () => {
 onMounted(() => {
   readUser()
   readCart()
+  readCoupon()
 })
 </script>
 
@@ -181,29 +236,43 @@ onMounted(() => {
               style="object-fit: cover;" />
             <div class="flex-grow-1">
               <p class="mb-1 fw-semibold">{{ value.name }}</p>
-              <small class="text-muted">x{{ value.quantity }} — {{ Number(value.discount).toLocaleString('vi-VN') }}
+              <small class="text-muted">x{{ value.quantity }} — {{ Number(value.discount).toLocaleString('en-US') }}
                 ₫</small>
             </div>
-            <span class="fw-bold text-danger">{{ (value.discount * value.quantity).toLocaleString('vi-VN') }} ₫</span>
+            <span class="fw-bold text-danger">{{ (value.discount * value.quantity).toLocaleString('en-US') }} ₫</span>
           </div>
 
           <hr />
 
           <div class="d-flex justify-content-between mb-2">
             <span>Subtotal</span>
-            <span>{{ total.toLocaleString('vi-VN') }} ₫</span>
+            <span>{{ Subtotal.toLocaleString('en-US') }} ₫</span>
           </div>
 
           <div class="d-flex justify-content-between mb-2">
             <span>Shipping Fee</span>
-            <span class="text-success">Free</span>
+            <span :class="{ 'text-success': shippingFee === 0 }">{{ shippingFee === 0 ? 'Free' :
+              shippingFee.toLocaleString('en-US') + ' ₫' }}</span>
           </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span>Discount</span>
+            <span>-{{ discountAmount.toLocaleString('en-US') }} ₫</span>
+          </div>
+
+          <hr>
+
+          <div class="input-group">
+            <input v-model="discountCode" type="text" class="form-control" placeholder="Enter your discount code" />
+            <button class="btn btn-outline-dark" @click="applyDiscount">Apply</button>
+          </div>
+          <small v-if="discountMessage" class="text-success">{{ discountMessage }}</small>
 
           <hr />
 
           <div class="d-flex justify-content-between fw-bold mb-3">
             <span>Total</span>
-            <span class="text-danger fs-5">{{ total.toLocaleString('vi-VN') }} ₫</span>
+            <span class="text-danger fs-5">{{ fullTotal.toLocaleString('en-US') }} ₫</span>
           </div>
 
           <!-- Payment Methods -->
