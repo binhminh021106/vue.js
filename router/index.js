@@ -86,7 +86,7 @@ router.beforeEach((to, from, next) => {
     if (!loggedUser) {
       next("/login"); 
     } else if (loggedUser.role !== "admin") {
-      next("/404"); 
+      next({ name: "NotFound" });
     } else {
       next(); 
     }
@@ -94,5 +94,6 @@ router.beforeEach((to, from, next) => {
     next(); 
   }
 });
+
 
 export default router;

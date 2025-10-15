@@ -12,7 +12,7 @@
         <!-- Ảnh + mô tả -->
         <div class="row align-items-center mb-5">
             <div class="col-md-6 mb-4 mb-md-0">
-                <img src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=800&q=80"
+                <img src="https://outfitvn.online/wp-content/uploads/2025/10/pickleball1.1.jpg"
                     class="img-fluid rounded shadow-sm" alt="about" />
             </div>
             <div class="col-md-6">

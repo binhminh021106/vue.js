@@ -79,7 +79,7 @@ const addtocart = async (wishlistItem) => {
 
     try {
         const prodId = wishlistItem.productId ?? wishlistItem.id
-        
+
         let fullProduct = null
         try {
             const pRes = await axios.get(`http://localhost:3000/products/${prodId}`)
@@ -147,14 +147,15 @@ onMounted(async () => {
         <div v-if="myWishlist.length > 0" class="row g-4 justify-content-center">
             <div class="col-lg-3 col-md-4 col-sm-6" v-for="items in myWishlist" :key="items.id">
                 <div class="card wishlist-card border-0 rounded-4 shadow-sm overflow-hidden">
-                    <div class="wishlist-img-wrapper position-relative">
-                        <img :src="items.image" :alt="items.name" class="wishlist-img" />
-                        <span v-if="items.discount < items.price"
-                            class="badge discount-badge position-absolute top-0 start-0 m-2 px-2 py-1">
-                            -{{ Math.round(100 - (items.discount / items.price) * 100) }}%
-                        </span>
-                    </div>
-
+                    <router-link :to="`/productDetail/${items.productId}`">
+                        <div class="wishlist-img-wrapper position-relative">
+                            <img :src="items.image" :alt="items.name" class="wishlist-img" />
+                            <span v-if="items.discount < items.price"
+                                class="badge discount-badge position-absolute top-0 start-0 m-2 px-2 py-1">
+                                -{{ Math.round(100 - (items.discount / items.price) * 100) }}%
+                            </span>
+                        </div>
+                    </router-link>
                     <div class="card-body d-flex flex-column p-3">
                         <h5 class="card-title fw-semibold mb-1 text-truncate text-dark">
                             {{ items.name }}

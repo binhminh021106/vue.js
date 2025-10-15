@@ -1,189 +1,103 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router'
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import Swal from 'sweetalert2';
 
-const product = ref(null)
-const route = useRoute()
+const store = useStore()
 const router = useRouter()
-const categories = ref([])
-const userQuantity = ref(1)
-const relatedProducts = ref([])
+const route = useRoute()
 
-const readProductDetail = async () => {
+const product = computed(() => store.getters.getProduct);
+const categories = computed(() => store.getters.getCategories);
+const relatedProducts = computed(() => store.getters.getRelatedProducts || []);
+const isLoading = computed(() => store.getters.isLoading);
+
+const userQuantity = ref(1);
+const isAddingToCart = ref(false);
+const isAddingToWishlist = ref(false);
+
+const handleAddToCart = async () => {
+    if (!product.value) return;
+    isAddingToCart.value = true;
     try {
-        const res = await axios.get(`http://localhost:3000/products/${route.params.id}`)
-        product.value = res.data
-    } catch (err) {
-        console.error('Err: ', err)
-    }
-}
-
-const readCategories = async () => {
-    try {
-        const res = await axios.get(`http://localhost:3000/categories`)
-        categories.value = res.data
-    } catch (err) {
-        console.error('Err: ', err)
-    }
-}
-
-const readRelatedProducts = async () => {
-    try {
-        if (!product.value) return
-        const res = await axios.get(`http://localhost:3000/products?categoryId=${product.value.categoryId}&id_ne=${product.value.id}&_limit=4`)
-        relatedProducts.value = res.data
-    } catch (err) {
-        console.error("Err: ", err)
-    }
-}
-
-const addtoWishlist = async () => {
-    const user = JSON.parse(localStorage.getItem("loggedInUser"))
-
-    if (!user) {
-        Swal.fire({
-            icon: "warning",
-            title: "Please log in",
-            text: "You must be logged in to add products to your cart.",
-            confirmButtonColor: "#000"
-        })
-        router.push("/login")
-        return
-    }
-
-    try {
-        const { data: existingItems } = await axios.get(`http://localhost:3000/wishlist?userId=${user.id}&productId=${product.value.id}`)
-
-        if (existingItems.length > 0) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Already in Wishlist',
-                text: 'This product is already in your wishlist!',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            return
-        }
-
-        const newWishlistItem = {
-            userId: user.id,
-            productId: product.value.id,
-            name: product.value.name,
-            price: product.value.price,
-            discount: product.value.discount,
-            image: product.value.image[0],
-            addedAt: new Date().toISOString()
-        }
-
-        await axios.post("http://localhost:3000/wishlist", newWishlistItem)
-
+        await store.dispatch('addToCart', {
+            product: product.value,
+            quantity: userQuantity.value
+        });
         Swal.fire({
             icon: 'success',
-            title: 'Added to Wishlist!',
-            text: `${product.value.name} has been added to your wishlist.`,
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#000',
-            timer: 1500
-        })
-    } catch (err) {
-        console.error("Err: ", err)
-    }
-}
-
-const addtocart = async (product) => {
-    const user = JSON.parse(localStorage.getItem("loggedInUser"))
-
-    if (!user) {
-        Swal.fire({
-            icon: "warning",
-            title: "Please log in",
-            text: "You must be logged in to add products to your cart.",
-            confirmButtonColor: "#000"
-        })
-        router.push("/login")
-        return
-    }
-
-    try {
-        const { data: cart } = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
-        const existingItem = cart.find(item => item.productId === product.id)
-
-        const catObj = categories.value.find(c => String(c.id) === String(product.categoryId))
-        const categoryName = catObj ? (catObj.nameCategory || catObj.name) : "Unknown"
-
-        if (existingItem) {
-            await axios.patch(`http://localhost:3000/cart/${existingItem.id}`, {
-                quantity: existingItem.quantity + 1
-            })
-        } else {
-            await axios.post("http://localhost:3000/cart", {
-                userId: user.id,
-                productId: product.id,
-                name: product.name,
-                category: categoryName,
-                price: product.price,
-                discount: product.discount,
-                image: product.image[0],
-                quantity: 1
-            })
-        }
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Product added to cart',
+            title: 'Added to Cart!',
             text: 'Your product has been added to your cart successfully!',
             confirmButtonText: 'OK',
             confirmButtonColor: '#000',
-            timer: 1500
-        })
-    } catch (err) {
-        console.error("Err: ", err)
+            timer: 1500,
+        });
+    } catch (error) {
+        if (error.message === "User not logged in") {
+            router.push("/login");
+        } else {
+            Swal.fire('Error', 'Could not add to cart.', 'error');
+            console.error(error);
+        }
+    } finally {
+        isAddingToCart.value = false;
     }
-}
+};
 
+const handleAddToWishlist = async () => {
+    if (!product.value) return;
+    isAddingToWishlist.value = true;
+    try {
+        await store.dispatch('addToWishlist', product.value);
+        Swal.fire({
+            icon: 'success',
+            title: 'Added to Wishlist!',
+            timer: 1500,
+            showConfirmButton: false,
+        });
+    } catch (error) {
+        if (error.message === "Product already in wishlist") {
+            Swal.fire('Info', 'This product is already in your wishlist!', 'info');
+        } else if (error.message === "User not logged in") {
+            router.push('/login');
+        } else {
+            Swal.fire('Error', 'Could not add to wishlist.', 'error');
+            console.error(error);
+        }
+    } finally {
+        isAddingToWishlist.value = false;
+    }
+};
 
 const decrease = () => {
-    if (userQuantity.value > 1) userQuantity.value--
-}
-
+    if (userQuantity.value > 1) userQuantity.value--;
+};
 const increase = () => {
-    if (userQuantity.value < 100) userQuantity.value++
-}
+    if (userQuantity.value < 100) userQuantity.value++;
+};
 
-const loadProductData = async () => {
-    product.value = null
-    userQuantity.value = 1
-
-    await readProductDetail()
-    await readCategories()
-    await readRelatedProducts()
-}
-
-watch(() => route.params.id, (newId, oldId) => {
-    if (newId && newId !== oldId) {
-        loadProductData()
-        window.scrollTo(0, 0)
+watch(() => route.params.id, async (newId) => {
+    if (newId) {
+        isLoading.value = true;
+        await store.dispatch('fetchProductData', newId);
+        isLoading.value = false;
+        window.scrollTo(0, 0);
     }
-})
+}, { immediate: true });
 
-onMounted(() => {
-    loadProductData()
-})
 </script>
 
 <template>
-    <div v-if="product" class="container my-5">
+    <div v-if="product && product.id" class="container my-5">
         <div class="row g-4">
             <!-- Hình ảnh & thông tin chi tiết -->
             <div class="col-md-6">
                 <div class="border rounded p-3 bg-white shadow-sm">
-                    <img :src="product.image[0]" class="img-fluid w-100 rounded mb-3 main-img" alt="product" />
+                    <img :src="product.image?.[0] || ''" class="img-fluid w-100 rounded mb-3 main-img" alt="product" />
                     <div class="d-flex gap-2">
-                        <img v-for="(img, idx) in product.image" :key="idx" :src="img" class="img-thumbnail small-img"
-                            alt="gallery" />
+                        <img v-for="(img, idx) in product.image ?? []" :key="idx" :src="img"
+                            class="img-thumbnail small-img" alt="gallery" />
                     </div>
                 </div>
             </div>
@@ -225,11 +139,18 @@ onMounted(() => {
                     </div>
 
                     <div class="mt-4 d-flex gap-3">
-                        <button @click="addtocart(product)" class="btn btn-dark px-4 py-2">
-                            <i class="fa fa-shopping-cart me-2"></i>Add to cart
+                        <button @click="handleAddToCart" class="btn btn-dark px-4 py-2" :disabled="isAddingToCart">
+                            <span v-if="isAddingToCart" class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>
+                            <i v-else class="fa fa-shopping-cart me-2"></i>
+                            {{ isAddingToCart ? 'Adding...' : 'Add to cart' }}
                         </button>
-                        <button @click="addtoWishlist" class="btn btn-outline-danger px-4 py-2">
-                            <i class="fa fa-heart me-2"></i>Favorite
+                        <button @click="handleAddToWishlist" class="btn btn-outline-danger px-4 py-2"
+                            :disabled="isAddingToWishlist">
+                            <span v-if="isAddingToWishlist" class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>
+                            <i v-else class="fa fa-heart me-2"></i>
+                            {{ isAddingToWishlist ? 'Saving...' : 'Favorite' }}
                         </button>
                     </div>
 
@@ -251,8 +172,8 @@ onMounted(() => {
             <div v-if="relatedProducts.length > 0" class="row g-4 justify-content-center">
                 <div v-for="items in relatedProducts" :key="items.id" class="col-md-3 col-sm-6">
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden hover-card">
-                        <img :src="items.image[0]" class="card-img-top" :alt="items.name"
-                            style="height: 220px; object-fit: cover;" />
+                        <img :src="items.image?.[0] || ''" class="img-fluid w-100 rounded mb-3 main-img"
+                            alt="product" />
                         <div class="card-body text-center">
                             <h6 class="fw-semibold mb-1">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2"> {{ Number(items.discount).toLocaleString('vi-VN') }} ₫
