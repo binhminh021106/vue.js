@@ -5,7 +5,7 @@ import { useStore } from "vuex";
 
 const router = useRouter();
 const store = useStore();
-
+ 
 const user = computed(() => {
   const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
   return storedUser || null;

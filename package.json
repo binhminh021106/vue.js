@@ -11,8 +11,15 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
     "axios": "^1.12.2",
+    "body-parser": "^2.2.0",
     "bootstrap": "^5.3.8",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "date-fns": "^4.1.0",
+    "express": "^5.1.0",
+    "qs": "^6.14.0",
     "sweetalert2": "^11.24.0",
+    "vnpay": "^2.4.4",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1",
     "vuex": "^4.0.2"
@@ -20,5 +27,18 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
     "vite": "^7.1.7"
-  }
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.",
+  "main": "vite.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/binhminh021106/vue.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/binhminh021106/vue.js/issues"
+  },
+  "homepage": "https://github.com/binhminh021106/vue.js#readme"
 }
