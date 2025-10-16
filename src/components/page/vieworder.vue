@@ -1,9 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useStore } from 'vuex'
+import Swal from 'sweetalert2';
 
 const vieworder = ref([])
 const user = ref(null)
+const store = useStore()
 
 const readview = async () => {
     const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
@@ -13,6 +16,24 @@ const readview = async () => {
     try {
         const res = await axios.get(`http://localhost:3000/order?userId=${storedUser.id}`)
         vieworder.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
+const Canceled = async (orderId) => {
+    try {
+        await axios.patch(`http://localhost:3000/order/${orderId}`, { status: 'Canceled' })
+
+        const order = vieworder.value.find(o => o.id === orderId)
+        if (order) order.status = 'Canceled'
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Order cancelled',
+            timer: 1500,
+            showConfirmButton: false
+        })
     } catch (err) {
         console.error("Err: ", err)
     }
@@ -30,6 +51,25 @@ const getStatusClass = (status) => {
             return 'bg-info text-dark'
         default:
             return 'bg-secondary text-white'
+    }
+}
+
+const buyBack = async (products) => {
+    try {
+        for (let item of products) {
+            console.log("Dữ liệu: ", item)
+            await store.dispatch('addToCart', { product: item, quantity: item.quantity })
+        }
+        Swal.fire({
+            icon: 'success',
+            title: 'Products added to cart',
+            text: 'All products from this order are now in your cart!',
+            confirmButtonColor: '#000',
+            timer: 1500
+        })
+    } catch (err) {
+        console.error(err)
+        Swal.fire('Error', 'Could not add products to cart.', 'error')
     }
 }
 
@@ -73,16 +113,29 @@ onMounted(readview)
                         <small class="text-muted">Payment:</small>
                         <p class="mb-0 fw-semibold">{{ value.payment }}</p>
                     </div>
+
                     <div class="text-end">
                         <small class="text-muted">Total:</small>
                         <p class="mb-0 fw-bold text-danger">{{ Number(value.total).toLocaleString('vi-VN') }}₫</p>
                     </div>
                 </div>
 
-                <div class="text-end mt-3">
-                    <router-link :to="`/orderdetail/${value.id}`" class="btn btn-outline-dark btn-sm">View
-                        Details</router-link>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div style="min-width: 100px;">
+                        <button v-if="value.status === 'Delivered' || value.status === 'Canceled'"
+                            class="btn btn-outline-primary btn-sm" @click="buyBack(value.products)">
+                            Buy Back
+                        </button>
+                        <button @click="Canceled(value.id)" v-else-if="value.status === 'Pending'" class="btn btn-outline-danger btn-sm">Cancel
+                            order</button>
+                    </div>
+
+                    <router-link :to="`/orderdetail/${value.id}`" class="btn btn-outline-dark btn-sm">
+                        View Details
+                    </router-link>
                 </div>
+
+
             </div>
         </div>
         <div v-else class="text-center py-5">

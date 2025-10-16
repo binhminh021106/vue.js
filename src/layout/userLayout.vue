@@ -19,7 +19,7 @@ const handleLogout = () => {
 };
 
 onMounted(() => {
-  store.dispatch("fetchCartCount"); 
+  store.dispatch("fetchCartCount");
 });
 </script>
 

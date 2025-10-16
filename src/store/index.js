@@ -18,7 +18,8 @@ export default createStore({
     isLoading: (state) => state.loadingStatus === "loading",
     getWishlist: (state) => state.wishlist,
     getCart: (state) => state.cart,
-    getCartCount: (state) => state.cart.reduce((sum, item) => sum + item.quantity, 0),
+    getCartCount: (state) =>
+      state.cart.reduce((sum, item) => sum + item.quantity, 0),
   },
 
   mutations: {
@@ -65,7 +66,9 @@ export default createStore({
 
     async fetchProductDetailAndRelated({ commit }, productId) {
       try {
-        const res = await axios.get(`http://localhost:3000/products/${productId}`);
+        const res = await axios.get(
+          `http://localhost:3000/products/${productId}`
+        );
         const product = res.data || null;
         commit("SET_PRODUCT", product);
 
@@ -76,7 +79,10 @@ export default createStore({
           commit("SET_RELATED_PRODUCTS", relatedRes.data || []);
         }
       } catch (error) {
-        console.error("Error fetching product detail or related products:", error);
+        console.error(
+          "Error fetching product detail or related products:",
+          error
+        );
         commit("SET_RELATED_PRODUCTS", []);
       }
     },
@@ -95,7 +101,9 @@ export default createStore({
       const user = JSON.parse(localStorage.getItem("loggedInUser"));
       if (!user) return commit("SET_CART", []);
       try {
-        const res = await axios.get(`http://localhost:3000/cart?userId=${user.id}`);
+        const res = await axios.get(
+          `http://localhost:3000/cart?userId=${user.id}`
+        );
         commit("SET_CART", res.data || []);
       } catch (err) {
         console.error(err);
@@ -103,11 +111,30 @@ export default createStore({
       }
     },
 
+    async fetchWishlist({ commit }) {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (!user) {
+        return commit("SET_WISHLIST", []);
+      }
+
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/wishlist?userId=${user.id}`
+        );
+        commit("SET_WISHLIST", res.data || []);
+      } catch (err) {
+        console.error("Lỗi khi fetch wishlist:", err);
+        commit("SET_WISHLIST", []);
+      }
+    },
+
     async addToCart({ state, dispatch }, { product, quantity }) {
       const user = JSON.parse(localStorage.getItem("loggedInUser"));
       if (!user) throw new Error("User not logged in");
 
-      const existingItem = state.cart.find((item) => item.productId === product.id);
+      const existingItem = state.cart.find(
+        (item) => item.productId === product.id
+      );
 
       try {
         if (existingItem) {
@@ -115,8 +142,11 @@ export default createStore({
             quantity: existingItem.quantity + quantity,
           });
         } else {
-          const catObj = state.categories.find((c) => String(c.id) === String(product.categoryId));
-          const categoryName = catObj?.nameCategory || catObj?.name || "Unknown";
+          const catObj = state.categories.find(
+            (c) => String(c.id) === String(product.categoryId)
+          );
+          const categoryName =
+            catObj?.nameCategory || catObj?.name || "Unknown";
 
           await axios.post("http://localhost:3000/cart", {
             userId: user.id,
@@ -129,7 +159,7 @@ export default createStore({
             quantity,
           });
         }
-        await dispatch("fetchCart"); 
+        await dispatch("fetchCart");
       } catch (err) {
         console.error(err);
         throw err;
@@ -143,7 +173,8 @@ export default createStore({
       const { data: existingItems } = await axios.get(
         `http://localhost:3000/wishlist?userId=${user.id}&productId=${product.id}`
       );
-      if (existingItems?.length > 0) throw new Error("Product already in wishlist");
+      if (existingItems?.length > 0)
+        throw new Error("Product already in wishlist");
 
       const newWishlistItem = {
         userId: user.id,

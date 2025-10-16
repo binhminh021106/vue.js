@@ -5,12 +5,32 @@ import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 
 const order = ref(null)
+const status = ref("")
 const route = useRoute()
 
 const readorder = async () => {
   try {
     const res = await axios.get(`http://localhost:3000/order/${route.params.id}`)
     order.value = res.data
+    status.value = res.data.status || "Pending"
+  } catch (err) {
+    console.error("Err: ", err)
+  }
+}
+
+const updateOrder = async () => {
+  try {
+    await axios.put(`http://localhost:3000/order/${route.params.id}`, {
+      ...order.value,
+      status: status.value
+    })
+    Swal.fire({
+      icon: 'success',
+      title: 'Cập nhật thành công!',
+      text: `Trạng thái mới: ${status.value}`,
+      timer: 2000,
+      showConfirmButton: false
+    })
   } catch (err) {
     console.error("Err: ", err)
   }
@@ -21,8 +41,9 @@ onMounted(readorder)
 
 <template>
   <div v-if="order" class="container my-5">
-    <router-link class="btn btn-outline-dark mb-4" to="/admin/adminorder"><i class="fa fa-arrow-left me-2"></i> Quay lại
-      giỏ hàng</router-link>
+    <router-link class="btn btn-outline-dark mb-4" to="/admin/adminorder">
+      <i class="fa fa-arrow-left me-2"></i> Quay lại giỏ hàng
+    </router-link>
 
     <div class="card shadow-sm border-0 rounded-4 p-4">
       <h3 class="fw-bold mb-4 text-center">📄 Chi Tiết Đơn Hàng</h3>
@@ -45,35 +66,44 @@ onMounted(readorder)
           <!-- Trạng thái hiện tại -->
           <div class="mb-3">
             <strong>Trạng thái hiện tại:</strong>
-            <span class="badge bg-warning text-dark px-3 py-2 rounded-3"> Đang chờ</span>
+            <span :class="[
+              'badge px-3 py-2 rounded-3',
+              order.status === 'Pending' ? 'bg-warning text-dark' :
+                order.status === 'Confirmed' ? 'bg-info text-white' :
+                  order.status === 'Delivering' ? 'bg-primary' :
+                    order.status === 'Delivered' ? 'bg-success' :
+                      order.status === 'Canceled' ? 'bg-danger' : 'bg-secondary'
+            ]">
+              {{ order.status }}
+            </span>
           </div>
 
-          <!-- Khu chọn trạng thái -->
+          <!-- Cập nhật trạng thái -->
           <div>
             <h6 class="fw-semibold mb-2">Cập nhật trạng thái:</h6>
             <div class="status-options d-flex flex-wrap gap-2">
               <label class="status-pill">
-                <input type="radio" name="status" value="Đang chờ" checked />
+                <input v-model="status" type="radio" value="Pending" />
                 <span>Đang chờ</span>
               </label>
 
               <label class="status-pill">
-                <input type="radio" name="status" value="Đã xác nhận" />
+                <input v-model="status" type="radio" value="Confirmed" />
                 <span>Đã xác nhận</span>
               </label>
 
               <label class="status-pill">
-                <input type="radio" name="status" value="Đang giao hàng" />
+                <input v-model="status" type="radio" value="Delivering" />
                 <span>Đang giao hàng</span>
               </label>
 
               <label class="status-pill">
-                <input type="radio" name="status" value="Đã giao hàng" />
+                <input v-model="status" type="radio" value="Delivered" />
                 <span>Đã giao hàng</span>
               </label>
 
               <label class="status-pill">
-                <input type="radio" name="status" value="Đã huỷ" />
+                <input v-model="status" type="radio" value="Canceled" />
                 <span>Đã huỷ</span>
               </label>
             </div>
@@ -104,13 +134,15 @@ onMounted(readorder)
               <td>{{ items.name }}</td>
               <td>{{ items.quantity }}</td>
               <td>{{ Number(items.discount).toLocaleString('vi-VN') }}</td>
-              <td class="text-danger fw-semibold">{{ (items.discount * items.quantity).toLocaleString('vi-VN') }} ₫</td>
+              <td class="text-danger fw-semibold">
+                {{ (items.discount * items.quantity).toLocaleString('vi-VN') }} ₫
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Tổng kết -->
+      <!-- Tổng cộng -->
       <div class="text-end">
         <h5>Tổng cộng:</h5>
         <h3 class="text-danger fw-bold">{{ order.total.toLocaleString('vi-VN') }} ₫</h3>
@@ -118,13 +150,14 @@ onMounted(readorder)
 
       <!-- Nút lưu -->
       <div class="text-end mt-4">
-        <button class="btn btn-dark px-4 py-2 fw-semibold">
+        <button @click="updateOrder" class="btn btn-dark px-4 py-2 fw-semibold">
           <i class="fa fa-save me-2"></i> Lưu thay đổi
         </button>
       </div>
     </div>
   </div>
-  <p v-else class="text-center text-muted mt-5">Loading Order...</p>
+
+  <p v-else class="text-center text-muted mt-5">Đang tải đơn hàng...</p>
 </template>
 
 <style scoped>
@@ -163,7 +196,6 @@ onMounted(readorder)
   transform: translateY(-2px);
 }
 
-/* Style phần chọn trạng thái */
 .status-options {
   display: flex;
   flex-wrap: wrap;
@@ -198,36 +230,28 @@ onMounted(readorder)
 .status-pill input:checked+span {
   color: #fff;
   font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
 }
 
-/* Màu riêng từng trạng thái */
-.status-pill input[value="Đang chờ"]:checked+span {
+/* Màu theo trạng thái */
+.status-pill input[value="Pending"]:checked+span {
   background-color: #ffc107;
-  padding: 4px 10px;
-  border-radius: 20px;
 }
 
-.status-pill input[value="Đã xác nhận"]:checked+span {
+.status-pill input[value="Confirmed"]:checked+span {
   background-color: #17a2b8;
-  padding: 4px 10px;
-  border-radius: 20px;
 }
 
-.status-pill input[value="Đang giao hàng"]:checked+span {
+.status-pill input[value="Delivering"]:checked+span {
   background-color: #007bff;
-  padding: 4px 10px;
-  border-radius: 20px;
 }
 
-.status-pill input[value="Đã giao hàng"]:checked+span {
+.status-pill input[value="Delivered"]:checked+span {
   background-color: #28a745;
-  padding: 4px 10px;
-  border-radius: 20px;
 }
 
-.status-pill input[value="Đã huỷ"]:checked+span {
+.status-pill input[value="Canceled"]:checked+span {
   background-color: #dc3545;
-  padding: 4px 10px;
-  border-radius: 20px;
 }
 </style>
