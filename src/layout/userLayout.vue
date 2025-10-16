@@ -5,7 +5,7 @@ import { useStore } from "vuex";
 
 const router = useRouter();
 const store = useStore();
- 
+
 const user = computed(() => {
   const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
   return storedUser || null;
@@ -82,6 +82,12 @@ onMounted(() => {
                 style="font-size: 10px;">
                 {{ cartCount }}
               </span>
+            </div>
+
+            <div class="position-relative">
+              <router-link to="/wishlist">
+                <i style="padding-left: 5px;" class="fa fa-heart me-2 fs-5 text-dark"></i>
+              </router-link>
             </div>
 
           </div>

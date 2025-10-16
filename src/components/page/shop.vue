@@ -4,8 +4,10 @@ import axios from 'axios'
 
 const category = ref([])
 const products = ref([])
+const allProducts = ref([])
 const searchQuery = ref('')
-const sortOption = ref('Sắp xếp mặc định')
+const sortOption = ref('Default sort')
+const selectedCategory = ref(null)
 
 const readCategory = async () => {
   try {
@@ -19,7 +21,8 @@ const readCategory = async () => {
 const readProduct = async () => {
   try {
     const res = await axios.get('http://localhost:3000/products')
-    products.value = res.data
+    allProducts.value = res.data
+    products.value = [...allProducts.value]
     sortProducts()
   } catch (err) {
     console.error('Error product:', err)
@@ -30,27 +33,49 @@ const sortProducts = () => {
   let sorted = [...products.value]
 
   switch (sortOption.value) {
-    case 'Từ A -> Z':
+    case 'A -> Z':
       sorted.sort((a, b) => a.name.localeCompare(b.name, 'vi', { sensitivity: 'base' }))
       break
-
-    case 'Từ Z -> A':
+    case 'Z -> A':
       sorted.sort((a, b) => b.name.localeCompare(a.name, 'vi', { sensitivity: 'base' }))
       break
-
-    case 'Giá tăng dần':
+    case 'Price: Low to High':
       sorted.sort((a, b) => (a.discount || a.price) - (b.discount || b.price))
       break
-
-    case 'Giá giảm dần':
+    case 'Price: High to Low':
       sorted.sort((a, b) => (b.discount || b.price) - (a.discount || a.price))
       break
-
     default:
       sorted.sort((a, b) => a.id - b.id)
   }
 
   products.value = sorted
+}
+
+const filterProducts = () => {
+  let filtered = [...allProducts.value]
+
+  if (searchQuery.value.trim() !== '') {
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  }
+
+  if (selectedCategory.value) {
+    filtered = filtered.filter(p => p.categoryId === selectedCategory.value)
+  }
+
+  products.value = filtered
+  sortProducts()
+}
+
+const searchProduct = () => {
+  filterProducts()
+}
+
+const selectCategory = (id) => {
+  selectedCategory.value = id
+  filterProducts()
 }
 
 onMounted(() => {
@@ -61,8 +86,11 @@ onMounted(() => {
 watch(sortOption, () => {
   sortProducts()
 })
-</script>
 
+watch(searchQuery, () => {
+  filterProducts()
+})
+</script>
 
 <template>
   <div class="container-fluid my-5">
@@ -70,20 +98,31 @@ watch(sortOption, () => {
       <!-- Sidebar -->
       <div class="col-lg-3 mb-4">
         <div class="p-3 border rounded shadow-sm bg-white">
-          <!-- Tìm kiếm -->
-          <h5 class="fw-bold mb-3">Tìm kiếm</h5>
+          <!-- Search -->
+          <h5 class="fw-bold mb-3">Search</h5>
           <form class="input-group mb-3" @submit.prevent>
-            <input v-model="searchQuery" type="text" class="form-control" placeholder="Nhập tên sản phẩm..." />
+            <input v-model="searchQuery" type="text" class="form-control" placeholder="Enter product name..." />
             <button type="button" class="btn btn-dark" @click="searchProduct">
               <i class="fa fa-search"></i>
             </button>
           </form>
 
-          <!-- Danh mục -->
-          <h5 class="fw-bold mt-4 mb-3">Danh mục sản phẩm</h5>
+          <!-- Categories -->
+          <h5 class="fw-bold mt-4 mb-3">Product Categories</h5>
           <ul class="list-unstyled sidebar-menu">
+            <li>
+              <a href="#" 
+                 class="text-decoration-none text-dark d-block py-2"
+                 :class="{'fw-bold text-primary': selectedCategory === null}"
+                 @click.prevent="selectCategory(null)">
+                All Products
+              </a>
+            </li>
             <li v-for="value in category" :key="value.id">
-              <a href="#" class="text-decoration-none text-dark d-block py-2">
+              <a href="#"
+                 class="text-decoration-none text-dark d-block py-2"
+                 :class="{'fw-bold text-primary': selectedCategory === value.id}"
+                 @click.prevent="selectCategory(value.id)">
                 {{ value.nameCategory }}
               </a>
             </li>
@@ -91,16 +130,16 @@ watch(sortOption, () => {
         </div>
       </div>
 
-      <!-- Sản phẩm -->
+      <!-- Products -->
       <div class="col-lg-9">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <p class="mb-0 text-muted">Hiển thị {{ products.length }} sản phẩm</p>
+          <p class="mb-0 text-muted">Showing {{ products.length }} products</p>
           <select v-model="sortOption" class="form-select w-auto">
-            <option selected>Sắp xếp mặc định</option>
-            <option>Từ A -> Z</option>
-            <option>Từ Z -> A</option>
-            <option>Giá tăng dần</option>
-            <option>Giá giảm dần</option>
+            <option selected>Default sort</option>
+            <option>A -> Z</option>
+            <option>Z -> A</option>
+            <option>Price: Low to High</option>
+            <option>Price: High to Low</option>
           </select>
         </div>
 
@@ -111,29 +150,29 @@ watch(sortOption, () => {
                 <div class="position-relative">
                   <img :src="item.image[0]" class="card-img-top" alt="product" />
                   <span v-if="item.discount < item.price"
-                    class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
+                        class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
                     -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
                   </span>
                 </div>
 
                 <div class="card-body text-center">
                   <p class="text-secondary small mb-1">
-                    {{category.find(c => c.id === item.categoryId)?.nameCategory || 'Không có'}}
+                    {{ category.find(c => c.id === item.categoryId)?.nameCategory || 'No category' }}
                   </p>
                   <h6 class="fw-semibold">{{ item.name }}</h6>
 
                   <template v-if="item.discount < item.price">
                     <p class="text-muted text-decoration-line-through small mb-1">
-                      {{ Number(item.price).toLocaleString('vi-VN') }} ₫
+                      {{ Number(item.price).toLocaleString('en-US') }} ₫
                     </p>
                     <p class="fw-bold mb-1 text-danger">
-                      {{ Number(item.discount).toLocaleString('vi-VN') }} ₫
+                      {{ Number(item.discount).toLocaleString('en-US') }} ₫
                     </p>
                   </template>
 
                   <template v-else>
                     <p class="fw-bold text-danger mb-0">
-                      {{ Number(item.price).toLocaleString('vi-VN') }} ₫
+                      {{ Number(item.price).toLocaleString('en-US') }} ₫
                     </p>
                   </template>
                 </div>
@@ -143,7 +182,7 @@ watch(sortOption, () => {
         </div>
 
         <p v-if="products.length === 0" class="text-center text-muted mt-4">
-          Không tìm thấy sản phẩm nào
+          No products found
         </p>
       </div>
     </div>
