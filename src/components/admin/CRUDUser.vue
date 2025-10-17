@@ -160,7 +160,7 @@ onMounted(readUser)
                 <button @click="editUser(items)" class="btn btn-outline-warning btn-sm me-2">
                   <i class="fa fa-edit"></i>
                 </button>
-                <button @click="removeUser(items.id)" class="btn btn-outline-danger btn-sm">
+                <button @click="removeUser(items.id)" class="btn btn-outline-danger btn-sm" :disabled="items.role === 'admin'">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>

@@ -20,6 +20,15 @@
       "address": "bmt",
       "role": "admin",
       "password": "123"
+    },
+    {
+      "id": "d2af",
+      "fullname": "Nguyễn Trần Bình Minh",
+      "email": "minhdzwama211@gmail.com",
+      "phone": "0358090730",
+      "address": "Phường Thành Nhất, Đắk Lắk",
+      "role": "admin",
+      "password": "123"
     }
   ],
   "categories": [
