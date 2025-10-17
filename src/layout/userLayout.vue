@@ -140,7 +140,7 @@ onMounted(() => {
             <li><a href="#" class="text-decoration-none">FAQ</a></li>
             <li><a href="#" class="text-decoration-none">Privacy Policy</a></li>
             <li><a href="#" class="text-decoration-none">Terms of Service</a></li>
-            <li><a href="#" class="text-decoration-none">Contact Us</a></li>
+            <li><router-link to="/contactForm" class="text-decoration-none">Contact Us</router-link></li>
           </ul>
         </div>
 

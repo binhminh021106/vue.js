@@ -49,7 +49,7 @@ onMounted(async () => {
 
 <template>
     <div class="container py-5">
-        <h2 class="fw-bold mb-5 text-center text-uppercase tracking-wide">~My Wishlist</h2>
+        <h2 class="fw-bold mb-5 text-center text-uppercase tracking-wide">My Wishlist</h2>
 
         <div v-if="store.getters.getWishlist.length > 0" class="row g-4 justify-content-center">
             <div class="col-lg-3 col-md-4 col-sm-6" v-for="items in store.getters.getWishlist" :key="items.id">
