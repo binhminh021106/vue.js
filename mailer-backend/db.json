@@ -1,0 +1,22 @@
+{
+    "messages": [
+        {
+            "id": 1760685917623,
+            "from": "truong123@gmail.com",
+            "to": "minhdzwama211@gmail.com",
+            "subject": "Hi",
+            "text": "Hi bạn\n",
+            "createdAt": "2025-10-17T07:25:17.623Z",
+            "read": false
+        },
+        {
+            "id": 1760669358186,
+            "from": "truong123@gmail.com",
+            "to": "minhdzwama211@gmail.com",
+            "subject": "hi",
+            "text": "hi hi hi",
+            "createdAt": "2025-10-17T02:49:18.186Z",
+            "read": false
+        }
+    ]
+}

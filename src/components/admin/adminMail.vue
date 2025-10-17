@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { ca } from 'date-fns/locale';
 
 const selectedName = ref("")
 const selectedId = ref(null)
@@ -9,9 +10,46 @@ const email = ref([])
 
 const readEmail = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/messages')
-        console.log("Dữ liệu trả về:", res.data)
+        const res = await axios.get('http://localhost:3001/messages')
         email.value = res.data
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
+const formatDateTimeVN = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  const options = {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }
+ return date.toLocaleString('vi-VN', options).replace('lúc', '')
+}
+
+const askDelete = (id, name) => {
+    selectedId.value = id
+    selectedName.value = name
+}
+
+const comfirmDelete = async () => {
+    if (!selectedId.value) return
+    try {
+        await axios.delete(`http://localhost:3001/messages/${selectedId.value}`)
+        email.value = email.value.filter(c => c.id !== selectedId.value)
+        selectedId.value = null
+        selectedName.value = ""
+        Swal.fire({
+            icon: 'success',
+            title: 'Delete email completed',
+            text: "You have successfully deleted the email.",
+            showConfirmButton: true,
+            confirmButtonColor: '#000'
+        })
     } catch (err) {
         console.error("Err: ", err)
     }
@@ -33,11 +71,11 @@ onMounted(() => {
                 <thead class="table-dark text-center">
                     <tr>
                         <th style="width: 5%;">#</th>
-                        <th>Email khách hàng</th>
+                        <th style="width: 18%;">Email khách hàng</th>
                         <th>Tiêu đề</th>
                         <th>Nội dung</th>
-                        <th>Ngày gửi</th>
-                        <th>Hành động</th>
+                        <th style="width: 15%;">Ngày gửi</th>
+                        <th style="width: 10%;">Hành động</th>
                     </tr>
                 </thead>
                 <tbody class="text-center">
@@ -46,12 +84,12 @@ onMounted(() => {
                         <td>{{ i.from }}</td>
                         <td>{{ i.subject }}</td>
                         <td>{{ i.text }}</td>
-                        <td>{{ i.createdAt }}</td>
+                        <td>{{ formatDateTimeVN(i.createdAt) }}</td>
                         <td>
-                            <router-link class="btn btn-outline-info btn-sm me-2">
+                            <router-link to="" class="btn btn-outline-info btn-sm me-2">
                                 <i class="fa fa-eye"></i>
                             </router-link>
-                            <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                            <button @click="askDelete(i.id, i.email)" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#deleteModal">
                                 <i class="fa fa-trash"></i>
                             </button>
@@ -80,7 +118,7 @@ onMounted(() => {
                     </div>
                     <div class="modal-footer border-0 justify-content-center">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
-                        <button @click="confirmDelete" data-bs-dismiss="modal" class="btn btn-danger">Xoá</button>
+                        <button @click="comfirmDelete" data-bs-dismiss="modal" class="btn btn-danger">Xoá</button>
                     </div>
                 </div>
             </div>

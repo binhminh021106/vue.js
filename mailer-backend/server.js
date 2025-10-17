@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
 
 app.post("/send-email", (req, res) => {
   const { to, subject, text } = req.body;
-  const dbPath = "../db.json"; 
+  const dbPath = "./db.json"; 
 
   const newEmail = {
     id: Date.now(),
@@ -71,6 +71,20 @@ app.post("/send-email", (req, res) => {
         }
       });
     });
+  });
+});
+
+app.get("/messages", (req, res) => {
+  const dbPath = "./db.json";
+
+  fs.readFile(dbPath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Lỗi đọc file db.json:", err);
+      return res.status(500).send("Lỗi phía server khi đọc database.");
+    }
+
+    const db = JSON.parse(data);
+    res.status(200).json(db.messages || []);
   });
 });
 
