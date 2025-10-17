@@ -2,59 +2,59 @@
 import axios from "axios";
 
 export default {
-  data() {
-    return {
-      emailData: {
-        to: "minhdzwama211@gmail.com", 
-        from: "", 
-        subject: "",
-        text: ""
-      },
-      isSending: false,
-      statusMessage: "",
-    };
-  },
-  methods: {
-    async sendEmail() {
-      if (!this.emailData.from) {
-          alert('Error: Your email is missing. Please log in again.');
-          return;
-      }
-
-      this.isSending = true;
-      this.statusMessage = "Sending email...";
-
-      const payload = {
-        to: this.emailData.to,
-        subject: this.emailData.subject,
-        text: `From: ${this.emailData.from}\n\nMessage:\n${this.emailData.text}`
-      };
-
-      try {
-        const res = await axios.post("http://localhost:3001/send-email", payload);
-        this.statusMessage = res.data;
-        
-        this.emailData.subject = "";
-        this.emailData.text = "";
-
-      } catch (err) {
-        this.statusMessage = "❌ Failed to send email. Please try again.";
-      } finally {
-        this.isSending = false;
-      }
+    data() {
+        return {
+            emailData: {
+                to: "minhdzwama211@gmail.com",
+                from: "",
+                subject: "",
+                text: ""
+            },
+            isSending: false,
+            statusMessage: "",
+        };
     },
-  },
+    methods: {
+        async sendEmail() {
+            if (!this.emailData.from) {
+                alert('Error: Your email is missing. Please log in again.');
+                return;
+            }
 
-  mounted() {
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    
-    if (loggedInUser && loggedInUser.email) {
-      this.emailData.from = loggedInUser.email;
-    } else {
-      alert('You are not logged in. Redirecting to login page.');
-      window.location.href = '/login'; 
+            this.isSending = true;
+            this.statusMessage = "Sending email...";
+
+            const payload = {
+                to: this.emailData.to,
+                subject: this.emailData.subject,
+                text: `From: ${this.emailData.from}\n\nMessage:\n${this.emailData.text}`
+            };
+
+            try {
+                const res = await axios.post("http://localhost:3001/send-email", payload);
+                this.statusMessage = res.data;
+
+                this.emailData.subject = "";
+                this.emailData.text = "";
+
+            } catch (err) {
+                this.statusMessage = "❌ Failed to send email. Please try again.";
+            } finally {
+                this.isSending = false;
+            }
+        },
+    },
+
+    mounted() {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+        if (loggedInUser && loggedInUser.email) {
+            this.emailData.from = loggedInUser.email;
+        } else {
+            alert('You are not logged in. Redirecting to login page.');
+            window.location.href = '/login';
+        }
     }
-  }
 };
 </script>
 
@@ -82,7 +82,7 @@ export default {
                         <div class="mb-3 text-start">
                             <label class="form-label fw-semibold">Your Email</label>
                             <input type="email" class="form-control" v-model="emailData.from"
-                                placeholder="Enter your email" required />
+                                placeholder="Enter your email" required readonly />
                         </div>
 
                         <div class="mb-3 text-start">
