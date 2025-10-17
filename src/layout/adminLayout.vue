@@ -3,22 +3,14 @@
     <!-- HEADER -->
     <header class="admin-header d-flex align-items-center justify-content-between px-4 py-3 shadow-sm bg-white">
       <div class="d-flex align-items-center gap-3">
-        <img
-          src="https://www.accuratereviews.com/wp-content/uploads/2021/07/outfit-logo-padding.png"
-          alt="logo"
-          width="120"
-        />
+        <img src="https://www.accuratereviews.com/wp-content/uploads/2021/07/outfit-logo-padding.png" alt="logo"
+          width="120" />
         <h5 class="fw-bold mb-0 text-dark">OutfitVN Admin Dashboard</h5>
       </div>
       <div class="d-flex align-items-center gap-3">
         <i class="fa-regular fa-bell fs-5 text-dark"></i>
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-          alt="avatar"
-          class="rounded-circle border"
-          width="40"
-          height="40"
-        />
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle border"
+          width="40" height="40" />
       </div>
     </header>
 
@@ -49,6 +41,11 @@
           <li>
             <router-link to="/admin/adminCoupon" class="nav-link" active-class="active-link">
               <i class="fa-solid fa-receipt me-2"></i>Mã giảm giá
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/admin/adminMail" class="nav-link" active-class="active-link">
+              <i class="fa-solid fa-receipt me-2"></i>Thông báo email
             </router-link>
           </li>
         </ul>
@@ -176,4 +173,3 @@
   }
 }
 </style>
-    
