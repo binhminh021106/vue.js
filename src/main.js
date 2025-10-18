@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "../router/index.js";
 import store from "./store/index.js";
 
+import 'vue3-toastify/dist/index.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";

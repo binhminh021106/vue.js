@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import coupon from './coupon.vue'
 import axios from 'axios'
+import { toast } from 'vue3-toastify';
 
 const store = useStore()
 const router = useRouter()
@@ -42,13 +43,10 @@ const readProduct = async () => {
 const addtocart = async (product) => {
   try {
     await store.dispatch('addToCart', { product, quantity: 1 })
-    Swal.fire({
-      icon: 'success',
-      title: 'Product added to cart',
-      text: 'Your product has been added to your cart successfully!',
-      confirmButtonColor: '#000',
-      timer: 1500
-    })
+    toast.success("Product added to cart", {
+      autoClose: 3000,
+      position: "top-right",
+    });
   } catch (err) {
     if (err.message === 'User not logged in') {
       Swal.fire({
@@ -60,7 +58,10 @@ const addtocart = async (product) => {
       router.push("/login")
     } else {
       console.error("Error adding to cart:", err)
-      Swal.fire('Error', 'Could not add product to cart.', 'error')
+      toast.error("Could not add product to cart.", {
+        autoClose: 3000,
+        position: "top-right",
+      });
     }
   }
 }

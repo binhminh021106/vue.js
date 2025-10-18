@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import Swal from 'sweetalert2';
+import { toast } from 'vue3-toastify';
 
 const store = useStore()
 const router = useRouter()
@@ -25,19 +25,18 @@ const handleAddToCart = async () => {
             product: product.value,
             quantity: userQuantity.value
         });
-        Swal.fire({
-            icon: 'success',
-            title: 'Added to Cart!',
-            text: 'Your product has been added to your cart successfully!',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#000',
-            timer: 1500,
+        toast.success("Product added to cart", {
+            autoClose: 3000,
+            position: "top-right",
         });
     } catch (error) {
         if (error.message === "User not logged in") {
             router.push("/login");
         } else {
-            Swal.fire('Error', 'Could not add to cart.', 'error');
+            toast.error("Could not add to cart.", {
+                autoClose: 3000,
+                position: "top-right",
+            });
             console.error(error);
         }
     } finally {
@@ -50,21 +49,23 @@ const handleAddToWishlist = async () => {
     isAddingToWishlist.value = true;
     try {
         await store.dispatch('addToWishlist', product.value);
-        Swal.fire({
-            icon: 'success',
-            title: 'Added to Wishlist!',
-            text: 'Added to favorites list',
-            timer: 1500,
-            showConfirmButton: 'OK',
-            confirmButtonColor: '#000'
+        toast.success("Added to Wishlist!", {
+            autoClose: 3000,
+            position: "top-right",
         });
     } catch (error) {
         if (error.message === "Product already in wishlist") {
-            Swal.fire('Info', 'This product is already in your wishlist!', 'info');
+            toast.error("This product is already in your wishlist!", {
+                autoClose: 3000,
+                position: "top-right",
+            });
         } else if (error.message === "User not logged in") {
             router.push('/login');
         } else {
-            Swal.fire('Error', 'Could not add to wishlist.', 'error');
+            toast.error("Could not add to wishlist.", {
+                autoClose: 3000,
+                position: "top-right",
+            });
             console.error(error);
         }
     } finally {

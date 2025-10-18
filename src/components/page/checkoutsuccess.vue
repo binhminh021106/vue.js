@@ -1,12 +1,18 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import axios from 'axios' // 🟢 Thêm dòng này
 
 const order = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   try {
     const raw = localStorage.getItem('lastOrder')
     order.value = raw ? JSON.parse(raw) : null
+
+    // 🟢 Gửi email xác nhận nếu có order và email khách
+    if (order.value && order.value.user && order.value.user.email) {
+      await sendConfirmationMail(order.value)
+    }
   } catch {
     order.value = null
   }
@@ -17,6 +23,39 @@ const orderCode = computed(() => {
   const id = order.value.id ?? order.value._id ?? '—'
   return `#ODR${new Date().getFullYear()}-${id}`
 })
+
+const sendConfirmationMail = async (order) => {
+  try {
+    const emailText = `
+From: ${order.user.fullname}
+To: ${order.user.email}
+
+Message:
+Xin chào ${order.user.fullname},
+
+Cảm ơn bạn đã đặt hàng tại OutfitVN! 🎉
+
+Đơn hàng ${orderCode.value} của bạn đã được xác nhận.
+Tổng giá trị đơn hàng: ${Number(order.total).toLocaleString('vi-VN')} ₫
+Phương thức thanh toán: ${order.payment}
+
+Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.
+
+Trân trọng,
+Đội ngũ OutfitVN.
+    `
+
+    await axios.post('http://localhost:3001/send-email', {
+      to: order.user.email,
+      subject: `Xác nhận đơn hàng ${orderCode.value}`,
+      text: emailText
+    })
+
+    console.log('Email xác nhận đã được gửi!')
+  } catch (err) {
+    console.error('Lỗi khi gửi email xác nhận:', err)
+  }
+}
 </script>
 
 <template>

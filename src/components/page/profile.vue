@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import { toast } from 'vue3-toastify';
 
 const user = ref({
   id: null,
@@ -50,12 +50,10 @@ const saveChanges = async () => {
     await axios.put(`http://localhost:3000/user/${user.value.id}`, user.value)
     localStorage.setItem('loggedInUser', JSON.stringify(user.value))
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Update complete!',
-      text: 'Your personal information has been saved.',
-      confirmButtonColor: '#000'
-    })
+    toast.success("Update complete", {
+      autoClose: 3000,
+      position: "top-right",
+    });
   } catch (err) {
     console.error('Update error:', err)
     Swal.fire({
