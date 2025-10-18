@@ -30,27 +30,32 @@
           </li>
           <li>
             <router-link to="/admin/product" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-box me-2"></i>Sản phẩm
+              <i class="fa-solid fa-shirt me-2"></i>Sản phẩm
             </router-link>
           </li>
           <li>
             <router-link to="/admin/adminorder" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-receipt me-2"></i>Đơn hàng
+              <i class="fa-solid fa-truck-fast me-2"></i>Đơn hàng
             </router-link>
           </li>
           <li>
             <router-link to="/admin/adminCoupon" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-receipt me-2"></i>Mã giảm giá
+              <i class="fa-solid fa-ticket-simple me-2"></i>Mã giảm giá
             </router-link>
           </li>
           <li>
             <router-link to="/admin/adminMail" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-receipt me-2"></i>Thông báo email
+              <i class="fa-solid fa-envelope-open-text me-2"></i>Thông báo email
             </router-link>
           </li>
           <li>
             <router-link to="/admin/doanhthu" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-receipt me-2"></i>Doanh thu
+              <i class="fa-solid fa-chart-column me-2"></i>Doanh thu
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/admin/thongKeUser" class="nav-link" active-class="active-link">
+              <i class="fa-solid fa-chart-column me-2"></i>Thống kê user
             </router-link>
           </li>
         </ul>

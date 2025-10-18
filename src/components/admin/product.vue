@@ -2,12 +2,34 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { computed } from 'vue';
 
 const selectedName = ref("")
 const selectedId = ref(null)
 const category = ref([])
 const products = ref([])
 const form = ref({ name: "", price: "", discount: "", quantity: "", status: "", description: "", categoryId: "", image: [] })
+const threshold = ref("");
+
+const alertClass = computed(() => {
+    switch (threshold.value) {
+        case 5:
+            return "alert-danger";
+        case 10:
+            return "alert-warning";
+        case 20:
+            return "alert-info";
+        case 50:
+            return "alert-primary";
+        default:
+            return "alert-secondary";
+    }
+});
+
+const lowStockProducts = computed(() => {
+    if (!threshold.value) return [];
+    return products.value.filter(p => Number(p.quantity) < threshold.value);
+});
 
 const readCategory = async () => {
     try {
@@ -426,6 +448,71 @@ onMounted(() => {
             </div>
         </div>
     </div>
+
+    <div class="container mt-5">
+        <h3 class="fw-bold mb-4 text-danger">
+            <i class="fa fa-exclamation-triangle me-2"></i>
+            Cảnh báo số lượng sắp hết hàng
+        </h3>
+
+        <div :class="['alert d-flex align-items-center justify-content-between', alertClass]">
+            <div>
+                <i class="fa fa-info-circle me-2"></i>
+                Cảnh báo khi số lượng nhỏ hơn:
+            </div>
+
+            <select class="form-select w-auto fw-bold text-center" v-model.number="threshold">
+                <option disabled value="">-- Chọn cảnh báo số lượng --</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+
+        <!-- Bảng hiển thị sản phẩm sắp hết -->
+        <div class="table-responsive shadow-sm rounded-3">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-danger text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Tồn kho</th>
+                        <th>Cảnh báo</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr v-for="(p, index) in lowStockProducts" :key="p.id">
+                        <td>{{ index + 1 }}</td>
+                        <td>
+                            <img :src="p.image[0]" alt="Ảnh" width="50" class="rounded border" />
+                        </td>
+                        <td class="fw-semibold">{{ p.name }}</td>
+                        <td>{{category.find(c => c.id === p.categoryId)?.nameCategory || "Không có"}}</td>
+                        <td>
+                            <span class="badge bg-secondary">{{ p.quantity }}</span>
+                        </td>
+                        <td>
+                            <div class="text-danger fw-bold">
+                                <i class="fa fa-exclamation-circle me-1"></i>
+                                Sắp hết hàng
+                            </div>
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-danger" :style="{ width: p.quantity * 10 + '%' }"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr v-if="!lowStockProducts.length">
+                        <td colspan="6" class="text-muted py-3">Tất cả sản phẩm đều đủ hàng!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </template>
 
 <style scoped>
@@ -453,5 +540,18 @@ h2 {
         opacity: 1;
         transform: scale(1);
     }
+}
+
+.progress {
+    background-color: #f0f0f0;
+}
+
+h3 {
+    letter-spacing: 0.5px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #fff4f4;
+    transition: 0.3s;
 }
 </style>

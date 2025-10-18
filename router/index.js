@@ -31,6 +31,7 @@ import AdminOrderView from "../src/components/admin/AdminOrderView.vue";
 import adminCoupon from "../src/components/admin/adminCoupon.vue";
 import adminMail from "../src/components/admin/adminMail.vue";
 import doanhthu from "../src/components/admin/doanhthu.vue";
+import thongKeUser from "../src/components/admin/thongKeUser.vue";
 
 import NotFound from "../src/components/page/NotFound.vue";
 
@@ -71,6 +72,7 @@ const routes = [
       { path: "adminCoupon", component: adminCoupon },
       { path: "adminMail", component: adminMail },
       { path: "doanhthu", component: doanhthu },
+      { path: "thongKeUser", component: thongKeUser },
     ],
   },
   {
