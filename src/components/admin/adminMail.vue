@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { ca } from 'date-fns/locale';
 
 const selectedName = ref("")
 const selectedId = ref(null)
@@ -36,7 +35,7 @@ const askDelete = (id, name) => {
     selectedName.value = name
 }
 
-const comfirmDelete = async () => {
+const confirmDelete = async () => {
     if (!selectedId.value) return
     try {
         await axios.delete(`http://localhost:3001/messages/${selectedId.value}`)
@@ -118,7 +117,7 @@ onMounted(() => {
                     </div>
                     <div class="modal-footer border-0 justify-content-center">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
-                        <button @click="comfirmDelete" data-bs-dismiss="modal" class="btn btn-danger">Xoá</button>
+                        <button @click="confirmDelete" data-bs-dismiss="modal" class="btn btn-danger">Xoá</button>
                     </div>
                 </div>
             </div>

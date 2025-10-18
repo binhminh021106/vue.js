@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useRouter } from 'vue-router'
 
 const form = ref({
     fullname: "",
@@ -11,6 +12,8 @@ const form = ref({
     address: "",
     role: "user"
 })
+const password = ref("")
+const router = useRouter()
 
 const handleSubmit = async () => {
     let users = JSON.parse(localStorage.getItem("users")) || []
@@ -24,12 +27,22 @@ const handleSubmit = async () => {
         })
         return
     }
+    
+    if (form.value.password !== password.value) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Passwords do not match!',
+            text: 'Please re-enter your password correctly.',
+            confirmButtonColor: '#000'
+        })
+        return
+    }
+
+    form.value.createdAt = new Date().toISOString()
 
     try {
         const res = await axios.post("http://localhost:3000/user", form.value)
         if (res.status === 201) {
-            users.push(form.value)
-            localStorage.setItem("users", JSON.stringify(users))
             Swal.fire({
                 icon: 'success',
                 title: 'Account created successfully',
@@ -38,17 +51,23 @@ const handleSubmit = async () => {
                 confirmButtonText: 'Go to Login',
                 confirmButtonColor: '#000'
             }).then(() => {
-                window.location.href = '/login'
+                router.push('/login')
             })
             form.value = { fullname: "", email: "", password: "", phone: "", address: "", role: "user" }
+            password.value = ""
         }
     } catch (err) {
         console.error("Err: ", err)
-        isMessage.value = "Error connert to server!"
-        isSuccess.value = false
+        Swal.fire({
+            icon: 'error',
+            title: 'Server Error!',
+            text: 'Cannot connect to server.',
+            confirmButtonColor: '#000'
+        })
     }
 }
 </script>
+
 
 <template>
     <div class="register-wrapper d-flex justify-content-center align-items-center vh-100">

@@ -29,6 +29,16 @@
       "address": "Phường Thành Nhất, Đắk Lắk",
       "role": "admin",
       "password": "123"
+    },
+    {
+      "id": "425b",
+      "fullname": "Phạm Hồng Hải",
+      "email": "honghai123@gmail.com",
+      "password": "123",
+      "phone": "0358090730",
+      "address": "308 Trần Nhân Tông",
+      "role": "user",
+      "createdAt": "2025-10-17T09:18:21.101Z"
     }
   ],
   "categories": [
