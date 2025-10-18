@@ -88,17 +88,17 @@ onMounted(readorder)
               </label>
 
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Confirmed" :disabled:="status === 'Canceled'" />
+                <input v-model="status" type="radio" value="Confirmed" :disabled="status === 'Canceled'" />
                 <span>Đã xác nhận</span>
               </label>
 
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Delivering" />
+                <input v-model="status" type="radio" value="Delivering" :disabled="status === 'Canceled'"/>
                 <span>Đang giao hàng</span>
               </label>
 
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Delivered" />
+                <input v-model="status" type="radio" value="Delivered" :disabled="status === 'Canceled'"/>
                 <span>Đã giao hàng</span>
               </label>
 
