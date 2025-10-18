@@ -83,12 +83,12 @@ onMounted(readorder)
             <h6 class="fw-semibold mb-2">Cập nhật trạng thái:</h6>
             <div class="status-options d-flex flex-wrap gap-2">
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Pending" />
+                <input v-model="status" type="radio" value="Pending" :disabled="status === 'Canceled'" />
                 <span>Đang chờ</span>
               </label>
 
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Confirmed" />
+                <input v-model="status" type="radio" value="Confirmed" :disabled:="status === 'Canceled'" />
                 <span>Đã xác nhận</span>
               </label>
 
