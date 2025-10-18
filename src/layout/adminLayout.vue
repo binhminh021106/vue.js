@@ -48,6 +48,11 @@
               <i class="fa-solid fa-receipt me-2"></i>Thông báo email
             </router-link>
           </li>
+          <li>
+            <router-link to="/admin/doanhthu" class="nav-link" active-class="active-link">
+              <i class="fa-solid fa-receipt me-2"></i>Doanh thu
+            </router-link>
+          </li>
         </ul>
 
         <div class="mt-auto text-center pt-4 border-top">

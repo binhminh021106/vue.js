@@ -523,7 +523,7 @@
       "payment": "Cash on Delivery (COD)",
       "total": 500000,
       "discount": 500000,
-      "status": "Pending",
+      "status": "Delivered",
       "date": "10/18/2025, 8:11:07 AM",
       "products": [
         {
@@ -551,7 +551,7 @@
       "payment": "Cash on Delivery (COD)",
       "total": 430000,
       "discount": 0,
-      "status": "Pending",
+      "status": "Delivered",
       "date": "10/18/2025, 8:13:55 AM",
       "products": [
         {
@@ -579,7 +579,7 @@
       "payment": "Cash on Delivery (COD)",
       "total": 750000,
       "discount": 0,
-      "status": "Pending",
+      "status": "Delivered",
       "date": "10/18/2025, 8:15:27 AM",
       "products": [
         {
@@ -607,7 +607,7 @@
       "payment": "Cash on Delivery (COD)",
       "total": 500000,
       "discount": 0,
-      "status": "Pending",
+      "status": "Delivered",
       "date": "10/18/2025, 8:18:15 AM",
       "products": [
         {
@@ -635,7 +635,7 @@
       "payment": "Cash on Delivery (COD)",
       "total": 1500000,
       "discount": 0,
-      "status": "Pending",
+      "status": "Delivered",
       "date": "10/18/2025, 8:20:32 AM",
       "products": [
         {

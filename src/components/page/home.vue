@@ -10,6 +10,7 @@ const store = useStore()
 const router = useRouter()
 
 const category = ref([])
+const topProducts = ref([])
 const products = ref([])
 
 const scrollContainer = ref(null)
@@ -64,9 +65,41 @@ const addtocart = async (product) => {
   }
 }
 
+const getTop5 = async () => {
+  try {
+    const res = await axios.get('http://localhost:3000/order')
+    const orders = res.data
+
+    const allProducts = orders
+      .filter(o => o.status === 'Delivered')
+      .flatMap(o => o.products)
+
+    const productCount = {}
+    for (const p of allProducts) {
+      if (!productCount[p.productId]) {
+        productCount[p.productId] = {
+          id: p.productId,
+          name: p.name,
+          image: p.image,
+          totalSold: 0
+        }
+      }
+      productCount[p.productId].totalSold += p.quantity
+    }
+
+    const sorted = Object.values(productCount).sort((a, b) => b.totalSold - a.totalSold)
+
+    topProducts.value = sorted.slice(0, 5)
+
+  } catch (err) {
+    console.error('Lỗi lấy top 5:', err)
+  }
+}
+
 onMounted(() => {
   readCategory()
   readProduct()
+  getTop5()
 })
 </script>
 
@@ -111,12 +144,44 @@ onMounted(() => {
     </section>
 
     <!-- Coupon -->
-     <h2 class="text-center fw-bold mb-4">HOT COUPONS</h2>
-     <coupon/>
+    <h2 class="text-center fw-bold mb-4">HOT COUPONS</h2>
+    <coupon />
+
+    <section class="container my-5">
+      <h2 class="text-center fw-bold mb-4">Top 5 best-selling products</h2>
+
+      <div class="row g-4 justify-content-center">
+        <div v-for="(p, index) in topProducts" :key="p.id" class="col-6 col-md-4 col-lg-2">
+          <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
+            <span class="position-absolute top-0 start-0 m-2 badge rounded-pill text-white px-3 py-2" :class="{
+              'bg-warning': index === 0,
+              'bg-secondary': index === 1,
+              'bg-danger': index === 2,
+              'bg-dark': index > 2
+            }">
+              #{{ index + 1 }}
+            </span>
+
+            <router-link :to="`/productDetail/${p.id}`">
+              <img :src="p.image" class="card-img-top" alt="Top product" style="height: 180px; object-fit: cover;" />
+            </router-link>
+
+            <div class="card-body text-center">
+              <h6 class="fw-bold text-truncate mb-2">{{ p.name }}</h6>
+              <p class="text-muted small mb-0">
+                Sold:
+                <span class="fw-semibold text-danger">{{ p.totalSold }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- PRODUCTS -->
     <section class="container my-5 position-relative">
-      <h2 class="text-center fw-bold mb-4">Best Sellers</h2>
+      <h2 class="text-center fw-bold mb-4">NEW Product</h2>
 
       <!-- Scroll buttons -->
       <button class="scroll-btn left" @click="scrollProductLeft">
