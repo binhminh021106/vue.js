@@ -44,8 +44,8 @@ const confirmDelete = async () => {
         selectedName.value = ""
         Swal.fire({
             icon: 'success',
-            title: 'Delete email completed',
-            text: "You have successfully deleted the email.",
+            title: 'Bạn đã xoá email thành công',
+            text: "Bạn đã xoá email thành công.",
             showConfirmButton: true,
             confirmButtonColor: '#000'
         })

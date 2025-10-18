@@ -7,6 +7,24 @@ import { computed } from 'vue'
 
 const cart = ref([])
 const router = useRouter()
+const categories = ref([])
+
+const loadCategories = async () => {
+    try {
+        const res = await axios.get('http://localhost:3000/categories')
+        categories.value = res.data
+    } catch (err) {
+        console.error("Lỗi tải danh mục:", err)
+    }
+}
+
+const getCategoryName = (categoryIdOrName) => {
+    if (!categoryIdOrName) return 'Không xác định'
+    const byId = categories.value.find(c => c.id === categoryIdOrName)
+    if (byId) return byId.name
+    if (typeof categoryIdOrName === 'string') return categoryIdOrName
+    return 'Không xác định'
+}
 
 const readCart = async () => {
     const user = JSON.parse(localStorage.getItem("loggedInUser"))
@@ -101,7 +119,10 @@ const total = computed(() => {
     }, 0)
 })
 
-onMounted(readCart)
+onMounted(async () => {
+    await loadCategories()
+    await readCart()
+})
 </script>
 
 
@@ -138,7 +159,8 @@ onMounted(readCart)
                                             <img :src="items.image" class="rounded me-3 border" width="70" />
                                             <div>
                                                 <h6 class="mb-0">{{ items.name }}</h6>
-                                                <small class="text-muted">Danh mục: {{ items.category }}</small>
+                                                <small class="text-muted">Category: {{ getCategoryName(items.category)
+                                                    }}</small>
                                             </div>
                                         </div>
                                     </td>

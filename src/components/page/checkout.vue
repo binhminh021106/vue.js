@@ -97,7 +97,7 @@ const applyDiscount = () => {
   } else if (found.icon === 'giamthang') {
     const flat = parseFloat(found.discount.replace(/[^\d]/g, '')) * 1000
     discountAmount.value = flat
-  } else if (found.icon === 'giamdacbiet'){
+  } else if (found.icon === 'giamdacbiet') {
     const flat = parseFloat(found.discount.replace(/[^\d]/g, '')) * 1000
     discountAmount.value = flat
   } else {
@@ -160,9 +160,47 @@ const placeOrder = async () => {
     const res = await axios.post('http://localhost:3000/order', orderData)
     localStorage.setItem("lastOrder", JSON.stringify(res.data))
 
+    for (let item of cart.value) {
+      try {
+        const productId = item.productId || item.id
+
+        const productRes = await axios.get(`http://localhost:3000/products/${productId}`)
+        const product = productRes.data
+
+        if (product.quantity !== undefined) {
+          if (product.quantity < item.quantity) {
+            await Swal.fire({
+              icon: 'error',
+              title: 'Out of stock!',
+              text: `${product.name} only has ${product.quantity} left.`,
+              confirmButtonColor: '#000'
+            })
+            continue
+          }
+
+          const newQuantity = Math.max(product.quantity - item.quantity, 0)
+          await axios.patch(`http://localhost:3000/products/${productId}`, { quantity: newQuantity })
+        } else {
+          console.warn(`Product ${product.name} has no 'quantity' field`)
+        }
+
+      } catch (err) {
+        console.error(`Error updating stock for ${item.id}:`, err)
+      }
+    }
+
     await Promise.all(
       cart.value.map(item => axios.delete(`http://localhost:3000/cart/${item.id}`))
     )
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Order placed successfully!',
+      text: 'Your products have been ordered successfully!',
+      confirmButtonColor: '#000',
+      timer: 1500,
+      showConfirmButton: false
+    })
 
     router.push('/checkoutsuccess')
   } catch (err) {

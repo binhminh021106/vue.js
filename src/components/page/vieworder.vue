@@ -56,10 +56,39 @@ const getStatusClass = (status) => {
 
 const buyBack = async (products) => {
     try {
-        for (let item of products) {
-            console.log("Dữ liệu: ", item)
-            await store.dispatch('addToCart', { product: item, quantity: item.quantity })
+        const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
+        if (!storedUser) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please log in',
+                text: 'You must be logged in to buy back products.',
+                confirmButtonColor: '#000'
+            })
+            return
         }
+
+        if (store.state.categories.length === 0) {
+            await store.dispatch('fetchCategories')
+        }
+
+        for (let item of products) {
+            const res = await axios.get(`http://localhost:3000/products/${item.productId}`)
+            const fullProduct = res.data
+
+            const catObj = store.state.categories.find(
+                c => String(c.id) === String(fullProduct.categoryId)
+            )
+            const categoryName = catObj?.nameCategory || catObj?.name || 'Unknown'
+
+            await store.dispatch('addToCart', {
+                product: {
+                    ...fullProduct,
+                    category: categoryName 
+                },
+                quantity: item.quantity
+            })
+        }
+
         Swal.fire({
             icon: 'success',
             title: 'Products added to cart',
@@ -72,7 +101,6 @@ const buyBack = async (products) => {
         Swal.fire('Error', 'Could not add products to cart.', 'error')
     }
 }
-
 
 onMounted(readview)
 </script>
@@ -126,7 +154,8 @@ onMounted(readview)
                             class="btn btn-outline-primary btn-sm" @click="buyBack(value.products)">
                             Buy Back
                         </button>
-                        <button @click="Canceled(value.id)" v-else-if="value.status === 'Pending'" class="btn btn-outline-danger btn-sm">Cancel
+                        <button @click="Canceled(value.id)" v-else-if="value.status === 'Pending'"
+                            class="btn btn-outline-danger btn-sm">Cancel
                             order</button>
                     </div>
 

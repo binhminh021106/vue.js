@@ -24,16 +24,16 @@ const transporter = nodemailer.createTransport({
 
 app.post("/send-email", (req, res) => {
   const { to, subject, text } = req.body;
-  const dbPath = "./db.json"; 
+  const dbPath = "./db.json";
 
   const newEmail = {
     id: Date.now(),
-    from: text.split("\n")[0].replace("From: ", ""), 
+    from: text.split("\n")[0].replace("From: ", ""),
     to: to,
     subject: subject,
     text: text.split("\n\nMessage:\n")[1],
     createdAt: new Date().toISOString(),
-    read: false, 
+    read: false,
   };
 
   fs.readFile(dbPath, "utf8", (err, data) => {
@@ -85,6 +85,40 @@ app.get("/messages", (req, res) => {
 
     const db = JSON.parse(data);
     res.status(200).json(db.messages || []);
+  });
+});
+
+app.delete("/messages/:id", (req, res) => {
+  const dbPath = "./db.json";
+  const messageId = parseInt(req.params.id);
+
+  fs.readFile(dbPath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Lỗi đọc file db.json:", err);
+      return res.status(500).send("Lỗi phía server khi đọc database.");
+    }
+
+    const db = JSON.parse(data);
+    if (!db.messages || db.messages.length === 0) {
+      return res.status(404).send("Không tìm thấy danh sách email.");
+    }
+
+    const emailIndex = db.messages.findIndex((msg) => msg.id === messageId);
+    if (emailIndex === -1) {
+      return res.status(404).send("Không tìm thấy email cần xoá.");
+    }
+
+    db.messages.splice(emailIndex, 1);
+
+    fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
+      if (err) {
+        console.error("Lỗi ghi file db.json:", err);
+        return res.status(500).send("Không thể ghi dữ liệu sau khi xoá.");
+      }
+
+      console.log(`Đã xoá email có id ${messageId}`);
+      res.status(200).send("Xoá email thành công!");
+    });
   });
 });
 
