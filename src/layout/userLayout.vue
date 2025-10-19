@@ -132,10 +132,10 @@ onMounted(() => {
             trends and elevate your style with OutfitVN.
           </p>
           <div class="d-flex gap-3">
-            <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61582249287712" class="social"><i class="fab fa-facebook-f"></i></a>
             <a href="#" class="social"><i class="fab fa-instagram"></i></a>
             <a href="#" class="social"><i class="fab fa-tiktok"></i></a>
-            <a href="#" class="social"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.youtube.com/@outfitvn-shop" class="social"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
 
