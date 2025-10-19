@@ -1,6 +1,407 @@
 {
   "messages": [
     {
+      "id": 1760865030779,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:10:30.779Z",
+      "read": false
+    },
+    {
+      "id": 1760865027238,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:10:27.238Z",
+      "read": false
+    },
+    {
+      "id": 1760864994807,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:09:54.807Z",
+      "read": false
+    },
+    {
+      "id": 1760864991381,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:09:51.381Z",
+      "read": false
+    },
+    {
+      "id": 1760864936586,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:08:56.586Z",
+      "read": false
+    },
+    {
+      "id": 1760864933987,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:08:53.987Z",
+      "read": false
+    },
+    {
+      "id": 1760864932459,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:08:52.459Z",
+      "read": false
+    },
+    {
+      "id": 1760864929692,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:08:49.692Z",
+      "read": false
+    },
+    {
+      "id": 1760864927013,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:08:47.013Z",
+      "read": false
+    },
+    {
+      "id": 1760864925943,
+      "to": "minhdzwama@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:08:45.943Z",
+      "read": false
+    },
+    {
+      "id": 1760864923239,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:08:43.239Z",
+      "read": false
+    },
+    {
+      "id": 1760864921666,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:08:41.666Z",
+      "read": false
+    },
+    {
+      "id": 1760864919446,
+      "to": "o@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:08:39.446Z",
+      "read": false
+    },
+    {
+      "id": 1760864915890,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:08:35.890Z",
+      "read": false
+    },
+    {
+      "id": 1760864912463,
+      "to": "outfitvn@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:08:32.463Z",
+      "read": false
+    },
+    {
+      "id": 1760864911559,
+      "to": "outfitvn@gmail.com",
+      "subject": "Đơn hàng mới từ Nguyễn Trần Bình Minh - #5f27",
+      "text": "",
+      "html": "\n        <h3>📦 Có đơn hàng mới!</h3>\n        <p><b>Khách hàng:</b> Nguyễn Trần Bình Minh (minhdzwama211@gmail.com)</p>\n        <p><b>Tổng tiền:</b> 500.000 ₫</p>\n        <p><b>Phương thức thanh toán:</b> Cash on Delivery (COD)</p>\n        <p><b>Ngày đặt:</b> 10/19/2025, 4:06:12 PM</p>\n        <p><b>Mã đơn hàng:</b> #ODR2025-5f27</p>\n      ",
+      "createdAt": "2025-10-19T09:08:31.559Z",
+      "read": false
+    },
+    {
+      "id": 1760864909775,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:08:29.775Z",
+      "read": false
+    },
+    {
+      "id": 1760864905871,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:08:25.871Z",
+      "read": false
+    },
+    {
+      "id": 1760864826450,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:07:06.450Z",
+      "read": false
+    },
+    {
+      "id": 1760864801956,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:06:41.956Z",
+      "read": false
+    },
+    {
+      "id": 1760864801149,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 5f27",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>5f27</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-5f27</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">500.000 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 4:06:12 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:06:41.149Z",
+      "read": false
+    },
+    {
+      "id": 1760864668313,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 8301",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>8301</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-8301</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">1.499.999 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 3:53:49 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:04:28.313Z",
+      "read": false
+    },
+    {
+      "id": 1760864599166,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 8301",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>8301</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-8301</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">1.499.999 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 3:53:49 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:03:19.166Z",
+      "read": false
+    },
+    {
+      "id": 1760864596725,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 8301",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>8301</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-8301</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">1.499.999 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 3:53:49 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:03:16.725Z",
+      "read": false
+    },
+    {
+      "id": 1760864550062,
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 8301",
+      "text": "",
+      "html": "\n<div style=\"font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;\">\n  <div style=\"background: #000; padding: 20px 30px; color: #fff;\">\n    <h2 style=\"margin: 0; font-size: 22px;\">🛍️ OutfitVN</h2>\n  </div>\n\n  <div style=\"padding: 30px;\">\n    <h3 style=\"color: #333;\">Xin chào Nguyễn Trần Bình Minh,</h3>\n    <p style=\"font-size: 15px; color: #555;\">\n      Cảm ơn bạn đã đặt hàng tại <b>OutfitVN</b>! 🎉<br>\n      Đơn hàng <b>8301</b> của bạn đã được xác nhận thành công.\n    </p>\n\n    <table style=\"width: 100%; border-collapse: collapse; margin-top: 20px;\">\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Mã đơn hàng:</td>\n        <td style=\"padding: 8px; font-weight: bold;\">#ODR2025-8301</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Tổng giá trị:</td>\n        <td style=\"padding: 8px; color: #e63946; font-weight: bold;\">1.499.999 ₫</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 8px; color: #555;\">Phương thức thanh toán:</td>\n        <td style=\"padding: 8px;\">Cash on Delivery (COD)</td>\n      </tr>\n      <tr style=\"background: #f8f9fa;\">\n        <td style=\"padding: 8px; color: #555;\">Ngày đặt:</td>\n        <td style=\"padding: 8px;\">10/19/2025, 3:53:49 PM</td>\n      </tr>\n    </table>\n\n    <p style=\"margin-top: 25px; color: #444;\">\n      Chúng tôi sẽ liên hệ để giao hàng sớm nhất có thể.<br>\n      Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua:\n      <a href=\"mailto:outfitvn@gmail.com\" style=\"color:#000; text-decoration:none; font-weight:600;\">outfitvn@gmail.com</a>.\n    </p>\n\n    <div style=\"text-align:center; margin-top: 30px;\">\n      <a href=\"http://localhost:5173/vieworder\" style=\"background: #000; color:#fff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:500;\">\n        Xem chi tiết đơn hàng\n      </a>\n    </div>\n  </div>\n\n  <div style=\"background: #f1f1f1; padding: 15px; text-align: center; font-size: 13px; color: #888;\">\n    OutfitVN © 2025 — All rights reserved.\n  </div>\n</div>\n",
+      "createdAt": "2025-10-19T09:02:30.062Z",
+      "read": false
+    },
+    {
+      "id": 1760863763513,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng aead",
+      "createdAt": "2025-10-19T08:49:23.513Z",
+      "read": false
+    },
+    {
+      "id": 1760863761564,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng aead",
+      "createdAt": "2025-10-19T08:49:21.564Z",
+      "read": false
+    },
+    {
+      "id": 1760863759180,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng aead",
+      "createdAt": "2025-10-19T08:49:19.180Z",
+      "read": false
+    },
+    {
+      "id": 1760863530650,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 7add",
+      "createdAt": "2025-10-19T08:45:30.650Z",
+      "read": false
+    },
+    {
+      "id": 1760863449831,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:44:09.831Z",
+      "read": false
+    },
+    {
+      "id": 1760863447589,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:44:07.589Z",
+      "read": false
+    },
+    {
+      "id": 1760863445156,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:44:05.156Z",
+      "read": false
+    },
+    {
+      "id": 1760863443932,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:44:03.933Z",
+      "read": false
+    },
+    {
+      "id": 1760863441229,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:44:01.229Z",
+      "read": false
+    },
+    {
+      "id": 1760863438086,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:43:58.087Z",
+      "read": false
+    },
+    {
+      "id": 1760863433130,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:43:53.130Z",
+      "read": false
+    },
+    {
+      "id": 1760863324318,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:42:04.318Z",
+      "read": false
+    },
+    {
+      "id": 1760863117729,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:38:37.729Z",
+      "read": false
+    },
+    {
+      "id": 1760863030758,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:37:10.758Z",
+      "read": false
+    },
+    {
+      "id": 1760863029793,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:37:09.794Z",
+      "read": false
+    },
+    {
+      "id": 1760863026947,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:37:06.947Z",
+      "read": false
+    },
+    {
+      "id": 1760863025228,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:37:05.228Z",
+      "read": false
+    },
+    {
+      "id": 1760863014050,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:36:54.050Z",
+      "read": false
+    },
+    {
+      "id": 1760862894559,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:34:54.559Z",
+      "read": false
+    },
+    {
+      "id": 1760862887197,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:34:47.197Z",
+      "read": false
+    },
+    {
+      "id": 1760862809630,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:33:29.630Z",
+      "read": false
+    },
+    {
+      "id": 1760862806235,
+      "from": "",
+      "to": "minhdzwama211@gmail.com",
+      "subject": "Xác nhận đơn hàng 0f23",
+      "createdAt": "2025-10-19T08:33:26.235Z",
+      "read": false
+    },
+    {
       "id": 1760836952169,
       "from": "minhdzwama211@gmail.com",
       "to": "minhdzwama211@gmail.com",

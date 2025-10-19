@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Cấu hình Nodemailer
-// Chú ý: Nên dùng biến môi trường (environment variables) để lưu thông tin nhạy cảm
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -29,15 +28,15 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post("/send-email", (req, res) => {
-  const { to, subject, text } = req.body;
+  const { to, subject, text, html } = req.body;
   const dbPath = "./db.json";
 
   const newEmail = {
     id: Date.now(),
-    from: text.split("\n")[0].replace("From: ", ""),
-    to: to,
-    subject: subject,
-    text: text.split("\n\nMessage:\n")[1],
+    to,
+    subject,
+    text: text || "",
+    html: html || "",
     createdAt: new Date().toISOString(),
     read: false,
   };
@@ -49,9 +48,7 @@ app.post("/send-email", (req, res) => {
     }
 
     const db = JSON.parse(data);
-    if (!db.messages) {
-      db.messages = [];
-    }
+    if (!db.messages) db.messages = [];
     db.messages.unshift(newEmail);
 
     fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
@@ -62,17 +59,18 @@ app.post("/send-email", (req, res) => {
 
       const mailOptions = {
         from: "minhdzwama211@gmail.com",
-        to: to,
-        subject: subject,
-        text: text,
+        to,
+        subject,
+        text: text || "",
+        html: html || "",
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.log(error);
+          console.error(error);
           res.status(500).send("Email đã được lưu nhưng có lỗi khi gửi đi.");
         } else {
-          console.log("Email sent: " + info.response);
+          console.log("Email sent:", info.response);
           res.status(200).send("Email đã được gửi thành công!");
         }
       });
