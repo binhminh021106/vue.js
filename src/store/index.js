@@ -3,6 +3,8 @@ import axios from "axios";
 
 export default createStore({
   state: {
+    user: JSON.parse(localStorage.getItem("loggedInUser")) || null,
+
     product: null,
     categories: [],
     relatedProducts: [],
@@ -12,6 +14,9 @@ export default createStore({
   },
 
   getters: {
+    getUser: (state) => state.user,
+    isLoggedIn: (state) => !!state.user,
+
     getProduct: (state) => state.product,
     getCategories: (state) => state.categories,
     getRelatedProducts: (state) => state.relatedProducts,
@@ -23,6 +28,15 @@ export default createStore({
   },
 
   mutations: {
+    SET_USER(state, user) {
+      state.user = user;
+      if (user) {
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("loggedInUser");
+      }
+    },
+
     SET_LOADING_STATUS(state, status) {
       state.loadingStatus = status;
     },
@@ -51,6 +65,15 @@ export default createStore({
   },
 
   actions: {
+    login({ commit }, user) {
+      commit("SET_USER", user);
+    },
+    logout({ commit }) {
+      commit("SET_USER", null);
+      commit("SET_CART", []); 
+      commit("SET_WISHLIST", []); 
+    },
+
     async fetchProductData({ commit, dispatch }, productId) {
       commit("SET_LOADING_STATUS", "loading");
       commit("CLEAR_PRODUCT_DATA");
@@ -66,9 +89,7 @@ export default createStore({
 
     async fetchProductDetailAndRelated({ commit }, productId) {
       try {
-        const res = await axios.get(
-          `http://localhost:3000/products/${productId}`
-        );
+        const res = await axios.get(`http://localhost:3000/products/${productId}`);
         const product = res.data || null;
         commit("SET_PRODUCT", product);
 
@@ -79,10 +100,7 @@ export default createStore({
           commit("SET_RELATED_PRODUCTS", relatedRes.data || []);
         }
       } catch (error) {
-        console.error(
-          "Error fetching product detail or related products:",
-          error
-        );
+        console.error("Error fetching product detail or related products:", error);
         commit("SET_RELATED_PRODUCTS", []);
       }
     },
@@ -97,13 +115,11 @@ export default createStore({
       }
     },
 
-    async fetchCart({ commit }) {
-      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    async fetchCart({ commit, state }) {
+      const user = state.user;
       if (!user) return commit("SET_CART", []);
       try {
-        const res = await axios.get(
-          `http://localhost:3000/cart?userId=${user.id}`
-        );
+        const res = await axios.get(`http://localhost:3000/cart?userId=${user.id}`);
         commit("SET_CART", res.data || []);
       } catch (err) {
         console.error(err);
@@ -111,16 +127,11 @@ export default createStore({
       }
     },
 
-    async fetchWishlist({ commit }) {
-      const user = JSON.parse(localStorage.getItem("loggedInUser"));
-      if (!user) {
-        return commit("SET_WISHLIST", []);
-      }
-
+    async fetchWishlist({ commit, state }) {
+      const user = state.user;
+      if (!user) return commit("SET_WISHLIST", []);
       try {
-        const res = await axios.get(
-          `http://localhost:3000/wishlist?userId=${user.id}`
-        );
+        const res = await axios.get(`http://localhost:3000/wishlist?userId=${user.id}`);
         commit("SET_WISHLIST", res.data || []);
       } catch (err) {
         console.error("Lỗi khi fetch wishlist:", err);
@@ -129,7 +140,7 @@ export default createStore({
     },
 
     async addToCart({ state, dispatch }, { product, quantity }) {
-      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      const user = state.user;
       if (!user) throw new Error("User not logged in");
 
       const existingItem = state.cart.find(
@@ -166,8 +177,8 @@ export default createStore({
       }
     },
 
-    async addToWishlist({}, product) {
-      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    async addToWishlist({ state }, product) {
+      const user = state.user;
       if (!user) throw new Error("User not logged in");
 
       const { data: existingItems } = await axios.get(

@@ -154,12 +154,7 @@ onMounted(() => {
       <div class="row g-4 justify-content-center">
         <div v-for="(p, index) in topProducts" :key="p.id" class="col-6 col-md-4 col-lg-2">
           <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
-            <span class="position-absolute top-0 start-0 m-2 badge rounded-pill text-white px-3 py-2" :class="{
-              'bg-warning': index === 0,
-              'bg-secondary': index === 1,
-              'bg-danger': index === 2,
-              'bg-dark': index > 2
-            }">
+            <span class="position-absolute top-0 start-0 m-2 badge rounded-pill text-white px-3 py-2 bg-danger">
               #{{ index + 1 }}
             </span>
 

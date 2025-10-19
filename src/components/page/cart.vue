@@ -4,6 +4,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
+import { toast } from 'vue3-toastify';
 
 const cart = ref([])
 const router = useRouter()
@@ -77,7 +78,10 @@ const deleteCart = async (id) => {
             try {
                 await axios.delete(`http://localhost:3000/cart/${id}`);
                 cart.value = cart.value.filter(c => c.id !== id)
-                Swal.fire('Deleted!', 'The product has been removed from the cart.', 'success');
+                toast.success("The product has been removed from the cart.", {
+                    autoClose: 3000,
+                    position: "top-right",
+                });
             } catch (err) {
                 console.error("Err: ", err)
             }
@@ -104,7 +108,10 @@ const deleteAllCart = async () => {
                     await axios.delete(`http://localhost:3000/cart/${items.id}`)
                 }
                 cart.value = []
-                Swal.fire('Deleted!', 'The entire cart has been cleared.', 'success')
+                toast.success("The entire cart has been cleared.", {
+                    autoClose: 3000,
+                    position: "top-right",
+                });
             } catch (err) {
                 console.error("Err: ", err)
             }

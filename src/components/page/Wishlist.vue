@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import Swal from 'sweetalert2';
+import { toast } from 'vue3-toastify';
+import axios from 'axios';
 
 const router = useRouter();
 const store = useStore();
@@ -22,13 +24,11 @@ const removeWishlist = async (id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                await store.dispatch('removeWishlist', id);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Removed!',
-                    text: 'The product has been removed from your wishlist.',
-                    timer: 1300,
-                    showConfirmButton: false
+                await axios.delete(`http://localhost:3000/wishlist/${id}`)
+                await store.dispatch('fetchWishlist')
+                toast.success("The product has been removed from your wishlist.", {
+                    autoClose: 3000,
+                    position: "top-right",
                 });
             } catch (err) {
                 console.error(err);
@@ -77,7 +77,7 @@ onMounted(async () => {
                         </template>
 
                         <div class="mt-auto d-flex gap-2">
-                            <router-link :to="`/productdetail/${items.productId}`"
+                            <router-link :to="`/productDetail/${items.productId}`"
                                 class="btn btn-dark flex-grow-1 d-flex align-items-center justify-content-center gap-2">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>View Detail</span>

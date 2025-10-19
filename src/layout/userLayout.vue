@@ -2,26 +2,42 @@
 import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 const store = useStore();
 
-const user = computed(() => {
-  const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  return storedUser || null;
-});
-
+const user = computed(() => store.getters.getUser);
 const cartCount = computed(() => store.getters.getCartCount);
 
 const handleLogout = () => {
-  localStorage.removeItem("loggedInUser");
-  router.push("/login");
+  Swal.fire({
+    icon: "question",
+    title: "Logout?",
+    text: "Do you want to log out of your account?",
+    showCancelButton: true,
+    confirmButtonText: "Yes, logout",
+    confirmButtonColor: "#000",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      store.dispatch("logout");
+      Swal.fire({
+        icon: "success",
+        title: "Logged out successfully!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      router.push("/login");
+    }
+  });
 };
 
 onMounted(() => {
   store.dispatch("fetchCart");
 });
 </script>
+
+
 
 <template>
   <header>
@@ -57,7 +73,7 @@ onMounted(() => {
 
           <!-- Right actions -->
           <div class="d-flex align-items-center gap-2">
-            <template v-if="user">
+            <template v-if="user && user.fullname">
               <span class="text-dark">
                 <i class="fa-solid fa-user" style="color: #000000;"></i>
                 Hi, <b>{{ user.fullname }}</b>
@@ -69,6 +85,7 @@ onMounted(() => {
 
               <button @click="handleLogout" class="btn btn-outline-dark btn-sm">Logout</button>
             </template>
+
 
             <template v-else>
               <router-link to="/login" class="btn btn-outline-dark btn-sm">Login</router-link>

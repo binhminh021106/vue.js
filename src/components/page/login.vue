@@ -3,9 +3,10 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useStore } from 'vuex';
 
 const router = useRouter();
-
+const store = useStore();
 const email = ref("");
 const password = ref("");
 const form = ref([]);
@@ -43,6 +44,7 @@ const handleLogin = () => {
             confirmButtonColor: '#000'
         })
     } else {
+        store.dispatch("login", user);
         Swal.fire({
             icon: 'success',
             title: 'Login Complete',
@@ -51,7 +53,7 @@ const handleLogin = () => {
             confirmButtonText: 'Go to Home',
             confirmButtonColor: '#000'
         }).then(() => {
-            window.location.href = '/'
+            router.push("/")
         })
 
         localStorage.setItem('loggedInUser', JSON.stringify(user));
