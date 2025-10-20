@@ -14,6 +14,8 @@ const route = useRoute()
 const user = JSON.parse(localStorage.getItem('loggedInUser'))
 const comment = ref('')
 const product_Comment = ref([])
+const replyingTo = ref(null)
+const replyText = ref('')
 
 const product = computed(() => store.getters.getProduct);
 const categories = computed(() => store.getters.getCategories);
@@ -37,9 +39,22 @@ const readReview = async () => {
 const readComment = async () => {
     try {
         const res = await axios.get('http://localhost:3000/comment')
-        product_Comment.value = res.data.filter(r => r.productId == route.params.id)
+        product_Comment.value = res.data.filter(r => r.productId == route.params.id).map(c => ({
+            ...c,
+            likes: c.likes || 0,
+            liked: c.liked || false
+        }))
     } catch (err) {
         console.error("Err: ", err)
+    }
+}
+
+
+const toggleLike = (comment) => {
+    const target = product_Comment.value.find(c => c.id === comment.id)
+    if (target) {
+        target.liked = !target.liked
+        target.likes += target.liked ? 1 : -1
     }
 }
 
@@ -48,6 +63,35 @@ const averageRating = computed(() => {
     const total = review.value.reduce((sum, r) => sum + (r.rating || 0), 0);
     return (total / review.value.length).toFixed(1);
 });
+
+const submitReply = async (parentId) => {
+    if (!user || !replyText.value.trim()) return;
+
+    try {
+        const res = await axios.post('http://localhost:3000/comment', {
+            userId: user.id,
+            productId: route.params.id,
+            parentId: parentId,
+            username: user.fullname,
+            imageUser: user.image,
+            comment: replyText.value,
+            date: new Date(),
+        });
+
+        product_Comment.value.push(res.data)
+        toast.success("Reply submitted!", { autoClose: 2000 });
+        replyText.value = "";
+        replyingTo.value = null;
+    } catch (err) {
+        console.error("Err reply:", err);
+    }
+};
+
+const rootComments = computed(() =>
+    product_Comment.value.filter(c => !c.parentId)
+)
+const repliesOf = (parentId) =>
+    product_Comment.value.filter(c => c.parentId === parentId)
 
 const totalReviews = computed(() => review.value.length);
 
@@ -92,7 +136,7 @@ const handleAddToCart = async () => {
 };
 
 const submitComment = async () => {
-    if (!user) return
+    if (!user || !comment.value.trim()) return;
 
     try {
         const res = await axios.post('http://localhost:3000/comment', {
@@ -102,14 +146,17 @@ const submitComment = async () => {
             imageUser: user.image,
             comment: comment.value,
             date: new Date(),
-        })
-        product_Comment.value.push(res.data)
-        toast.success("Comment submitted!", { autoClose: 2000 })
-        comment.value = ""
+            parentId: null,
+        });
+
+        product_Comment.value.push(res.data);
+        toast.success("Comment submitted!", { autoClose: 2000 });
+        comment.value = "";
     } catch (err) {
-        console.error("Err comment: ", err)
+        console.error("Err comment:", err);
     }
-}
+};
+
 
 const handleAddToWishlist = async () => {
     if (!product.value) return;
@@ -292,34 +339,67 @@ onMounted(() => {
 
             <!-- Comment List -->
             <div class="comment-list">
-                <div v-for="i in product_Comment" :key="i.id"
+                <!-- Bình luận gốc -->
+                <div v-for="c in rootComments" :key="c.id"
                     class="comment-item d-flex gap-3 align-items-start mb-4 p-3 rounded-4 shadow-sm bg-white border">
-                    <img :src="i.imageUser" class="avatar flex-shrink-0 rounded-circle" :alt="i.fullname"
+                    <img :src="c.imageUser" class="avatar flex-shrink-0 rounded-circle" :alt="c.username"
                         style="width:50px; height:50px;" />
                     <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <h6 class="fw-bold mb-0">{{ i.username }}</h6>
-                            <small class="text-muted">{{ dayjs(i.date).fromNow() }}</small>
+                            <h6 class="fw-bold mb-0">{{ c.username }}</h6>
+                            <small class="text-muted">{{ dayjs(c.date).fromNow() }}</small>
                         </div>
-                        <p class="text-muted mb-2">
-                            {{ i.comment }}
-                        </p>
+                        <p class="text-muted mb-2">{{ c.comment }}</p>
+
+                        <!-- Nút hành động -->
                         <div class="d-flex gap-2">
-                            <button
-                                class="btn btn-sm btn-outline-primary rounded-pill py-0 px-3 d-flex align-items-center">
-                                <i class="fa fa-thumbs-up me-1"></i> Like
+                            <button @click="toggleLike(c)"
+                                class="btn btn-sm rounded-pill py-0 px-3 d-flex align-items-center"
+                                :class="c.liked ? 'btn-primary' : 'btn-outline-primary'">
+                                <i :class="['fa', c.liked ? 'fa-thumbs-up' : 'fa-regular fa-thumbs-up', 'me-1']"></i>
+                                {{ c.likes || 0 }}
                             </button>
-                            <button
+                            <button @click="replyingTo = c.id"
                                 class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-3 d-flex align-items-center">
                                 <i class="fa fa-reply me-1"></i> Reply
                             </button>
                         </div>
+
+                        <!-- Khung trả lời -->
+                        <div v-if="replyingTo === c.id" class="reply-box mt-3 ps-5">
+                            <div class="p-3 rounded-3 bg-light border">
+                                <textarea v-model="replyText" class="form-control mb-2" rows="2"
+                                    placeholder="Write your feedback..."></textarea>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button @click="submitReply(c.id)" class="btn btn-dark btn-sm">
+                                        Send
+                                    </button>
+                                    <button @click="replyingTo = null" class="btn btn-outline-secondary btn-sm">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Các phản hồi con -->
+                        <div v-for="r in repliesOf(c.id)" :key="r.id" class="reply-item mt-3 ps-5">
+                            <div
+                                class="d-flex gap-3 align-items-start bg-white rounded p-2 border-start border-2 border-primary">
+                                <img :src="r.imageUser" class="avatar rounded-circle" alt="reply user"
+                                    style="width:40px; height:40px;" />
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <h6 class="fw-semibold mb-0">{{ r.username }}</h6>
+                                        <small class="text-muted"> | {{ dayjs(r.date).fromNow() }}</small>
+                                    </div>
+                                    <p class="text-muted mb-1">{{ r.comment }}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
 
         <!-- Sản phẩm liên quan -->
         <div class="related-products mt-5 pt-4 border-top">
@@ -462,5 +542,33 @@ input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+.reply-box {
+    border-left: 3px solid #000000;
+}
+
+.reply-item {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.reply-item:hover {
+    background-color: #f1f1f1;
+}
+
+.reply-box textarea {
+    resize: none;
+}
+
+.comment-item {
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 </style>
