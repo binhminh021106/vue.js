@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
 
 const order = ref(null)
 const route = useRoute()
@@ -10,6 +11,15 @@ const orderdetail = async () => {
     try {
         const res = await axios.get(`http://localhost:3000/order/${route.params.id}`)
         order.value = res.data
+
+        const reviewsRes = await axios.get(`http://localhost:3000/reviews?orderId=${order.value.id}`)
+        const reviewedProducts = reviewsRes.data.map(r => r.productId)
+
+        order.value.products.forEach((item) => {
+            item.tempRating = 0
+            item.tempComment = ''
+            item.alreadyReviewed = reviewedProducts.includes(item.productId)
+        })
     } catch (err) {
         console.error("Err: ", err)
     }
@@ -27,6 +37,30 @@ const getStatusClass = (status) => {
             return 'bg-info text-dark'
         default:
             return 'bg-secondary text-white'
+    }
+}
+
+const review = async (product) => {
+    if (!product.tempRating) {
+        Swal.fire('Oops!', 'Please select a rating before submitting.', 'warning')
+        return
+    }
+
+    try {
+        axios.post('http://localhost:3000/reviews', {
+            orderId: order.value.id,
+            productId: product.productId,
+            rating: product.tempRating,
+            comment: product.tempComment,
+            date: new Date().toLocaleDateString()
+        })
+        product.alreadyReviewed = true
+        toast.success("Successful product review", {
+            autoClose: 3000,
+            position: "top-right",
+        });
+    } catch (err) {
+        console.error("Err rating: ", err)
     }
 }
 
@@ -78,16 +112,47 @@ onMounted(orderdetail)
             <h5 class="fw-semibold mb-3">🛍️ Ordered Products</h5>
 
             <!-- Product -->
-            <div class="d-flex align-items-center mb-3 pb-3 border-bottom" v-for="items in order.products"
-                :key="items.productId">
-                <img :src="items.image" :alt="items.name" width="70" height="70" class="rounded border me-3" />
-                <div class="flex-grow-1">
-                    <p class="fw-semibold mb-1">{{ items.name }}</p>
-                    <p class="text-muted mb-0">x{{ items.quantity }} — {{ Number(items.discount).toLocaleString('vi-VN') }}₫</p>
+            <div class="mb-4 pb-4 border-bottom" v-for="items in order.products" :key="items.productId">
+                <div class="d-flex align-items-center mb-3">
+                    <img :src="items.image" :alt="items.name" width="70" height="70" class="rounded border me-3" />
+                    <div class="flex-grow-1">
+                        <p class="fw-semibold mb-1">{{ items.name }}</p>
+                        <p class="text-muted mb-0">
+                            x{{ items.quantity }} — {{ Number(items.discount).toLocaleString('vi-VN') }}₫
+                        </p>
+                    </div>
+                    <p class="fw-bold text-danger mb-0">
+                        {{ (items.discount * items.quantity).toLocaleString('vi-VN') }}₫
+                    </p>
                 </div>
-                <p class="fw-bold text-danger mb-0">{{ (items.discount * items.quantity).toLocaleString('vi-VN') }}₫</p>
+
+                <div v-if="order.status === 'Delivered' && !items.alreadyReviewed"
+                    class="rating-section mt-3 p-3 bg-light rounded-3">
+                    <p class="fw-semibold mb-2">Rate this product</p>
+
+                    <div class="stars mb-3">
+                        <i v-for="n in 5" :key="n" class="fa-star fa me-2"
+                            :class="n <= items.tempRating ? 'fa-solid text-warning' : 'fa-regular text-secondary'"
+                            @click="items.tempRating = n"></i>
+                    </div>
+
+                    <textarea class="form-control rounded-3" placeholder="Write your review here..." rows="2"
+                        v-model="items.tempComment"></textarea>
+
+                    <div class="text-end mt-3">
+                        <button class="btn btn-dark btn-sm px-3" @click="review(items)">
+                            <i class="fa fa-paper-plane me-1"></i>Submit Review
+                        </button>
+                    </div>
+                </div>
+                <div v-else-if="items.alreadyReviewed" class="alert alert-success mt-3 py-2">
+                    <i class="fa-solid fa-check-circle me-1"></i>
+                    You have already reviewed this product.
+                </div>
+
             </div>
         </div>
+
 
         <!-- Payment Summary -->
         <div class="card shadow-sm border-0 rounded-4 p-4">

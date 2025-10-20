@@ -15,7 +15,11 @@ const readview = async () => {
 
     try {
         const res = await axios.get(`http://localhost:3000/order?userId=${storedUser.id}`)
-        vieworder.value = res.data
+        vieworder.value = res.data.sort((a, b) => {
+            const dateA = new Date(a.date.split(' ')[1].split('/').reverse().join('-') + ' ' + a.date.split(' ')[0])
+            const dateB = new Date(b.date.split(' ')[1].split('/').reverse().join('-') + ' ' + b.date.split(' ')[0])
+            return dateB - dateA
+        })
     } catch (err) {
         console.error("Err: ", err)
     }
@@ -23,19 +27,38 @@ const readview = async () => {
 
 const Canceled = async (orderId) => {
     try {
-        await axios.patch(`http://localhost:3000/order/${orderId}`, { status: 'Canceled' })
+        const result = await Swal.fire({
+            icon: "question",
+            title: "Cancel Order?",
+            text: "Are you sure you want to cancel this order?",
+            showCancelButton: true,
+            confirmButtonText: "Yes, cancel it",
+            cancelButtonText: "No, keep it",
+            confirmButtonColor: "#000",
+        });
 
-        const order = vieworder.value.find(o => o.id === orderId)
-        if (order) order.status = 'Canceled'
+        if (!result.isConfirmed) return;
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Order cancelled',
+        await axios.patch(`http://localhost:3000/order/${orderId}`, { status: "Canceled" });
+
+        const order = (vieworder?.value ?? vieworder)?.find(o => o.id === orderId);
+        if (order) order.status = "Canceled";
+
+        await Swal.fire({
+            icon: "success",
+            title: "Order canceled",
+            text: "The order has been successfully canceled.",
             timer: 1500,
             showConfirmButton: false
-        })
+        });
+
     } catch (err) {
-        console.error("Err: ", err)
+        console.error("Error:", err);
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to cancel the order. Please try again later.",
+        });
     }
 }
 
@@ -83,7 +106,7 @@ const buyBack = async (products) => {
             await store.dispatch('addToCart', {
                 product: {
                     ...fullProduct,
-                    category: categoryName 
+                    category: categoryName
                 },
                 quantity: item.quantity
             })
@@ -149,20 +172,28 @@ onMounted(readview)
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div style="min-width: 100px;">
+                    <div class="d-flex gap-2 flex-wrap">
                         <button v-if="value.status === 'Delivered' || value.status === 'Canceled'"
                             class="btn btn-outline-primary btn-sm" @click="buyBack(value.products)">
                             Buy Back
                         </button>
-                        <button @click="Canceled(value.id)" v-else-if="value.status === 'Pending'"
-                            class="btn btn-outline-danger btn-sm">Cancel
-                            order</button>
+
+                        <button v-else-if="value.status === 'Pending'" @click="Canceled(value.id)"
+                            class="btn btn-outline-danger btn-sm">
+                            Cancel order
+                        </button>
+
+                        <button v-if="value.status === 'Delivered'" class="btn btn-outline-danger btn-sm"
+                            @click="$router.push(`/orderdetail/${value.id}#review`)">
+                            Rate Products
+                        </button>
                     </div>
 
                     <router-link :to="`/orderdetail/${value.id}`" class="btn btn-outline-dark btn-sm">
                         View Details
                     </router-link>
                 </div>
+
 
 
             </div>

@@ -126,11 +126,6 @@ watch(() => route.params.id, async (newId) => {
                         </span>
                     </div>
 
-                    <p class="text-secondary">
-                        Đôi giày huyền thoại mang phong cách cổ điển, chất liệu da cao cấp,
-                        đế cao su chống trơn trượt. Phù hợp cho mọi phong cách thời trang.
-                    </p>
-
                     <div class="mt-4">
                         <p class="fw-semibold mb-2">Choose Quantity:</p>
                         <div class="input-group input-group-sm" style="width: 120px;">
