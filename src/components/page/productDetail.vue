@@ -106,8 +106,6 @@ const getStarClass = (n) => {
     }
 }
 
-
-
 const handleAddToCart = async () => {
     if (!product.value) return;
     isAddingToCart.value = true;
@@ -253,8 +251,15 @@ onMounted(() => {
                         <small class="text-muted">
                             {{ averageRating }}/5.0 based on {{ totalReviews }} reviews
                         </small>
-                    </div>
 
+                    </div>
+                    <br>
+
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 shadow-sm">
+                            Available: <strong>{{ product.quantity }}</strong>
+                        </span>
+                    </div>
 
                     <div class="mt-4">
                         <p class="fw-semibold mb-2">Choose Quantity:</p>
@@ -267,12 +272,14 @@ onMounted(() => {
                     </div>
 
                     <div class="mt-4 d-flex gap-3 flex-wrap">
-                        <button @click="handleAddToCart" class="btn btn-dark px-4 py-2" :disabled="isAddingToCart">
+                        <button v-if="product.quantity > 0" @click="handleAddToCart" class="btn btn-dark px-4 py-2"
+                            :disabled="isAddingToCart">
                             <span v-if="isAddingToCart" class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>
                             <i v-else class="fa fa-shopping-cart me-2"></i>
                             {{ isAddingToCart ? 'Adding...' : 'Add to cart' }}
                         </button>
+                        <button v-else class="btn btn-danger" disabled>Out of stock</button>
                         <button @click="handleAddToWishlist" class="btn btn-outline-danger px-4 py-2"
                             :disabled="isAddingToWishlist">
                             <span v-if="isAddingToWishlist" class="spinner-border spinner-border-sm" role="status"
@@ -412,7 +419,7 @@ onMounted(() => {
                         <div class="card-body text-center p-2">
                             <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
-                            }} ₫</p>
+                                }} ₫</p>
                             <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
                                 <i class="fa fa-eye me-2"></i>View
                             </router-link>

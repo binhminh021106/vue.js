@@ -6,17 +6,21 @@ const adminorder = ref([]);
 const searchQuery = ref("");
 const filterStatus = ref("");
 
-// Đọc dữ liệu đơn hàng
 const readorder = async () => {
     try {
         const res = await axios.get('http://localhost:3000/order');
-        adminorder.value = res.data;
+        adminorder.value = res.data.sort((a, b) => {
+            const [timeA, dateA] = a.date.split(', ')
+            const [timeB, dateB] = b.date.split(', ')
+            const dA = new Date(`${dateA} ${timeA}`)
+            const dB = new Date(`${dateB} ${timeB}`)
+            return dB - dA
+        })
     } catch (err) {
         console.error("Err: ", err);
     }
 };
 
-// Lọc đơn hàng theo tìm kiếm và trạng thái
 const filteredOrders = computed(() => {
     return adminorder.value.filter(order => {
         const matchSearch =

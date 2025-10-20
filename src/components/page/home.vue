@@ -216,9 +216,10 @@ onMounted(() => {
               <p class="fw-bold mb-2">{{ Number(item.price).toLocaleString('vi-VN') }} ₫</p>
             </template>
 
-            <button @click="addtocart(item)" class="btn btn-dark btn-sm mt-1">
+            <button v-if="item.quantity > 0"@click="addtocart(item)" class="btn btn-dark btn-sm mt-1">
               <i class="fa fa-shopping-cart me-1"></i> Add to cart
             </button>
+            <button v-else class="btn btn-danger btn-sm mt-1" disabled>Out of Stock</button>
           </div>
         </div>
       </div>

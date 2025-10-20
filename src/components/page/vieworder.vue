@@ -187,6 +187,11 @@ onMounted(readview)
                             Cancel order
                         </button>
 
+                        <router-link :to="`/orderdetail/${value.id}`" v-if="value.status === 'Delivered'"
+                            class="btn btn-outline-success btn-sm">
+                            Review
+                        </router-link>
+
                     </div>
 
                     <router-link :to="`/orderdetail/${value.id}`" class="btn btn-outline-dark btn-sm">
