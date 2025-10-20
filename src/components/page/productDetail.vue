@@ -11,6 +11,9 @@ dayjs.extend(relativeTime)
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
+const user = JSON.parse(localStorage.getItem('loggedInUser'))
+const comment = ref('')
+const product_Comment = ref([])
 
 const product = computed(() => store.getters.getProduct);
 const categories = computed(() => store.getters.getCategories);
@@ -28,6 +31,15 @@ const readReview = async () => {
         review.value = res.data.filter(r => r.productId == route.params.id)
     } catch (error) {
         console.error("Err review: ", error)
+    }
+}
+
+const readComment = async () => {
+    try {
+        const res = await axios.get('http://localhost:3000/comment')
+        product_Comment.value = res.data.filter(r => r.productId == route.params.id)
+    } catch (err) {
+        console.error("Err: ", err)
     }
 }
 
@@ -79,6 +91,26 @@ const handleAddToCart = async () => {
     }
 };
 
+const submitComment = async () => {
+    if (!user) return
+
+    try {
+        const res = await axios.post('http://localhost:3000/comment', {
+            userId: user.id,
+            productId: route.params.id,
+            username: user.fullname,
+            imageUser: user.image,
+            comment: comment.value,
+            date: new Date(),
+        })
+        product_Comment.value.push(res.data)
+        toast.success("Comment submitted!", { autoClose: 2000 })
+        comment.value = ""
+    } catch (err) {
+        console.error("Err comment: ", err)
+    }
+}
+
 const handleAddToWishlist = async () => {
     if (!product.value) return;
     isAddingToWishlist.value = true;
@@ -124,7 +156,10 @@ watch(() => route.params.id, async (newId) => {
     }
 }, { immediate: true });
 
-onMounted(readReview)
+onMounted(() => {
+    readComment()
+    readReview()
+})
 </script>
 
 <template>
@@ -233,47 +268,56 @@ onMounted(readReview)
             <h4 class="fw-bold mb-4 text-center text-uppercase">Product Comments</h4>
 
             <!-- Comment Form -->
-            <div class="comment-form p-3 rounded shadow-sm bg-white mb-4">
+            <div v-if="user" class="comment-form p-3 rounded shadow-sm bg-white mb-4">
                 <div class="d-flex gap-3">
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="avatar flex-shrink-0"
-                        alt="user" />
+                    <img :src="user.image" class="avatar flex-shrink-0" alt="user" />
                     <div class="flex-grow-1">
-                        <textarea class="form-control rounded-3" rows="3"
+                        <textarea v-model="comment" class="form-control rounded-3" rows="3"
                             placeholder="Write your comment here..."></textarea>
                         <div class="text-end mt-2">
-                            <button class="btn btn-dark px-4 py-2 rounded-3">
+                            <button @click="submitComment" class="btn btn-dark px-4 py-2 rounded-3">
                                 <i class="fa fa-paper-plane me-2"></i> Submit Comment
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+            <div v-else class="text-center bg-white border rounded-3 p-4 shadow-sm mt-4">
+                <i class="fa fa-lock text-muted fs-3 mb-2"></i>
+                <p class="text-muted mb-3">Please log in to comment.</p>
+                <router-link to="/login" class="btn btn-outline-dark rounded-3 px-4 py-2">
+                    <i class="fa fa-sign-in-alt me-2"></i> Log In
+                </router-link>
+            </div>
 
             <!-- Comment List -->
             <div class="comment-list">
-                <div v-for="i in 3" :key="i"
-                    class="comment-item d-flex gap-3 align-items-start mb-4 p-3 rounded-4 shadow-sm bg-light">
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="avatar flex-shrink-0"
-                        alt="user" />
-                    <div>
+                <div v-for="i in product_Comment" :key="i.id"
+                    class="comment-item d-flex gap-3 align-items-start mb-4 p-3 rounded-4 shadow-sm bg-white border">
+                    <img :src="i.imageUser" class="avatar flex-shrink-0 rounded-circle" :alt="i.fullname"
+                        style="width:50px; height:50px;" />
+                    <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <h6 class="fw-bold mb-0">User {{ i }}</h6>
-                            <small class="text-muted">2 hours ago</small>
+                            <h6 class="fw-bold mb-0">{{ i.username }}</h6>
+                            <small class="text-muted">{{ dayjs(i.date).fromNow() }}</small>
                         </div>
-                        <p class="text-muted small mb-1">
-                            Sample comment number {{ i }} for this product 😁
+                        <p class="text-muted mb-2">
+                            {{ i.comment }}
                         </p>
-                        <div class="d-flex gap-2 mt-1">
-                            <button class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-3">
+                        <div class="d-flex gap-2">
+                            <button
+                                class="btn btn-sm btn-outline-primary rounded-pill py-0 px-3 d-flex align-items-center">
                                 <i class="fa fa-thumbs-up me-1"></i> Like
                             </button>
-                            <button class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-3">
+                            <button
+                                class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-3 d-flex align-items-center">
                                 <i class="fa fa-reply me-1"></i> Reply
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
 
@@ -412,5 +456,11 @@ onMounted(readReview)
     .related-img {
         height: 130px;
     }
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 </style>
