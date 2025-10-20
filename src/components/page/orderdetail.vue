@@ -50,9 +50,10 @@ const review = async (product) => {
         axios.post('http://localhost:3000/reviews', {
             orderId: order.value.id,
             productId: product.productId,
+            username: order.value.fullname,
             rating: product.tempRating,
             comment: product.tempComment,
-            date: new Date().toLocaleDateString()
+            date: new Date().toLocaleString()
         })
         product.alreadyReviewed = true
         toast.success("Successful product review", {
