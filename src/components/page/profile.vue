@@ -44,6 +44,24 @@ const getAge = (dateString) => {
   return age
 }
 
+const fileInput = ref(null)
+
+const triggerFileInput = () => {
+  fileInput.value.click()
+}
+
+const handleImageChange = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      user.value.image = e.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+
 
 const saveChanges = async () => {
   try {
@@ -73,10 +91,11 @@ const saveChanges = async () => {
         <!-- Avatar + Basic Info -->
         <div class="d-flex align-items-center gap-4 flex-wrap">
           <div class="text-center flex-shrink-0">
-            <img :src="user.image || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" alt="avatar"
+            <img :src="user.image || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" alt="avatar"
               class="rounded-circle border shadow-sm" width="140" height="140" />
             <div class="mt-3">
-              <button class="btn btn-outline-dark btn-sm px-3">
+              <input type="file" ref="fileInput" accept="image/*" class="d-none" @change="handleImageChange" />
+              <button class="btn btn-outline-dark btn-sm px-3" @click="triggerFileInput">
                 <i class="fa fa-camera me-2"></i>Choose image
               </button>
             </div>
@@ -85,7 +104,7 @@ const saveChanges = async () => {
           <div class="flex-grow-1">
             <h3 class="fw-bold mb-2">{{ user.fullname }}</h3>
             <p class="text-muted mb-1">
-              <i class="fa fa-birthday-cake me-2"></i>Tuổi: {{ getAge(user.date_birth) }}
+              <i class="fa fa-birthday-cake me-2"></i>Age: {{ getAge(user.date_birth) }}
             </p>
             <p class="text-muted mb-1"><i class="fa fa-envelope me-2"></i>{{ user.email }}</p>
             <p class="text-muted mb-1"><i class="fa fa-phone me-2"></i>{{ user.phone }}</p>

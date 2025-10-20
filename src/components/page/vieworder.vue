@@ -14,12 +14,16 @@ const readview = async () => {
     user.value = storedUser
 
     try {
-        const res = await axios.get(`http://localhost:3000/order?userId=${storedUser.id}`)
-        vieworder.value = res.data.sort((a, b) => {
-            const dateA = new Date(a.date.split(' ')[1].split('/').reverse().join('-') + ' ' + a.date.split(' ')[0])
-            const dateB = new Date(b.date.split(' ')[1].split('/').reverse().join('-') + ' ' + b.date.split(' ')[0])
-            return dateB - dateA
-        })
+        const res = await axios.get(`http://localhost:3000/order`)
+        vieworder.value = res.data
+            .filter(o => o.userId === storedUser.id)
+            .sort((a, b) => {
+                const [timeA, dateA] = a.date.split(', ')
+                const [timeB, dateB] = b.date.split(', ')
+                const dA = new Date(`${dateA} ${timeA}`)
+                const dB = new Date(`${dateB} ${timeB}`)
+                return dB - dA
+            })
     } catch (err) {
         console.error("Err: ", err)
     }
