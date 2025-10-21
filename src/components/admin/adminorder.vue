@@ -1,10 +1,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const adminorder = ref([]);
 const searchQuery = ref("");
 const filterStatus = ref("");
+const selectedId = ref(null)
+const selectedName = ref("")
 
 const readorder = async () => {
     try {
@@ -20,6 +23,30 @@ const readorder = async () => {
         console.error("Err: ", err);
     }
 };
+
+const askDelete = (id, name) => {
+    selectedId.value = id
+    selectedName.value = name
+}
+
+const deleteOrder = async () => {
+    if (!selectedId.value) return
+    try {
+        await axios.delete(`http://localhost:3000/order/${selectedId.value}`)
+        adminorder.value = adminorder.value.filter(c => c.id !== selectedId.value)
+        selectedId.value = null
+        selectedName.value = ""
+        Swal.fire({
+            icon: 'success',
+            title: 'Xoá order thành công',
+            text: `Bạn đã xoá order thành công`,
+            showConfirmButton: true,
+            confirmButtonColor: '#000'
+        })
+    } catch (err) {
+        console.error('Err delete order: ', err)
+    }
+}
 
 const filteredOrders = computed(() => {
     return adminorder.value.filter(order => {
@@ -98,7 +125,8 @@ onMounted(readorder);
                                 :to="`/admin/AdminOrderView/${order.id}`">
                                 <i class="fa fa-eye"></i>
                             </router-link>
-                            <button class="btn btn-outline-danger btn-sm">
+                            <button @click="askDelete(order.id, order.fullname)" class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
                                 <i class="fa fa-trash me-1"></i>
                             </button>
                         </td>
@@ -111,6 +139,26 @@ onMounted(readorder);
                     </tr>
                 </tbody>
             </table>
+
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title">Xác nhận xoá</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                            <i class="fa fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                            <p>Bạn có chắc muốn xoá <strong>{{ selectedName }}</strong> không?</p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                            <button @click="deleteOrder" data-bs-dismiss="modal" class="btn btn-danger">Xoá</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </template>

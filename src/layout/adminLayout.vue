@@ -1,3 +1,7 @@
+<script setup>
+const user = JSON.parse(localStorage.getItem('loggedInUser'))
+</script>
+
 <template>
   <div class="admin-layout d-flex flex-column min-vh-100 bg-light">
     <!-- HEADER -->
@@ -9,8 +13,7 @@
       </div>
       <div class="d-flex align-items-center gap-3">
         <i class="fa-regular fa-bell fs-5 text-dark"></i>
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle border"
-          width="40" height="40" />
+        <img :src="user.image" :alt="user.fullname" class="rounded-circle border" width="40" height="40" />
       </div>
     </header>
 
@@ -20,7 +23,7 @@
         <ul class="list-unstyled d-flex flex-column gap-2 mt-3">
           <li>
             <router-link to="/admin/user" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-user me-2"></i>Người dùng
+              <i class="fa-solid fa-users me-2"></i>Người dùng
             </router-link>
           </li>
           <li>
@@ -35,27 +38,32 @@
           </li>
           <li>
             <router-link to="/admin/adminorder" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-truck-fast me-2"></i>Đơn hàng
+              <i class="fa-solid fa-box-open me-2"></i>Đơn hàng
             </router-link>
           </li>
           <li>
             <router-link to="/admin/adminCoupon" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-ticket-simple me-2"></i>Mã giảm giá
+              <i class="fa-solid fa-ticket me-2"></i>Mã giảm giá
             </router-link>
           </li>
           <li>
             <router-link to="/admin/adminMail" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-envelope-open-text me-2"></i>Thông báo email
+              <i class="fa-solid fa-envelope me-2"></i>Thông báo email
             </router-link>
           </li>
           <li>
             <router-link to="/admin/doanhthu" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-chart-column me-2"></i>Doanh thu
+              <i class="fa-solid fa-chart-line me-2"></i>Doanh thu
             </router-link>
           </li>
           <li>
             <router-link to="/admin/thongKeUser" class="nav-link" active-class="active-link">
-              <i class="fa-solid fa-chart-column me-2"></i>Thống kê user
+              <i class="fa-solid fa-user me-2"></i>Thống kê user
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/admin/adminComment" class="nav-link" active-class="active-link">
+              <i class="fa-solid fa-comments me-2"></i>Quản lí bình luận
             </router-link>
           </li>
         </ul>

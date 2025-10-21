@@ -39,10 +39,11 @@ const readReview = async () => {
 const readComment = async () => {
     try {
         const res = await axios.get('http://localhost:3000/comment')
-        product_Comment.value = res.data.filter(r => r.productId == route.params.id).map(c => ({
+        product_Comment.value = res.data.filter(r => r.productId == route.params.id && r.status === "Approved").map(c => ({
             ...c,
             likes: c.likes || 0,
-            liked: c.liked || false
+            liked: c.liked || false,
+            product: c.product || ""
         }))
     } catch (err) {
         console.error("Err: ", err)
@@ -76,6 +77,7 @@ const submitReply = async (parentId) => {
             imageUser: user.image,
             comment: replyText.value,
             date: new Date(),
+            status: "Pending",
         });
 
         product_Comment.value.push(res.data)
@@ -145,10 +147,13 @@ const submitComment = async () => {
             comment: comment.value,
             date: new Date(),
             parentId: null,
+            status: "Pending",
+            product: product.value.name,
+            email: user.email
         });
 
         product_Comment.value.push(res.data);
-        toast.success("Comment submitted!", { autoClose: 2000 });
+        toast.success("Comment submitted! your comment will need to be approved before appearing", { autoClose: 2000 });
         comment.value = "";
     } catch (err) {
         console.error("Err comment:", err);

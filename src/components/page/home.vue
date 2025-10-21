@@ -174,7 +174,6 @@ onMounted(() => {
       </div>
     </section>
 
-
     <!-- PRODUCTS -->
     <section class="container my-5 position-relative">
       <h2 class="text-center fw-bold mb-4">NEW Product</h2>
