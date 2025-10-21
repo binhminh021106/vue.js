@@ -53,7 +53,10 @@ const review = async (product) => {
             username: order.value.fullname,
             rating: product.tempRating,
             comment: product.tempComment,
-            date: new Date().toLocaleString()
+            date: new Date().toLocaleString(),
+            status: "Pending",
+            product: product.name,
+            email: order.value.email
         })
         product.alreadyReviewed = true
         toast.success("Successful product review", {

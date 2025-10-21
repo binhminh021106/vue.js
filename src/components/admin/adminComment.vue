@@ -126,17 +126,14 @@ onMounted(readComment)
                             </span>
                         </td>
                         <td class="text-center">
-                            <button v-if="value.status === 'Pending'"
+                            <button :disabled="value.status === 'Approved' || value.status === 'Rejected'"
                                 @click="successComment(value.id)" class="btn btn-outline-success btn-sm me-2">
                                 <i class="fa fa-check"></i>
                             </button>
                             <button @click="RejectedComment(value.id)"
-                                v-if="value.status === 'Pending'"
+                                :disabled="value.status === 'Approved' || value.status === 'Rejected'"
                                 class="btn btn-outline-danger btn-sm me-2">
                                 <i class="fa fa-times"></i>
-                            </button>
-                            <button class="btn btn-outline-info btn-sm">
-                                <i class="fa fa-eye"></i>
                             </button>
                         </td>
                     </tr>

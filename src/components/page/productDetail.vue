@@ -30,7 +30,7 @@ const isAddingToWishlist = ref(false);
 const readReview = async () => {
     try {
         const res = await axios.get('http://localhost:3000/reviews')
-        review.value = res.data.filter(r => r.productId == route.params.id)
+        review.value = res.data.filter(r => r.productId == route.params.id && r.status === "Approved")
     } catch (error) {
         console.error("Err review: ", error)
     }

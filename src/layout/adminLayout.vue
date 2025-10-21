@@ -66,6 +66,11 @@ const user = JSON.parse(localStorage.getItem('loggedInUser'))
               <i class="fa-solid fa-comments me-2"></i>Quản lí bình luận
             </router-link>
           </li>
+          <li>
+            <router-link to="/admin/adminReview" class="nav-link" active-class="active-link">
+              <i class="fa-solid fa-star me-2"></i>Quản lí đánh giá
+            </router-link>
+          </li>
         </ul>
 
         <div class="mt-auto text-center pt-4 border-top">
