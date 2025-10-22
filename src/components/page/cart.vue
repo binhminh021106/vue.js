@@ -141,7 +141,7 @@ onMounted(async () => {
         <div class="text-center text-muted py-5" v-if="cart.length === 0">
             <i class="fa fa-shopping-cart fa-3x mb-3"></i>
             <p>Your cart is empty</p>
-            <router-link to="/" class="btn btn-dark">Continue Shopping</router-link>
+            <router-link to="/" class="text-decoration-none text-dark fw-semibold">Continue Shopping</router-link>
         </div>
 
         <!-- Danh sách sản phẩm -->

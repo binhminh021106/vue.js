@@ -153,7 +153,7 @@ const submitComment = async () => {
         });
 
         product_Comment.value.push(res.data);
-        toast.success("Comment submitted! your comment will need to be approved before appearing", { autoClose: 2000 });
+        toast.success("Comment submitted! It will appear after approval.", { autoClose: 2000 });
         comment.value = "";
     } catch (err) {
         console.error("Err comment:", err);
@@ -305,11 +305,13 @@ onMounted(() => {
         </div>
 
         <div class="reviews-section mt-5 pt-4 border-top">
-            <h4 class="fw-bold mb-4">Customer Reviews</h4>
+            <h4 class="fw-bold mb-4 text-center text-uppercase">Customer Reviews</h4>
+
             <div v-if="review.length > 0" class="review-list">
-                <div v-for="value in review" :key="value.id" class="review-item mb-3 p-3 rounded border bg-light">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="fw-semibold mb-1">{{ value.username }}</h6>
+                <div v-for="value in review" :key="value.id"
+                    class="review-item mb-3 p-3 rounded-3 border bg-white shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <h6 class="fw-semibold mb-0">{{ value.username }}</h6>
                         <small class="text-muted">{{ dayjs(value.date).fromNow() }}</small>
                     </div>
                     <div class="rating mb-2">
@@ -319,8 +321,14 @@ onMounted(() => {
                     <p class="mb-0 text-muted">{{ value.comment }}</p>
                 </div>
             </div>
-            <div v-else class="text-center text-muted mt-5">No reviews yet</div>
+
+            <div v-else class="empty-review text-center p-5 rounded bg-white shadow-sm mt-4">
+                <i class="fa fa-star text-warning fs-1 mb-3"></i>
+                <h6 class="fw-semibold text-dark">No reviews yet</h6>
+                <p class="text-muted small mb-0">Be the first to share your experience!</p>
+            </div>
         </div>
+
 
         <!-- Comments Section -->
         <div class="product-comments mt-5 pt-5 border-top">
@@ -350,67 +358,80 @@ onMounted(() => {
             </div>
 
             <!-- Comment List -->
-            <div class="comment-list">
-                <!-- Bình luận gốc -->
-                <div v-for="c in rootComments" :key="c.id"
-                    class="comment-item d-flex gap-3 align-items-start mb-4 p-3 rounded-4 shadow-sm bg-white border">
-                    <img :src="c.imageUser" class="avatar flex-shrink-0 rounded-circle" :alt="c.username"
-                        style="width:50px; height:50px;" />
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <h6 class="fw-bold mb-0">{{ c.username }}</h6>
-                            <small class="text-muted">{{ dayjs(c.date).fromNow() }}</small>
-                        </div>
-                        <p class="text-muted mb-2">{{ c.comment }}</p>
+            <div class="comment-section mt-5 pt-4 border-top">
+                <h4 class="fw-bold mb-4 text-center text-uppercase">Comments</h4>
 
-                        <!-- Nút hành động -->
-                        <div class="d-flex gap-2">
-                            <button @click="toggleLike(c)"
-                                class="btn btn-sm rounded-pill py-0 px-3 d-flex align-items-center"
-                                :class="c.liked ? 'btn-primary' : 'btn-outline-primary'">
-                                <i :class="['fa', c.liked ? 'fa-thumbs-up' : 'fa-regular fa-thumbs-up', 'me-1']"></i>
-                                {{ c.likes || 0 }}
-                            </button>
-                            <button @click="replyingTo = c.id"
-                                class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-3 d-flex align-items-center">
-                                <i class="fa fa-reply me-1"></i> Reply
-                            </button>
-                        </div>
+                <div v-if="rootComments.length > 0" class="comment-list">
+                    <!-- Bình luận gốc -->
+                    <div v-for="c in rootComments" :key="c.id"
+                        class="comment-item d-flex gap-3 align-items-start mb-4 p-3 rounded-4 bg-white border shadow-sm transition">
+                        <img :src="c.imageUser" class="avatar flex-shrink-0 rounded-circle border" :alt="c.username"
+                            style="width:50px; height:50px; object-fit:cover;" />
 
-                        <!-- Khung trả lời -->
-                        <div v-if="replyingTo === c.id" class="reply-box mt-3 ps-5">
-                            <div class="p-3 rounded-3 bg-light border">
-                                <textarea v-model="replyText" class="form-control mb-2" rows="2"
-                                    placeholder="Write your feedback..."></textarea>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button @click="submitReply(c.id)" class="btn btn-dark btn-sm">
-                                        Send
-                                    </button>
-                                    <button @click="replyingTo = null" class="btn btn-outline-secondary btn-sm">
-                                        Cancel
-                                    </button>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="fw-semibold mb-0 text-dark">{{ c.username }}</h6>
+                                <small class="text-muted">{{ dayjs(c.date).fromNow() }}</small>
+                            </div>
+                            <p class="text-muted mb-2">{{ c.comment }}</p>
+
+                            <!-- Nút hành động -->
+                            <div class="d-flex gap-2">
+                                <button @click="toggleLike(c)"
+                                    class="btn btn-sm rounded-pill py-0 px-3 d-flex align-items-center"
+                                    :class="c.liked ? 'btn-primary text-white' : 'btn-outline-primary'">
+                                    <i
+                                        :class="['fa', c.liked ? 'fa-thumbs-up' : 'fa-regular fa-thumbs-up', 'me-1']"></i>
+                                    {{ c.likes || 0 }}
+                                </button>
+                                <button @click="replyingTo = c.id"
+                                    class="btn btn-sm btn-outline-secondary rounded-pill py-0 px-3 d-flex align-items-center">
+                                    <i class="fa fa-reply me-1"></i> Reply
+                                </button>
+                            </div>
+
+                            <!-- Khung trả lời -->
+                            <div v-if="replyingTo === c.id" class="reply-box mt-3 ps-5">
+                                <div class="p-3 rounded-3 bg-light border">
+                                    <textarea v-model="replyText" class="form-control mb-2" rows="2"
+                                        placeholder="Write your reply..."></textarea>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button @click="submitReply(c.id)" class="btn btn-dark btn-sm">
+                                            Send
+                                        </button>
+                                        <button @click="replyingTo = null" class="btn btn-outline-secondary btn-sm">
+                                            Cancel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Các phản hồi con -->
-                        <div v-for="r in repliesOf(c.id)" :key="r.id" class="reply-item mt-3 ps-5">
-                            <div
-                                class="d-flex gap-3 align-items-start bg-white rounded p-2 border-start border-2 border-primary">
-                                <img :src="r.imageUser" class="avatar rounded-circle" alt="reply user"
-                                    style="width:40px; height:40px;" />
-                                <div>
-                                    <div class="d-flex justify-content-between align-items-center w-100">
-                                        <h6 class="fw-semibold mb-0">{{ r.username }}</h6>
-                                        <small class="text-muted"> | {{ dayjs(r.date).fromNow() }}</small>
+                            <!-- Phản hồi con -->
+                            <div v-for="r in repliesOf(c.id)" :key="r.id" class="reply-item mt-3 ps-5">
+                                <div
+                                    class="d-flex gap-3 align-items-start bg-light rounded-3 p-2 border-start border-3 border-primary shadow-sm">
+                                    <img :src="r.imageUser" class="avatar rounded-circle border" alt="reply user"
+                                        style="width:40px; height:40px; object-fit:cover;" />
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="fw-semibold mb-0">{{ r.username }}</h6>
+                                            <small class="text-muted">{{ dayjs(r.date).fromNow() }}</small>
+                                        </div>
+                                        <p class="text-muted mb-1">{{ r.comment }}</p>
                                     </div>
-                                    <p class="text-muted mb-1">{{ r.comment }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div v-else class="empty-comment text-center p-5 rounded bg-white shadow-sm mt-4">
+                    <i class="fa fa-comments text-primary fs-1 mb-3"></i>
+                    <h6 class="fw-semibold text-dark">No comments yet</h6>
+                    <p class="text-muted small mb-0">Be the first to share your thoughts!</p>
+                </div>
             </div>
+
         </div>
 
         <!-- Sản phẩm liên quan -->
@@ -424,7 +445,7 @@ onMounted(() => {
                         <div class="card-body text-center p-2">
                             <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
-                                }} ₫</p>
+                            }} ₫</p>
                             <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
                                 <i class="fa fa-eye me-2"></i>View
                             </router-link>
@@ -535,6 +556,29 @@ onMounted(() => {
     transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+.review-item {
+    transition: all 0.3s ease;
+}
+
+.review-item:hover {
+    background-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.empty-review {
+    border: 1px dashed #ddd;
+    color: #666;
+    background-color: #fafafa;
+    transition: all 0.2s ease;
+}
+
+.empty-review:hover {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 
 .rating i {
     font-size: 1.2rem;
