@@ -57,7 +57,6 @@ const readComment = async () => {
     }
 }
 
-
 const toggleLike = (comment) => {
     const target = product_Comment.value.find(c => c.id === comment.id)
     if (target) {
@@ -214,6 +213,12 @@ watch(() => route.params.id, async (newId) => {
         await store.dispatch('fetchProductData', newId);
         isLoading.value = false;
         window.scrollTo(0, 0);
+    }
+}, { immediate: true });
+
+watch(product, (newProduct) => {
+    if (newProduct && newProduct.id) {
+        fetchAIRecommendations(newProduct);
     }
 }, { immediate: true });
 
@@ -467,7 +472,6 @@ onMounted(() => {
             <div v-else class="text-center text-muted mt-5">No related products</div>
         </div>
     </div>
-
     <ProductDetailSkeleton v-else />
 </template>
 

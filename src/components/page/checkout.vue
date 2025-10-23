@@ -151,7 +151,7 @@ const placeOrder = async () => {
     try {
       const orderId = "DH" + Date.now();
 
-      const response = await axios.post("http://localhost:3002/create_payment_url", {
+      const response = await axios.post("http://localhost:3000/create_payment_url", {
         orderId,
         amount: Math.round(fullTotal.value),
         orderDescription: `Thanh toán đơn hàng #${orderId}`,
