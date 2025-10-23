@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 
 const router = useRouter()
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const cart = ref([])
 const user = ref({})
@@ -23,7 +24,9 @@ const readUser = async () => {
   const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
   if (storedUser) {
     try {
-      const res = await axios.get(`http://localhost:3000/user/${storedUser.id}`)
+      const res = await axios.get(`${API_URL}/user/${storedUser.id}`, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      })
       user.value = res.data
     } catch (err) {
       console.error('Error reading user:', err)
@@ -35,7 +38,9 @@ const readCart = async () => {
   const storedUser = JSON.parse(localStorage.getItem('loggedInUser'))
   if (!storedUser) return
   try {
-    const res = await axios.get(`http://localhost:3000/cart?userId=${storedUser.id}`)
+    const res = await axios.get(`${API_URL}/cart?userId=${storedUser.id}`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    })
     cart.value = res.data
   } catch (err) {
     console.error('Error reading cart:', err)
@@ -44,7 +49,9 @@ const readCart = async () => {
 
 const readCoupon = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/coupon')
+    const res = await axios.get(`${API_URL}/coupon`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    })
     coupons.value = res.data
   } catch (err) {
     console.error('Error reading coupons:', err)
@@ -140,6 +147,34 @@ const placeOrder = async () => {
     return
   }
 
+  if (selectPayment.value === "VNPAY") {
+    try {
+      const orderId = "DH" + Date.now();
+
+      const response = await axios.post("http://localhost:3002/create_payment_url", {
+        orderId,
+        amount: Math.round(fullTotal.value),
+        orderDescription: `Thanh toán đơn hàng #${orderId}`,
+      });
+
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error("Không nhận được URL từ server");
+      }
+      return;
+    } catch (error) {
+      console.error("VNPay error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'VNPay Error',
+        text: 'Không thể tạo liên kết thanh toán VNPay!',
+        confirmButtonColor: '#000'
+      });
+      return;
+    }
+  }
+
   try {
     const orderData = {
       userId: storedUser.id,
@@ -157,14 +192,18 @@ const placeOrder = async () => {
       products: cart.value
     }
 
-    const res = await axios.post('http://localhost:3000/order', orderData)
+    const res = await axios.post(`${API_URL}/order`, orderData, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    })
     localStorage.setItem("lastOrder", JSON.stringify(res.data))
 
     for (let item of cart.value) {
       try {
         const productId = item.productId || item.id
 
-        const productRes = await axios.get(`http://localhost:3000/products/${productId}`)
+        const productRes = await axios.get(`${API_URL}/products/${productId}`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        })
         const product = productRes.data
 
         if (product.quantity !== undefined) {
@@ -179,7 +218,9 @@ const placeOrder = async () => {
           }
 
           const newQuantity = Math.max(product.quantity - item.quantity, 0)
-          await axios.patch(`http://localhost:3000/products/${productId}`, { quantity: newQuantity })
+          await axios.patch(`${API_URL}/products/${productId}`, { quantity: newQuantity }, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+          })
         } else {
           console.warn(`Product ${product.name} has no 'quantity' field`)
         }
@@ -190,7 +231,9 @@ const placeOrder = async () => {
     }
 
     await Promise.all(
-      cart.value.map(item => axios.delete(`http://localhost:3000/cart/${item.id}`))
+      cart.value.map(item => axios.delete(`${API_URL}/cart/${item.id}`, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      }))
     )
 
     Swal.fire({
@@ -329,16 +372,11 @@ onMounted(() => {
                 <span>MoMo E-Wallet</span>
               </label>
 
-              <label class="payment-option p-3 mb-2 rounded-3 border d-flex align-items-center gap-3">
-                <input v-model="selectPayment" type="radio" value="Bank Transfer" class="form-check-input" />
-                <i class="fa-solid fa-building-columns text-success fs-5"></i>
-                <span>Bank Transfer</span>
-              </label>
-
               <label class="payment-option p-3 rounded-3 border d-flex align-items-center gap-3">
-                <input v-model="selectPayment" type="radio" value="Credit / Debit Card" class="form-check-input" />
-                <i class="fa-brands fa-cc-visa text-info fs-5"></i>
-                <span>Credit / Debit Card</span>
+                <input v-model="selectPayment" type="radio" value="VNPAY" class="form-check-input" />
+                <img src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg"
+                  width="40" />
+                <span>VNPAY</span>
               </label>
             </div>
           </div>

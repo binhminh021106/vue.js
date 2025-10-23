@@ -13,9 +13,14 @@ const form = ref([]);
 const message = ref("");
 const isSuccess = ref(false);
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
 const readadmin = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/user');
+        const res = await axios.get(`${API_URL}/user`, ngrokHeaderConfig);
         form.value = res.data;
     } catch (err) {
         console.log("Fetch posts error:", err);

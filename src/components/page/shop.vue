@@ -1,31 +1,37 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import axios from 'axios'
+import { useStore } from 'vuex'
+import ShopSidebarSkeleton from './ShopSidebarSkeleton.vue'
+import ProductGridSkeleton from './ProductGridSkeleton.vue'
 
-const category = ref([])
+const store = useStore()
+const category = computed(() => store.getters.getCategories);
 const products = ref([])
 const allProducts = ref([])
 const searchQuery = ref('')
 const sortOption = ref('Default sort')
 const selectedCategory = ref(null)
 
-const readCategory = async () => {
-  try {
-    const res = await axios.get('http://localhost:3000/categories')
-    category.value = res.data
-  } catch (err) {
-    console.error('Error category:', err)
-  }
-}
+const isLoadingCategories = ref(true)
+const isLoadingProducts = ref(true)
+
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+  headers: { 'ngrok-skip-browser-warning': 'true' },
+};
 
 const readProduct = async () => {
+  isLoadingProducts.value = true
   try {
-    const res = await axios.get('http://localhost:3000/products')
+    const res = await axios.get(`${API_URL}/products`, ngrokHeaderConfig)
     allProducts.value = res.data
     products.value = [...allProducts.value]
     sortProducts()
   } catch (err) {
     console.error('Error product:', err)
+  } finally {
+    isLoadingProducts.value = false
   }
 }
 
@@ -78,8 +84,20 @@ const selectCategory = (id) => {
   filterProducts()
 }
 
-onMounted(() => {
-  readCategory()
+onMounted(async () => {
+  if (store.getters.getCategories.length > 0) {
+    isLoadingCategories.value = false;
+  } else {
+    isLoadingCategories.value = true;
+    try {
+      await store.dispatch('fetchCategories');
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    } finally {
+      isLoadingCategories.value = false;
+    }
+  }
+
   readProduct()
 })
 
@@ -97,6 +115,7 @@ watch(searchQuery, () => {
     <div class="row">
       <!-- Sidebar -->
       <div class="col-lg-3 mb-4">
+        <ShopSidebarSkeleton v-if="isLoadingCategories" />
         <div class="p-3 border rounded shadow-sm bg-white">
           <!-- Search -->
           <h5 class="fw-bold mb-3">Search</h5>
@@ -129,58 +148,62 @@ watch(searchQuery, () => {
 
       <!-- Products -->
       <div class="col-lg-9">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <p class="mb-0 text-muted">Showing {{ products.length }} products</p>
-          <select v-model="sortOption" class="form-select w-auto">
-            <option selected>Default sort</option>
-            <option>A -> Z</option>
-            <option>Z -> A</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-          </select>
-        </div>
-
-        <div class="row g-4">
-          <div class="col-12 col-sm-6 col-md-4 col-lg-3" v-for="item in products" :key="item.id">
-            <router-link :to="`/productDetail/${item.id}`" class="text-decoration-none text-dark">
-              <div class="card border-0 shadow-sm h-100">
-                <div class="position-relative">
-                  <img :src="item.image[0]" class="card-img-top" alt="product" />
-                  <span v-if="item.discount < item.price"
-                    class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
-                    -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
-                  </span>
-                </div>
-
-                <div class="card-body text-center">
-                  <p class="text-secondary small mb-1">
-                    {{category.find(c => c.id === item.categoryId)?.nameCategory || 'No category'}}
-                  </p>
-                  <h6 class="fw-semibold">{{ item.name }}</h6>
-
-                  <template v-if="item.discount < item.price">
-                    <p class="text-muted text-decoration-line-through small mb-1">
-                      {{ Number(item.price).toLocaleString('en-US') }} ₫
-                    </p>
-                    <p class="fw-bold mb-1 text-danger">
-                      {{ Number(item.discount).toLocaleString('en-US') }} ₫
-                    </p>
-                  </template>
-
-                  <template v-else>
-                    <p class="fw-bold text-danger mb-0">
-                      {{ Number(item.price).toLocaleString('en-US') }} ₫
-                    </p>
-                  </template>
-                </div>
-              </div>
-            </router-link>
+        <ProductGridSkeleton v-if="isLoadingProducts" />
+        <div v-else>
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <p class="mb-0 text-muted">Showing {{ products.length }} products</p>
+            <select v-model="sortOption" class="form-select w-auto">
+              <option selected>Default sort</option>
+              <option>A -> Z</option>
+              <option>Z -> A</option>
+              <option>Price: Low to High</option>
+              <option>Price: High to Low</option>
+            </select>
           </div>
-        </div>
 
-        <p v-if="products.length === 0" class="text-center text-muted mt-4">
-          No products found
-        </p>
+
+          <div class="row g-4">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3" v-for="item in products" :key="item.id">
+              <router-link :to="`/productDetail/${item.id}`" class="text-decoration-none text-dark">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="position-relative">
+                    <img :src="item.image[0]" class="card-img-top" alt="product" />
+                    <span v-if="item.discount < item.price"
+                      class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1" style="font-size: 0.8rem;">
+                      -{{ Math.round(100 - (item.discount / item.price) * 100) }}%
+                    </span>
+                  </div>
+
+                  <div class="card-body text-center">
+                    <p class="text-secondary small mb-1">
+                      {{category.find(c => c.id === item.categoryId)?.nameCategory || 'No category'}}
+                    </p>
+                    <h6 class="fw-semibold">{{ item.name }}</h6>
+
+                    <template v-if="item.discount < item.price">
+                      <p class="text-muted text-decoration-line-through small mb-1">
+                        {{ Number(item.price).toLocaleString('en-US') }} ₫
+                      </p>
+                      <p class="fw-bold mb-1 text-danger">
+                        {{ Number(item.discount).toLocaleString('en-US') }} ₫
+                      </p>
+                    </template>
+
+                    <template v-else>
+                      <p class="fw-bold text-danger mb-0">
+                        {{ Number(item.price).toLocaleString('en-US') }} ₫
+                      </p>
+                    </template>
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+
+          <p v-if="products.length === 0" class="text-center text-muted mt-4">
+            No products found
+          </p>
+        </div>
       </div>
     </div>
   </div>

@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { toast } from 'vue3-toastify';
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const isSaving = ref(false)
+
 const user = ref({
   id: null,
   fullname: '',
@@ -64,8 +67,11 @@ const handleImageChange = (event) => {
 
 
 const saveChanges = async () => {
+  isSaving.value = true;
   try {
-    await axios.put(`http://localhost:3000/user/${user.value.id}`, user.value)
+    await axios.put(`${API_URL}/user/${user.value.id}`, user.value, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    })
     localStorage.setItem('loggedInUser', JSON.stringify(user.value))
 
     toast.success("Update complete", {
@@ -80,6 +86,8 @@ const saveChanges = async () => {
       text: 'Unable to update information, please try again.',
       confirmButtonColor: '#000'
     })
+  } finally {
+    isSaving.value = false;
   }
 }
 </script>
@@ -165,8 +173,13 @@ const saveChanges = async () => {
         </div>
 
         <div class="mt-4 d-flex gap-3">
-          <button class="btn btn-dark px-4 py-2" @click="saveChanges">
-            <i class="fa fa-save me-2"></i>Save Profile
+          <button class="btn btn-dark px-4 py-2" @click="saveChanges" :disabled="isSaving">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+
+            <span v-else>
+              <i class="fa fa-save me-2"></i>
+              {{ isSaving ? 'Saving...' : 'Save Profile' }}
+            </span>
           </button>
           <button class="btn btn-outline-dark px-4 py-2">
             <i class="fa fa-times me-2"></i>Cancel

@@ -2,15 +2,24 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+const isLoading = ref(true)
+
 const copiedCode = ref(null);
 const coupons = ref([])
 
 const readCoupon = async () => {
+    isLoading.value = true;
     try {
-        const res = await axios.get('http://localhost:3000/coupon')
+        const res = await axios.get(`${API_URL}/coupon`, ngrokHeaderConfig)
         coupons.value = res.data
     } catch (err) {
         console.error("Err: ", err)
+    } finally {
+        isLoading.value = false;
     }
 }
 
@@ -30,7 +39,9 @@ onMounted(readCoupon)
 <template>
     <div class="coupon-section-wrapper">
         <div class="container">
-            <div v-if="coupons.length" class="coupons-grid">
+            <CouponSkeleton v-if="isLoading" />
+
+            <div v-else-if="!isLoading && coupons.length > 0" class="coupons-grid">
                 <div v-for="coupon in coupons" :key="coupon.id" class="coupon-card">
                     <div class="coupon-icon">
                         <i v-if="coupon.icon === 'giam%'" class="fa-solid fa-percent"></i>

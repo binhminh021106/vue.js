@@ -5,14 +5,21 @@ import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import { toast } from 'vue3-toastify';
+import CartSkeleton from './CartSkeleton.vue'
 
 const cart = ref([])
 const router = useRouter()
 const categories = ref([])
+const isLoading = ref(true)
+
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
 
 const loadCategories = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/categories')
+        const res = await axios.get(`${API_URL}/categories`, ngrokHeaderConfig)
         categories.value = res.data
     } catch (err) {
         console.error("Lỗi tải danh mục:", err)
@@ -42,7 +49,7 @@ const readCart = async () => {
     }
 
     try {
-        const res = await axios.get(`http://localhost:3000/cart?userId=${user.id}`)
+        const res = await axios.get(`${API_URL}/cart?userId=${user.id}`, ngrokHeaderConfig)
         cart.value = res.data
     } catch (err) {
         console.error("Err: ", err)
@@ -52,14 +59,14 @@ const readCart = async () => {
 const decrease = async (item) => {
     if (item.quantity > 1) {
         item.quantity--
-        await axios.patch(`http://localhost:3000/cart/${item.id}`, { quantity: item.quantity })
+        await axios.patch(`${API_URL}/cart/${item.id}`, { quantity: item.quantity }, ngrokHeaderConfig)
     }
 }
 
 const increase = async (item) => {
     if (item.quantity < 100) {
         item.quantity++
-        await axios.patch(`http://localhost:3000/cart/${item.id}`, { quantity: item.quantity })
+        await axios.patch(`${API_URL}/cart/${item.id}`, { quantity: item.quantity }, ngrokHeaderConfig)
     }
 }
 
@@ -76,7 +83,7 @@ const deleteCart = async (id) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:3000/cart/${id}`);
+                await axios.delete(`${API_URL}/cart/${id}`, ngrokHeaderConfig);
                 cart.value = cart.value.filter(c => c.id !== id)
                 toast.success("The product has been removed from the cart.", {
                     autoClose: 3000,
@@ -105,7 +112,7 @@ const deleteAllCart = async () => {
         if (result.isConfirmed) {
             try {
                 for (const items of cart.value) {
-                    await axios.delete(`http://localhost:3000/cart/${items.id}`)
+                    await axios.delete(`${API_URL}/cart/${items.id}`, ngrokHeaderConfig)
                 }
                 cart.value = []
                 toast.success("The entire cart has been cleared.", {
@@ -127,8 +134,15 @@ const total = computed(() => {
 })
 
 onMounted(async () => {
-    await loadCategories()
-    await readCart()
+    isLoading.value = true;
+    try {
+        await loadCategories()
+        await readCart()
+    } catch (err) {
+        console.error("Lỗi khi tải trang giỏ hàng:", err)
+    } finally {
+        isLoading.value = false;
+    }
 })
 </script>
 
@@ -137,11 +151,14 @@ onMounted(async () => {
     <div class="container my-5">
         <h2 class="fw-bold mb-4 text-center">🛒 Your Cart</h2>
 
+        <CartSkeleton v-if="isLoading" />
+
         <!-- Nếu giỏ hàng trống -->
-        <div class="text-center text-muted py-5" v-if="cart.length === 0">
+        <div class="text-center text-muted py-5" v-else-if="!isLoading && cart.length === 0">
             <i class="fa fa-shopping-cart fa-3x mb-3"></i>
             <p>Your cart is empty</p>
-            <router-link to="/" class="text-decoration-none text-dark fw-semibold">Continue Shopping</router-link>
+            <router-link to="/" class="text-decoration-none text-dark fw-semibold">Continue
+                Shopping</router-link>
         </div>
 
         <!-- Danh sách sản phẩm -->

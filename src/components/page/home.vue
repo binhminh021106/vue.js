@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
@@ -7,12 +7,21 @@ import coupon from './coupon.vue'
 import axios from 'axios'
 import { toast } from 'vue3-toastify';
 
+import CategorySkeleton from './CategorySkeleton.vue'
+import TopProductSkeleton from './TopProductSkeleton.vue'
+import NewProductSkeleton from './NewProductSkeleton.vue'
+
 const store = useStore()
 const router = useRouter()
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-const category = ref([])
+const category = computed(() => store.getters.getCategories);
 const topProducts = ref([])
 const products = ref([])
+
+const isLoadingCategories = ref(true);
+const isLoadingTopProducts = ref(true);
+const isLoadingNewProducts = ref(true);
 
 const scrollContainer = ref(null)
 const scrollLeft = () => scrollContainer.value.scrollBy({ left: -350, behavior: 'smooth' })
@@ -22,21 +31,18 @@ const productScroll = ref(null)
 const scrollProductLeft = () => productScroll.value.scrollBy({ left: -350, behavior: 'smooth' })
 const scrollProductRight = () => productScroll.value.scrollBy({ left: 350, behavior: 'smooth' })
 
-const readCategory = async () => {
-  try {
-    const res = await axios.get('http://localhost:3000/categories')
-    category.value = res.data
-  } catch (err) {
-    console.error("Error fetching categories:", err)
-  }
-}
 
 const readProduct = async () => {
+  isLoadingNewProducts.value = true;
   try {
-    const res = await axios.get('http://localhost:3000/products')
+    const res = await axios.get(`${API_URL}/products`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    })
     products.value = res.data
   } catch (err) {
     console.error("Error fetching products:", err)
+  } finally {
+    isLoadingNewProducts.value = false;
   }
 }
 
@@ -67,8 +73,11 @@ const addtocart = async (product) => {
 }
 
 const getTop5 = async () => {
+  isLoadingTopProducts.value = true;
   try {
-    const res = await axios.get('http://localhost:3000/order')
+    const res = await axios.get(`${API_URL}/order`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    })
     const orders = res.data
 
     const allProducts = orders
@@ -94,17 +103,29 @@ const getTop5 = async () => {
 
   } catch (err) {
     console.error('Lỗi lấy top 5:', err)
+  } finally {
+    isLoadingTopProducts.value = false;
   }
 }
 
-onMounted(() => {
-  readCategory()
-  readProduct()
-  getTop5()
+onMounted(async () => {
+  if (store.getters.getCategories.length > 0) {
+    isLoadingCategories.value = false;
+  } else {
+    isLoadingCategories.value = true;
+    try {
+      await store.dispatch('fetchCategories');
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    } finally {
+      isLoadingCategories.value = false;
+    }
+  }
+
+  readProduct();
+  getTop5();
 })
 </script>
-
-
 
 <template>
   <div class="home">
@@ -126,11 +147,12 @@ onMounted(() => {
       <h2 class="section-title text-center mb-4">Featured Categories</h2>
 
       <!-- Scroll buttons -->
-      <button class="scroll-btn left" @click="scrollLeft"><i class="fa fa-chevron-left"></i></button>
-      <button class="scroll-btn right" @click="scrollRight"><i class="fa fa-chevron-right"></i></button>
-
+      <button v-if="!isLoadingCategories" class="scroll-btn left" @click="scrollLeft"><i
+          class="fa fa-chevron-left"></i></button>
+      <button v-if="!isLoadingCategories" class="scroll-btn right" @click="scrollRight"><i
+          class="fa fa-chevron-right"></i></button>
       <!-- Category Scroll -->
-      <div class="category-scroll d-flex gap-4 overflow-auto pb-2" ref="scrollContainer">
+      <div v-if="!isLoadingCategories" class="category-scroll d-flex gap-4 overflow-auto pb-2" ref="scrollContainer">
         <div v-for="items in category" :key="items.id" class="category-item flex-shrink-0">
           <div class="image-wrapper position-relative rounded-3 overflow-hidden shadow-sm">
             <img :src="items.image" alt="Category" />
@@ -145,6 +167,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <CategorySkeleton v-else />
     </section>
 
     <!-- COUPON SECTION -->
@@ -157,7 +180,7 @@ onMounted(() => {
     <section class="container my-5">
       <h2 class="section-title text-center mb-4">Top 5 Best-Selling Products</h2>
 
-      <div class="row g-4 justify-content-center">
+      <div v-if="!isLoadingTopProducts" class="row g-4 justify-content-center">
         <div v-for="(p, index) in topProducts" :key="p.id" class="col-6 col-md-4 col-lg-2">
           <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden rounded-3 product-card">
             <span class="rank-badge position-absolute top-0 start-0 m-2 badge rounded-pill text-white px-3 py-2">
@@ -177,6 +200,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <TopProductSkeleton v-else />
     </section>
 
     <!-- NEW PRODUCTS -->
@@ -184,11 +208,13 @@ onMounted(() => {
       <h2 class="section-title text-center mb-4">New Arrivals</h2>
 
       <!-- Scroll buttons -->
-      <button class="scroll-btn left" @click="scrollProductLeft"><i class="fa fa-chevron-left"></i></button>
-      <button class="scroll-btn right" @click="scrollProductRight"><i class="fa fa-chevron-right"></i></button>
+      <button v-if="!isLoadingNewProducts" class="scroll-btn left" @click="scrollProductLeft"><i
+          class="fa fa-chevron-left"></i></button>
+      <button v-if="!isLoadingNewProducts" class="scroll-btn right" @click="scrollProductRight"><i
+          class="fa fa-chevron-right"></i></button>
 
       <!-- Product Scroll -->
-      <div class="category-scroll d-flex gap-4 overflow-auto pb-2" ref="productScroll">
+      <div v-if="!isLoadingNewProducts" class="category-scroll d-flex gap-4 overflow-auto pb-2" ref="productScroll">
         <div v-for="item in products" :key="item.id"
           class="product-card flex-shrink-0 border-0 shadow-sm text-center bg-white rounded-3 overflow-hidden"
           style="width: 250px">
@@ -228,13 +254,13 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <NewProductSkeleton v-else />
     </section>
 
   </div>
 </template>
 
 <style scoped>
-/* 🌟 HERO SECTION */
 .hero {
   position: relative;
   background: url("https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;

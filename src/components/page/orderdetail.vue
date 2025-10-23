@@ -7,12 +7,17 @@ import { toast } from 'vue3-toastify';
 const order = ref(null)
 const route = useRoute()
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
 const orderdetail = async () => {
     try {
-        const res = await axios.get(`http://localhost:3000/order/${route.params.id}`)
+        const res = await axios.get(`${API_URL}/order/${route.params.id}`, ngrokHeaderConfig)
         order.value = res.data
 
-        const reviewsRes = await axios.get(`http://localhost:3000/reviews?orderId=${order.value.id}`)
+        const reviewsRes = await axios.get(`${API_URL}/reviews?orderId=${order.value.id}`, ngrokHeaderConfig)
         const reviewedProducts = reviewsRes.data.map(r => r.productId)
 
         order.value.products.forEach((item) => {
@@ -47,7 +52,7 @@ const review = async (product) => {
     }
 
     try {
-        axios.post('http://localhost:3000/reviews', {
+        axios.post(`${API_URL}/reviews`, ngrokHeaderConfig, {
             orderId: order.value.id,
             productId: product.productId,
             username: order.value.fullname,

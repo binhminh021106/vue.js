@@ -6,7 +6,10 @@ import { toast } from 'vue3-toastify';
 import axios from 'axios';
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import ProductDetailSkeleton from './ProductDetailSkeleton.vue';
 dayjs.extend(relativeTime)
+
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const store = useStore()
 const router = useRouter()
@@ -20,7 +23,7 @@ const replyText = ref('')
 const product = computed(() => store.getters.getProduct);
 const categories = computed(() => store.getters.getCategories);
 const relatedProducts = computed(() => store.getters.getRelatedProducts || []);
-const isLoading = computed(() => store.getters.isLoading);
+const isLoading = ref(false);
 
 const review = ref([])
 const userQuantity = ref(1);
@@ -29,7 +32,9 @@ const isAddingToWishlist = ref(false);
 
 const readReview = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/reviews')
+        const res = await axios.get(`${API_URL}/reviews`, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+        })
         review.value = res.data.filter(r => r.productId == route.params.id && r.status === "Approved")
     } catch (error) {
         console.error("Err review: ", error)
@@ -38,7 +43,9 @@ const readReview = async () => {
 
 const readComment = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/comment')
+        const res = await axios.get(`${API_URL}/comment`, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+        })
         product_Comment.value = res.data.filter(r => r.productId == route.params.id && r.status === "Approved").map(c => ({
             ...c,
             likes: c.likes || 0,
@@ -69,7 +76,7 @@ const submitReply = async (parentId) => {
     if (!user || !replyText.value.trim()) return;
 
     try {
-        const res = await axios.post('http://localhost:3000/comment', {
+        const res = await axios.post(`${API_URL}/comment`, {
             userId: user.id,
             productId: route.params.id,
             parentId: parentId,
@@ -78,6 +85,8 @@ const submitReply = async (parentId) => {
             comment: replyText.value,
             date: new Date(),
             status: "Pending",
+        }, {
+            headers: { 'ngrok-skip-browser-warning': 'true' },
         });
 
         product_Comment.value.push(res.data)
@@ -139,7 +148,7 @@ const submitComment = async () => {
     if (!user || !comment.value.trim()) return;
 
     try {
-        const res = await axios.post('http://localhost:3000/comment', {
+        const res = await axios.post(`${API_URL}/comment`, {
             userId: user.id,
             productId: route.params.id,
             username: user.fullname,
@@ -150,6 +159,8 @@ const submitComment = async () => {
             status: "Pending",
             product: product.value.name,
             email: user.email
+        }, {
+            headers: { 'ngrok-skip-browser-warning': 'true' },
         });
 
         product_Comment.value.push(res.data);
@@ -457,7 +468,7 @@ onMounted(() => {
         </div>
     </div>
 
-    <p v-else class="text-center text-muted mt-5">Loading Product...</p>
+    <ProductDetailSkeleton v-else />
 </template>
 
 <style scoped>
