@@ -216,12 +216,6 @@ watch(() => route.params.id, async (newId) => {
     }
 }, { immediate: true });
 
-watch(product, (newProduct) => {
-    if (newProduct && newProduct.id) {
-        fetchAIRecommendations(newProduct);
-    }
-}, { immediate: true });
-
 onMounted(() => {
     readComment()
     readReview()

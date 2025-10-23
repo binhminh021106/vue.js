@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import CouponSkeleton from './CouponSkeleton.vue'
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const ngrokHeaderConfig = {
