@@ -9,9 +9,14 @@ const totalCustomers = ref(0);
 const chartRef = ref(null);
 let chartInstance = null;
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
 const fetchCustomerStats = async () => {
     try {
-        const res = await axios.get("http://localhost:3000/order");
+        const res = await axios.get(`${API_URL}/order`, ngrokHeaderConfig);
         const orders = res.data;
 
         const deliveredOrders = orders.filter(o => o.status === "Delivered");
@@ -115,7 +120,7 @@ onMounted(fetchCustomerStats);
                     <tbody>
                         <tr v-for="(c, i) in customers" :key="i">
                             <td>{{ i + 1 }}</td>
-                            <td>{{ c.fullname  }}</td>
+                            <td>{{ c.fullname }}</td>
                             <td>{{ c.orders }}</td>
                             <td>{{ c.totalSpent.toLocaleString('vi-VN') }} ₫</td>
                         </tr>

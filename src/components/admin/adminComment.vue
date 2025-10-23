@@ -7,9 +7,14 @@ const comment = ref([])
 const searchQuery = ref("")
 const filterStatus = ref("")
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
 const readComment = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/comment')
+        const res = await axios.get(`${API_URL}/comment`, ngrokHeaderConfig)
         comment.value = res.data
     } catch (err) {
         console.error("Err admin comment: ", err)
@@ -32,7 +37,7 @@ const formatDateTimeVN = (dateString) => {
 
 const successComment = async (id) => {
     try {
-        await axios.patch(`http://localhost:3000/comment/${id}`, {
+        await axios.patch(`${API_URL}/comment/${id}`, ngrokHeaderConfig, {
             status: "Approved"
         })
 
@@ -52,7 +57,7 @@ const successComment = async (id) => {
 
 const RejectedComment = async (id) => {
     try {
-        await axios.patch(`http://localhost:3000/comment/${id}`, {
+        await axios.patch(`${API_URL}/comment/${id}`, ngrokHeaderConfig, {
             status: "Rejected"
         })
 

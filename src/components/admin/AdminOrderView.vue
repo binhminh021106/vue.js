@@ -8,9 +8,15 @@ const order = ref(null)
 const status = ref("")
 const route = useRoute()
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
+
 const readorder = async () => {
   try {
-    const res = await axios.get(`http://localhost:3000/order/${route.params.id}`)
+    const res = await axios.get(`${API_URL}/order/${route.params.id}`, ngrokHeaderConfig)
     order.value = res.data
     status.value = res.data.status || "Pending"
   } catch (err) {
@@ -20,7 +26,7 @@ const readorder = async () => {
 
 const updateOrder = async () => {
   try {
-    await axios.put(`http://localhost:3000/order/${route.params.id}`, {
+    await axios.put(`${API_URL}/order/${route.params.id}`, ngrokHeaderConfig, {
       ...order.value,
       status: status.value
     })

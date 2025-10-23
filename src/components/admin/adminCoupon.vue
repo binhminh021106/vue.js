@@ -8,9 +8,14 @@ const selectedId = ref(null)
 const coupon = ref([])
 const form = ref({ icon: "", title: "", discount: "", condition: "", expiry: "", code: "" })
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
 const readCoupon = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/coupon')
+        const res = await axios.get(`${API_URL}/coupon`, ngrokHeaderConfig)
         coupon.value = res.data
     } catch (err) {
         console.error('err: ', err)
@@ -25,7 +30,7 @@ const askDelete = (id, code) => {
 const confirmDelete = async () => {
     if (!selectedId.value) return
     try {
-        await axios.delete(`http://localhost:3000/coupon/${selectedId.value}`)
+        await axios.delete(`${API_URL}/coupon/${selectedId.value}`, ngrokHeaderConfig)
         coupon.value = coupon.value.filter(c => c.id !== selectedId.value)
         selectedId.value = null
         selectedCode.value = ""
@@ -54,7 +59,7 @@ const addCoupon = async () => {
     }
 
     try {
-        const res = await axios.post('http://localhost:3000/coupon', form.value)
+        const res = await axios.post(`${API_URL}/coupon`, form.value, ngrokHeaderConfig)
         coupon.value.push(res.data)
         Swal.fire({
             icon: 'success',
@@ -94,7 +99,7 @@ const editCoupon = async () => {
     }
 
     try {
-        const res = await axios.put(`http://localhost:3000/coupon/${selectedId.value}`, form.value)
+        const res = await axios.put(`${API_URL}/coupon/${selectedId.value}`, form.value, ngrokHeaderConfig)
 
         const index = coupon.value.findIndex((p) => p.id === selectedId.value)
         if (index !== -1) {

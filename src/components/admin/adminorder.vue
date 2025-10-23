@@ -9,9 +9,14 @@ const filterStatus = ref("");
 const selectedId = ref(null)
 const selectedName = ref("")
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
 const readorder = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/order');
+        const res = await axios.get(`${API_URL}/order`, ngrokHeaderConfig);
         adminorder.value = res.data.sort((a, b) => {
             const [timeA, dateA] = a.date.split(', ')
             const [timeB, dateB] = b.date.split(', ')
@@ -32,7 +37,7 @@ const askDelete = (id, name) => {
 const deleteOrder = async () => {
     if (!selectedId.value) return
     try {
-        await axios.delete(`http://localhost:3000/order/${selectedId.value}`)
+        await axios.delete(`${API_URL}/order/${selectedId.value}`, ngrokHeaderConfig)
         adminorder.value = adminorder.value.filter(c => c.id !== selectedId.value)
         selectedId.value = null
         selectedName.value = ""

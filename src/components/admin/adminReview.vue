@@ -7,9 +7,14 @@ const reviews = ref([]);
 const searchQuery = ref("");
 const filterRating = ref("");
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
 const readReview = async () => {
     try {
-        const res = await axios.get('http://localhost:3000/reviews')
+        const res = await axios.get(`${API_URL}/reviews`, ngrokHeaderConfig)
         reviews.value = res.data
     } catch (err) {
         console.error("Err admin review: ", err)
@@ -18,7 +23,7 @@ const readReview = async () => {
 
 const successReview = async (id) => {
     try {
-        await axios.patch(`http://localhost:3000/reviews/${id}`, {
+        await axios.patch(`${API_URL}/reviews/${id}`, ngrokHeaderConfig, {
             status: "Approved"
         })
 
@@ -38,7 +43,7 @@ const successReview = async (id) => {
 
 const RejectedReview = async (id) => {
     try {
-        await axios.patch(`http://localhost:3000/reviews/${id}`, {
+        await axios.patch(`${API_URL}/reviews/${id}`, ngrokHeaderConfig, {
             status: "Rejected"
         })
 

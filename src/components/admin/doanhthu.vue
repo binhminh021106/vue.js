@@ -15,6 +15,12 @@ const chartRef = ref(null);
 let chartInstance = null;
 const selectedView = ref("monthly"); 
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+const ngrokHeaderConfig = {
+    headers: { 'ngrok-skip-browser-warning': 'true' },
+};
+
+
 function getWeek(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const yearStart = new Date(Date.UTC(date.getFullYear(), 0, 1));
@@ -24,7 +30,7 @@ function getWeek(date) {
 
 const fetchOrders = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/order");
+    const res = await axios.get(`${API_URL}/order`, ngrokHeaderConfig);
     const orders = res.data;
 
     const deliveredOrders = orders.filter(o => o.status === "Delivered");
