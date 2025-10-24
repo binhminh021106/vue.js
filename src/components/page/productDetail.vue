@@ -30,6 +30,40 @@ const userQuantity = ref(1);
 const isAddingToCart = ref(false);
 const isAddingToWishlist = ref(false);
 
+const aiRecommendedProducts = ref([]);
+const isFetchingAI = ref(false);
+
+const fetchAIRecommendations = async (currentProduct) => {
+    if (!currentProduct || !currentProduct.id) return;
+
+    isFetchingAI.value = true;
+    aiRecommendedProducts.value = [];
+
+    try {
+
+        const payload = {
+            currentProduct: {
+                id: currentProduct.id,
+                name: currentProduct.name,
+                description: currentProduct.description,
+                categoryId: currentProduct.categoryId
+            }
+        };
+
+        const response = await axios.post(
+            'http://localhost:4000/api/recommendations',
+            payload
+        );
+        aiRecommendedProducts.value = response.data;
+        console.log('Sản phẩm gợi ý từ AI:', response.data);
+
+    } catch (error) {
+        console.error('Lỗi khi lấy gợi ý AI:', error.message);
+    } finally {
+        isFetchingAI.value = false;
+    }
+};
+
 const readReview = async () => {
     try {
         const res = await axios.get(`${API_URL}/reviews`, {
@@ -213,6 +247,8 @@ watch(() => route.params.id, async (newId) => {
         await store.dispatch('fetchProductData', newId);
         isLoading.value = false;
         window.scrollTo(0, 0);
+    } if (product.value) {
+        fetchAIRecommendations(product.value);
     }
 }, { immediate: true });
 
@@ -441,12 +477,41 @@ onMounted(() => {
                     <p class="text-muted small mb-0">Be the first to share your thoughts!</p>
                 </div>
             </div>
-
         </div>
 
-        <!-- Sản phẩm liên quan -->
+        <div class="related-products mt-5 pt-4 border-top" style="background-color: #fdfdfd;">
+            <h4 class="fw-bold mb-4 text-center text-uppercase">You Might Also Like</h4>
+
+            <div v-if="isFetchingAI" class="text-center text-muted mt-5">
+                <div class="spinner-border text-dark" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2 small">Finding similar products...</p>
+            </div>
+
+            <div v-else-if="aiRecommendedProducts.length > 0" class="row g-3 justify-content-center">
+                <div v-for="items in aiRecommendedProducts" :key="items.id" class="col-lg-2 col-md-3 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden hover-card">
+                        <img :src="items.image?.[0] || ''" class="img-fluid w-100 related-img" alt="product" />
+                        <div class="card-body text-center p-2">
+                            <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
+                            <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
+                                }} ₫</p>
+                            <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
+                                <i class="fa fa-eye me-2"></i>View
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else-if="!isFetchingAI" class="text-center text-muted mt-5">
+                <p class="small">No similar products found.</p>
+            </div>
+        </div>
+
         <div class="related-products mt-5 pt-4 border-top">
-            <h4 class="fw-bold mb-4 text-center">Related Products</h4>
+            <h4 class="fw-bold mb-4 text-center">RELATED PRODUCTS</h4>
 
             <div v-if="relatedProducts.length > 0" class="row g-3 justify-content-center">
                 <div v-for="items in relatedProducts" :key="items.id" class="col-lg-2 col-md-3 col-6">
@@ -455,12 +520,17 @@ onMounted(() => {
                         <div class="card-body text-center p-2">
                             <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
-                            }} ₫</p>
+                                }} ₫</p>
                             <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
                                 <i class="fa fa-eye me-2"></i>View
                             </router-link>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div v-else-if="isLoading" class="text-center text-muted mt-5">
+                <div class="spinner-border text-secondary spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
             <div v-else class="text-center text-muted mt-5">No related products</div>
