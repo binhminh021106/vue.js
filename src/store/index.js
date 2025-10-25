@@ -27,6 +27,12 @@ export default createStore({
     getCart: (state) => state.cart,
     getCartCount: (state) =>
       state.cart.reduce((sum, item) => sum + item.quantity, 0),
+    isInWishlist: (state) => (productId) => {
+      if (!state.wishlist || state.wishlist.length === 0) {
+        return false;
+      }
+      return state.wishlist.some((item) => item.productId === productId);
+    },
   },
 
   mutations: {
@@ -57,6 +63,7 @@ export default createStore({
     },
     SET_WISHLIST(state, items) {
       state.wishlist = items;
+      localStorage.setItem("wishlist", JSON.stringify(items));
     },
     REMOVE_WISHLIST_ITEM(state, id) {
       state.wishlist = state.wishlist.filter((item) => item.id !== id);
@@ -155,6 +162,32 @@ export default createStore({
       }
     },
 
+    async removeFromWishlist({ commit, state, dispatch }, productId) {
+      if (!state.user) {
+        throw new Error("User not logged in");
+      }
+
+      const wishlistItem = state.wishlist.find(
+        (item) => item.productId === productId && item.userId === state.user.id
+      );
+
+      if (!wishlistItem) {
+        console.warn("Item not in wishlist to remove.");
+        return;
+      }
+
+      try {
+        await axios.delete(`${API_URL}/wishlist/${wishlistItem.id}`, {
+          headers: { "ngrok-skip-browser-warning": "true" },
+        });
+
+        await dispatch("fetchWishlist");
+      } catch (err) {
+        console.error("Error removing from wishlist:", err);
+        throw err;
+      }
+    },
+
     async addToCart({ state, dispatch }, { product, quantity }) {
       const user = state.user;
       if (!user) throw new Error("User not logged in");
@@ -205,7 +238,8 @@ export default createStore({
       }
     },
 
-    async addToWishlist({ state }, product) {
+    async addToWishlist({ state, dispatch }, product) {
+      // Thêm 'dispatch'
       const user = state.user;
       if (!user) throw new Error("User not logged in");
 
@@ -227,11 +261,16 @@ export default createStore({
         image: product.image?.[0] || "",
         addedAt: new Date().toISOString(),
       };
-      return axios.post(`${API_URL}/wishlist`, newWishlistItem, {
-        headers: { "ngrok-skip-browser-warning": "true" },
-      });
+
+      try {
+        await axios.post(`${API_URL}/wishlist`, newWishlistItem, {
+          headers: { "ngrok-skip-browser-warning": "true" },
+        });
+        await dispatch("fetchWishlist");
+      } catch (err) {
+        console.error("Error adding to wishlist:", err);
+        throw err;
+      }
     },
   },
-
-  modules: {},
 });

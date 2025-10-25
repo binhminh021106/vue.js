@@ -28,10 +28,15 @@ const isLoading = ref(false);
 const review = ref([])
 const userQuantity = ref(1);
 const isAddingToCart = ref(false);
-const isAddingToWishlist = ref(false);
+const isWishlistLoading = ref(false);
 
 const aiRecommendedProducts = ref([]);
 const isFetchingAI = ref(false);
+
+const isInWishlist = computed(() => {
+    if (!product.value) return false;
+    return store.getters.isInWishlist(product.value.id);
+});
 
 const fetchAIRecommendations = async (currentProduct) => {
     if (!currentProduct || !currentProduct.id) return;
@@ -205,32 +210,41 @@ const submitComment = async () => {
 };
 
 
-const handleAddToWishlist = async () => {
+const handleToggleWishlist = async () => {
     if (!product.value) return;
-    isAddingToWishlist.value = true;
+    isWishlistLoading.value = true;
+
     try {
-        await store.dispatch('addToWishlist', product.value);
-        toast.success("Added to Wishlist!", {
-            autoClose: 3000,
-            position: "top-right",
-        });
+        if (isInWishlist.value) {
+            await store.dispatch('removeFromWishlist', product.value.id);
+            toast.success("Removed from Wishlist!", {
+                autoClose: 2000,
+                position: "top-right",
+            });
+        } else {
+            await store.dispatch('addToWishlist', product.value);
+            toast.success("Added to Wishlist!", {
+                autoClose: 2000,
+                position: "top-right",
+            });
+        }
     } catch (error) {
-        if (error.message === "Product already in wishlist") {
+        if (error.message === "User not logged in") {
+            router.push('/login');
+        } else if (error.message === "Product already in wishlist") {
             toast.error("This product is already in your wishlist!", {
                 autoClose: 3000,
                 position: "top-right",
             });
-        } else if (error.message === "User not logged in") {
-            router.push('/login');
         } else {
-            toast.error("Could not add to wishlist.", {
+            toast.error("Could not update wishlist.", {
                 autoClose: 3000,
                 position: "top-right",
             });
             console.error(error);
         }
     } finally {
-        isAddingToWishlist.value = false;
+        isWishlistLoading.value = false;
     }
 };
 
@@ -331,12 +345,17 @@ onMounted(() => {
                             {{ isAddingToCart ? 'Adding...' : 'Add to cart' }}
                         </button>
                         <button v-else class="btn btn-danger" disabled>Out of stock</button>
-                        <button @click="handleAddToWishlist" class="btn btn-outline-danger px-4 py-2"
-                            :disabled="isAddingToWishlist">
-                            <span v-if="isAddingToWishlist" class="spinner-border spinner-border-sm" role="status"
+                        <button @click="handleToggleWishlist" class="btn px-4 py-2"
+                            :class="isInWishlist ? 'btn-danger' : 'btn-outline-danger'" :disabled="isWishlistLoading">
+
+                            <span v-if="isWishlistLoading" class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>
-                            <i v-else class="fa fa-heart me-2"></i>
-                            {{ isAddingToWishlist ? 'Saving...' : 'Favorite' }}
+
+                            <i v-else class="me-2"
+                                :class="isInWishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+
+                            <span v-if="isWishlistLoading">Saving...</span>
+                            <span v-else>{{ isInWishlist ? 'Added to Favorites' : 'Favorite' }}</span>
                         </button>
                     </div>
 
@@ -496,7 +515,7 @@ onMounted(() => {
                         <div class="card-body text-center p-2">
                             <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
-                                }} ₫</p>
+                            }} ₫</p>
                             <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
                                 <i class="fa fa-eye me-2"></i>View
                             </router-link>
@@ -520,7 +539,7 @@ onMounted(() => {
                         <div class="card-body text-center p-2">
                             <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
-                                }} ₫</p>
+                            }} ₫</p>
                             <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
                                 <i class="fa fa-eye me-2"></i>View
                             </router-link>

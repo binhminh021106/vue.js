@@ -115,7 +115,6 @@ watch(searchQuery, () => {
     <div class="row">
       <!-- Sidebar -->
       <div class="col-lg-3 mb-4">
-        <ShopSidebarSkeleton v-if="isLoadingCategories" />
         <div class="p-3 border rounded shadow-sm bg-white">
           <!-- Search -->
           <h5 class="fw-bold mb-3">Search</h5>
@@ -135,6 +134,7 @@ watch(searchQuery, () => {
                 All Products
               </a>
             </li>
+            <ShopSidebarSkeleton v-if="isLoadingCategories" />
             <li v-for="value in category" :key="value.id">
               <a href="#" class="text-decoration-none text-dark d-block py-2"
                 :class="{ 'fw-bold text-primary': selectedCategory === value.id }"
