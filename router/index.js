@@ -58,7 +58,7 @@ const routes = [
       { path: "Wishlist", component: Wishlist },
       { path: "coupon", component: coupon },
       { path: "contactForm", component: contactForm },
-      { path: "payment-return", component: paymentReturn },
+      { path: "payment_return", component: paymentReturn },
     ],
   },
   {
