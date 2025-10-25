@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import crypto from "crypto";
-import querystring from "qs"; // 1. Import 'qs' 1 lần duy nhất ở ĐẦU
+import querystring from "qs";
 
 const app = express();
 const port = 3002;
@@ -10,13 +10,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// THÔNG TIN CẤU HÌNH VNPAY (OK)
 const vnp_TmnCode = "WDD40GAS";
 const vnp_HashSecret = "B01UZWBE5OYMQ5INDIDCCLHMZLG65O1Z";
 const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 const vnp_ReturnUrl = "http://localhost:5173/payment_return";
 
-// HÀM SẮP XẾP OBJECT (OK)
 function sortObject(obj) {
   let sorted = {};
   let str = [];
@@ -33,7 +31,6 @@ function sortObject(obj) {
   return sorted;
 }
 
-// API 1: TẠO URL THANH TOÁN
 app.post("/create_payment_url", (req, res) => {
   let amount = req.body.amount;
   let orderId = req.body.orderId;
@@ -73,7 +70,6 @@ app.post("/create_payment_url", (req, res) => {
   let signData = querystring.stringify(vnp_Params, { encode: false });
   let hmac = crypto.createHmac("sha512", secretKey);
 
-  // 2. Dùng 'Buffer.from' (bạn đã sửa đúng ở đây)
   let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
   vnp_Params["vnp_SecureHash"] = signed;
   let paymentUrl =
@@ -82,7 +78,6 @@ app.post("/create_payment_url", (req, res) => {
   res.json({ url: paymentUrl });
 });
 
-// API 2: NHẬN VÀ XÁC THỰC DỮ LIỆU
 app.get("/vnpay_return", (req, res) => {
   let vnp_Params = req.query;
   let secureHash = vnp_Params["vnp_SecureHash"];
@@ -93,11 +88,9 @@ app.get("/vnpay_return", (req, res) => {
   vnp_Params = sortObject(vnp_Params);
   let secretKey = vnp_HashSecret;
 
-  // 3. KHÔNG 'require("qs")' ở đây nữa
   let signData = querystring.stringify(vnp_Params, { encode: false });
   let hmac = crypto.createHmac("sha512", secretKey);
 
-  // 4. SỬA 'new Buffer' thành 'Buffer.from'
   let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
 
   if (secureHash === signed) {

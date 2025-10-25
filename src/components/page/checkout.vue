@@ -166,32 +166,26 @@ const placeOrder = async () => {
   }
 
   if (selectPayment.value === "VNPAY") {
-    // Sửa trạng thái thành "Đang chờ thanh toán VNPAY"
     orderData.status = "Pending Payment";
 
     try {
-      // 2.1. LƯU ĐƠN HÀNG VÀO DB.JSON TRƯỚC
       await axios.post(`${API_URL}/order`, orderData, {
         headers: { 'ngrok-skip-browser-warning': 'true' }
       });
-      // Lưu đơn hàng cuối cùng vào localStorage để trang return dùng
       localStorage.setItem("lastOrder", JSON.stringify(orderData));
 
-
-      // 2.2. GỌI SERVER (CỔNG 3002) ĐỂ TẠO LINK
       const response = await axios.post("http://localhost:3002/create_payment_url", {
-        orderId: orderId, // Dùng orderId đã tạo
+        orderId: orderId,
         amount: Math.round(fullTotal.value),
         orderDescription: `Thanh toán đơn hàng #${orderId}`,
       });
 
-      // 2.3. CHUYỂN HƯỚNG ĐI THANH TOÁN
       if (response.data?.url) {
         window.location.href = response.data.url;
       } else {
         throw new Error("Không nhận được URL từ server");
       }
-      return; // Dừng hàm sau khi chuyển hướng
+      return; 
 
     } catch (error) {
       console.error("VNPay error:", error);
