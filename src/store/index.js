@@ -239,7 +239,6 @@ export default createStore({
     },
 
     async addToWishlist({ state, dispatch }, product) {
-      // Thêm 'dispatch'
       const user = state.user;
       if (!user) throw new Error("User not logged in");
 

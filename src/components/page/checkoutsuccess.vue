@@ -59,7 +59,7 @@ const sendConfirmationMail = async (order) => {
 
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
       <tr>
-        <td style="padding: 8px; color: #555;">Mã đơn hàng: #ODR2025-</td>
+        <td style="padding: 8px; color: #555;">Mã đơn hàng:</td>
         <td style="padding: 8px; font-weight: bold;">#ODR${new Date().getFullYear()}-${order.id}</td>
       </tr>
       <tr style="background: #f8f9fa;">

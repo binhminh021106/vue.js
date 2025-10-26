@@ -342,7 +342,7 @@ onMounted(() => {
                             <span v-if="isAddingToCart" class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>
                             <i v-else class="fa fa-shopping-cart me-2"></i>
-                            {{ isAddingToCart ? 'Adding...' : 'Add to cart' }}
+                            {{ isAddingToCart ? 'Adding...' : 'Add to cart' }} 
                         </button>
                         <button v-else class="btn btn-danger" disabled>Out of stock</button>
                         <button @click="handleToggleWishlist" class="btn px-4 py-2"

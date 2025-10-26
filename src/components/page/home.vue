@@ -22,6 +22,7 @@ const products = ref([])
 const isLoadingCategories = ref(true);
 const isLoadingTopProducts = ref(true);
 const isLoadingNewProducts = ref(true);
+const addingProductId = ref(null);
 
 const scrollContainer = ref(null)
 const scrollLeft = () => scrollContainer.value.scrollBy({ left: -350, behavior: 'smooth' })
@@ -47,6 +48,7 @@ const readProduct = async () => {
 }
 
 const addtocart = async (product) => {
+  addingProductId.value = product.id;
   try {
     await store.dispatch('addToCart', { product, quantity: 1 })
     toast.success("Product added to cart", {
@@ -69,6 +71,8 @@ const addtocart = async (product) => {
         position: "top-right",
       });
     }
+  } finally {
+    addingProductId.value = null;
   }
 }
 
@@ -245,10 +249,14 @@ onMounted(async () => {
               <p class="fw-bold mb-2">{{ Number(item.price).toLocaleString('vi-VN') }} ₫</p>
             </template>
 
-            <button v-if="item.quantity > 0" @click="addtocart(item)" class="btn btn-dark btn-sm mt-1 rounded-pill">
-              <i class="fa fa-shopping-cart me-1"></i> Add to cart
+            <button v-if="item.quantity > 0" @click="addtocart(item)" class="btn btn-dark btn-sm mt-1"
+              :disabled="addingProductId === item.id">
+              <span v-if="addingProductId === item.id" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true"></span>
+              <i v-else class="fa fa-shopping-cart me-2"></i>
+              {{ addingProductId === item.id ? 'Adding...' : 'Add to cart' }}
             </button>
-            <button v-else class="btn btn-danger btn-sm mt-1 rounded-pill" disabled>
+            <button v-else class="btn btn-danger btn-sm mt-1" disabled>
               Out of Stock
             </button>
           </div>

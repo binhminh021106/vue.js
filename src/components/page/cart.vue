@@ -236,7 +236,7 @@ onMounted(async () => {
 
                         <div class="d-flex justify-content-between mb-2">
                             <span>Shipping Fee</span>
-                            <span class="text-success">Free</span>
+                            <span class="text-dark">30.000đ</span>
                         </div>
 
                         <hr />

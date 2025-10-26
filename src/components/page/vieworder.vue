@@ -141,7 +141,7 @@ onMounted(readview)
             <div v-for="value in vieworder" :key="value.id" class="card border-0 shadow-sm rounded-4 mb-4 p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h5 class="fw-semibold mb-1">Order #ODR2025-{{ value.id }}</h5>
+                        <h5 class="fw-semibold mb-1">Order #{{ value.id }}</h5>
                         <small class="text-muted">Placed on {{ value.date }}</small>
                     </div>
                     <span :class="['badge px-3 py-2', getStatusClass(value.status)]">

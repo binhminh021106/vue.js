@@ -17,7 +17,7 @@ const ngrokHeaderConfig = {
 const readorder = async () => {
     try {
         const res = await axios.get(`${API_URL}/order`, ngrokHeaderConfig);
-        adminorder.value = res.data.sort((a, b) => {
+        adminorder.value = res.data.filter(o => o.date).sort((a, b) => {
             const [timeA, dateA] = a.date.split(', ')
             const [timeB, dateB] = b.date.split(', ')
             const dA = new Date(`${dateA} ${timeA}`)

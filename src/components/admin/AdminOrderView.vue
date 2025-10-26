@@ -10,7 +10,7 @@ const route = useRoute()
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const ngrokHeaderConfig = {
-    headers: { 'ngrok-skip-browser-warning': 'true' },
+  headers: { 'ngrok-skip-browser-warning': 'true' },
 };
 
 
@@ -26,10 +26,10 @@ const readorder = async () => {
 
 const updateOrder = async () => {
   try {
-    await axios.put(`${API_URL}/order/${route.params.id}`, ngrokHeaderConfig, {
+    await axios.put(`${API_URL}/order/${route.params.id}`, {
       ...order.value,
       status: status.value
-    })
+    }, ngrokHeaderConfig)
     Swal.fire({
       icon: 'success',
       title: 'Cập nhật thành công!',
@@ -99,12 +99,12 @@ onMounted(readorder)
               </label>
 
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Delivering" :disabled="status === 'Canceled'"/>
+                <input v-model="status" type="radio" value="Delivering" :disabled="status === 'Canceled'" />
                 <span>Đang giao hàng</span>
               </label>
 
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Delivered" :disabled="status === 'Canceled'"/>
+                <input v-model="status" type="radio" value="Delivered" :disabled="status === 'Canceled'" />
                 <span>Đã giao hàng</span>
               </label>
 
