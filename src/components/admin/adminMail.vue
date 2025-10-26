@@ -17,17 +17,17 @@ const readEmail = async () => {
 }
 
 const formatDateTimeVN = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  const options = {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  }
- return date.toLocaleString('vi-VN', options).replace('lúc', '')
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    const options = {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    }
+    return date.toLocaleString('vi-VN', options).replace('lúc', '')
 }
 
 const askDelete = (id, name) => {
@@ -80,16 +80,16 @@ onMounted(() => {
                 <tbody class="text-center">
                     <tr v-if="email.length" v-for="(i, index) in email" :key="i.id">
                         <td>{{ index + 1 }}</td>
-                        <td>{{ i.from }}</td>
+                        <td>{{ i.to }}</td>
                         <td>{{ i.subject }}</td>
-                        <td>{{ i.text }}</td>
+                        <td v-html="i.text || i.html"></td>
                         <td>{{ formatDateTimeVN(i.createdAt) }}</td>
                         <td>
                             <router-link to="" class="btn btn-outline-info btn-sm me-2">
                                 <i class="fa fa-eye"></i>
                             </router-link>
-                            <button @click="askDelete(i.id, i.email)" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal">
+                            <button @click="askDelete(i.id, i.email)" class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>

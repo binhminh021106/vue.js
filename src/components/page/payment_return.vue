@@ -1,141 +1,175 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useStore } from 'vuex'; // Dùng Vuex
-import axios from 'axios';
-import Swal from 'sweetalert2'; // Thêm Swal cho đẹp
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_BASE_URL; // Cổng 8080 (json-server)
-const route = useRoute();
-const router = useRouter();
-const store = useStore(); // Khởi tạo store
+const route = useRoute()
+const router = useRouter()
+const API_URL = import.meta.env.VITE_API_BASE_URL
+const VNPAY_SERVER_URL = 'http://localhost:3002'
 
-const message = ref('Đang xác thực thanh toán, vui lòng đợi...');
-const status = ref('processing'); // 'processing', 'success', 'failed'
-const orderId = ref(null);
+const status = ref('loading') 
+const message = ref('Processing your transaction, please wait...')
+const orderId = ref(route.query.vnp_TxnRef || null)
 
-// Hàm trừ kho và xóa giỏ hàng
-const finalizeOrder = async (order) => {
-    try {
-        // 1. Trừ kho (Dùng 'order.products' từ đơn hàng)
-        for (let item of order.products) {
-            const productId = item.productId || item.id;
+const updateStock = async (products) => {
+    console.log('Updating stock for', products)
+    for (let item of products) {
+        try {
+            const productId = item.productId || item.id
             const productRes = await axios.get(`${API_URL}/products/${productId}`, {
                 headers: { 'ngrok-skip-browser-warning': 'true' }
-            });
-            const product = productRes.data;
+            })
+            const product = productRes.data
+
             if (product.quantity !== undefined) {
-                const newQuantity = Math.max(product.quantity - item.quantity, 0);
-                await axios.patch(`${API_URL}/products/${productId}`, { quantity: newQuantity }, {
-                    headers: { 'ngrok-skip-browser-warning': 'true' }
-                });
+                const newQuantity = Math.max(product.quantity - item.quantity, 0)
+                await axios.patch(
+                    `${API_URL}/products/${productId}`,
+                    { quantity: newQuantity },
+                    { headers: { 'ngrok-skip-browser-warning': 'true' } }
+                )
             }
+        } catch (err) {
+            console.error(`Lỗi cập nhật tồn kho cho ${item.id}:`, err)
         }
-
-        // 2. Xóa giỏ hàng (Dùng Vuex)
-        store.dispatch('cart/deleteAllCart'); // Giả sử action của bạn tên là 'deleteAllCart'
-
-    } catch (err) {
-        console.error('Lỗi khi trừ kho/xóa giỏ hàng:', err);
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi cập nhật đơn hàng!',
-            text: 'Thanh toán đã thành công nhưng có lỗi khi cập nhật kho.',
-            confirmButtonColor: '#000'
-        });
     }
-};
+}
 
+const clearCart = async (products) => {
+    console.log('Clearing cart...')
+    try {
+        await Promise.all(
+            products.map((item) =>
+                axios.delete(`${API_URL}/cart/${item.id}`, {
+                    headers: { 'ngrok-skip-browser-warning': 'true' }
+                })
+            )
+        )
+    } catch (err) {
+        console.error('Lỗi xóa giỏ hàng:', err)
+    }
+}
 
-onMounted(async () => {
-    const queryParams = route.query;
-    orderId.value = queryParams.vnp_TxnRef; // Lấy orderId từ VNPAY
+const handlePaymentReturn = async () => {
+    const queryParams = route.query
+    if (!orderId.value) {
+        status.value = 'failed'
+        message.value = 'Order code not found. Transaction is invalid..'
+        return
+    }
 
     try {
-        // 1. GỌI SERVER BẢO MẬT (CỔNG 3002) ĐỂ XÁC THỰC
-        const response = await axios.get('http://localhost:3002/vnpay_return', {
-            params: queryParams // Gửi toàn bộ query lên
-        });
+        const res = await axios.get(`${VNPAY_SERVER_URL}/vnpay_return`, {
+            params: queryParams
+        })
 
-        // 2. KIỂM TRA KẾT QUẢ TỪ SERVER 3002 (response.data.code)
-        if (response.data.code === '00') {
-            // BẢO MẬT: Chữ ký hợp lệ và thanh toán thành công
-            status.value = 'success';
-            message.value = `Giao dịch thành công! Cảm ơn bạn đã mua hàng.`;
+        const { code } = res.data
 
-            // 3. CẬP NHẬT DATABASE (CỔNG API_URL / 8080)
-            // Dùng 'PATCH' để cập nhật status (An toàn hơn GET + PUT)
-            await axios.patch(`${API_URL}/order/${orderId.value}`, {
-                status: "Đã thanh toán",
-                paymentInfo: "Thanh toán thành công qua VNPay."
-            }, {
-                headers: { 'ngrok-skip-browser-warning': 'true' }
-            });
+        const lastOrder = JSON.parse(localStorage.getItem('lastOrder'))
 
-            // 4. TRỪ KHO & XÓA GIỎ HÀNG
-            // Lấy lại đơn hàng từ localStorage (đã lưu ở checkout) để biết trừ kho
-            const lastOrder = JSON.parse(localStorage.getItem("lastOrder"));
-            if (lastOrder && lastOrder.id === orderId.value) {
-                await finalizeOrder(lastOrder);
-            } else {
-                // Nếu mất localStorage, ít nhất cũng xóa giỏ hàng (nếu cartId lưu trong store)
-                console.warn("Không tìm thấy lastOrder trong localStorage, không thể trừ kho.");
-                store.dispatch('cart/deleteAllCart');
-            }
+        if (!lastOrder || lastOrder.id !== orderId.value) {
+            status.value = 'failed'
+            message.value = `Payment successful (Code: ${code}), but order information could not be found on the browser. Please contact support.`
+            localStorage.removeItem('lastOrder')
+            return
+        }
+
+        if (code === '00') {
+            status.value = 'success'
+            message.value = 'Payment transaction successful! Your order is being processed.'
+
+            await axios.patch(
+                `${API_URL}/order/${lastOrder.id}`,
+                { status: 'Pending' },
+                { headers: { 'ngrok-skip-browser-warning': 'true' } }
+            )
+
+            await updateStock(lastOrder.products)
+
+            await clearCart(lastOrder.products)
+
+            localStorage.removeItem('lastOrder')
 
         } else {
-            // BẢO MẬT: Chữ ký KHÔNG hợp lệ, hoặc giao dịch thất bại (code != 00)
-            status.value = 'failed';
-            message.value = `Giao dịch thất bại (${response.data.message}). Đơn hàng đang ở trạng thái "Chờ thanh toán".`;
+            status.value = 'failed'
+            message.value = `Transaction failed. ${res.data.message || 'Please try again.'} (Error code: ${code})`
 
-            // Không cần làm gì cả, vì đơn hàng vẫn là "Pending Payment"
+            await axios.patch(
+                `${API_URL}/order/${lastOrder.id}`,
+                { status: 'Payment Failed' },
+                { headers: { 'ngrok-skip-browser-warning': 'true' } }
+            )
         }
     } catch (error) {
-        console.error('Lỗi khi xác thực thanh toán:', error);
-        status.value = 'failed';
-        message.value = 'Lỗi kết nối khi xác thực thanh toán.';
+        console.error('Lỗi xác thực thanh toán:', error)
+        status.value = 'failed'
+        message.value = 'Đã xảy ra lỗi khi xác thực thanh toán. Vui lòng liên hệ hỗ trợ.'
     }
-});
+}
+
+onMounted(() => {
+    handlePaymentReturn()
+})
+
+const goToHome = () => {
+    router.push('/')
+}
+
+const goToCheckout = () => {
+    router.push('/checkout')
+}
 </script>
 
-<!-- PHẦN TEMPLATE CỦA BẠN RẤT TỐT, GIỮ NGUYÊN -->
 <template>
-        <div class="container my-5" style="min-height: 300px;">
-                <div class="card shadow-sm border-0 rounded-4">
-                        <div class="card-body text-center p-5">
+    <div class="container my-5 py-5 text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm p-4 rounded-4">
+                    <div v-if="status === 'loading'">
+                        <div class="spinner-border text-dark" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h4 class="mt-3 fw-semibold">Verifying Payment</h4>
+                        <p class="text-muted">{{ message }}</p>
+                    </div>
 
-                <!-- Thêm spinner khi đang xử lý -->
-                                <div v-if="status === 'processing'" class="spinner-border text-dark fa-4x mb-3"
-                    role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <div v-if="status === 'success'">
+                        <i class="fa-solid fa-circle-check text-success display-3 mb-3"></i>
+                        <h3 class="fw-bold mb-2">Payment Successful!</h3>
+                        <p class="fs-5 text-muted">{{ message }}</p>
+                        <p class="mb-4">Your order ID is: <strong class="text-dark">{{ orderId }}</strong></p>
+                        <button @click="goToHome" class="btn btn-dark py-2 px-4 fw-semibold">
+                            Continue Shopping
+                        </button>
+                    </div>
+
+                    <div v-if="status === 'failed'">
+                        <i class="fa-solid fa-circle-xmark text-danger display-3 mb-3"></i>
+                        <h3 class="fw-bold mb-2">Payment Failed</h3>
+                        <p class="fs-5 text-muted">{{ message }}</p>
+                        <p v-if="orderId" class="mb-4">Order ID: <strong class="text-dark">{{ orderId }}</strong></p>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button @click="goToCheckout" class="btn btn-outline-dark py-2 px-4 fw-semibold">
+                                Retry Payment
+                            </button>
+                            <button @click="goToHome" class="btn btn-dark py-2 px-4 fw-semibold">
+                                Back to Home
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                                <i v-if="status === 'success'" class="fa fa-check-circle text-success fa-4x mb-3"></i>
-                                <i v-else-if="status === 'failed'"
-                    class="fa fa-times-circle text-danger fa-4x mb-3"></i>
-
-                                <h2 v-if="status === 'success'" class="fw-bold">Thanh toán thành công!</h2>
-                                <h2 v-else-if="status === 'failed'" class="fw-bold">Thanh toán thất bại</h2>
-                                <h2 v-else class="fw-bold">Đang xử lý...</h2>
-
-
-                                <p class="text-muted fs-5 mt-3">{{ message }}</p>
-                                <p v-if="orderId" class="text-muted">Mã đơn hàng của bạn là: <strong>{{ orderId
-                }}</strong></p>
-
-                                <div class="mt-4">
-                                        <router-link to="/shop" class="btn btn-dark me-2">Tiếp tục mua sắm</router-link>
-                                        <router-link to="/profile" class="btn btn-outline-dark">Xem lịch sử đơn
-                        hàng</router-link>
-                                    </div>
-                           
             </div>
-                    </div>
-            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
-.rounded-4 {
-    border-radius: 15px;
+.card {
+    transition: 0.3s;
+}
+
+.display-3 {
+    font-size: 4.5rem;
 }
 </style>

@@ -79,33 +79,41 @@ app.post("/create_payment_url", (req, res) => {
 });
 
 app.get("/vnpay_return", (req, res) => {
-  let vnp_Params = req.query;
-  let secureHash = vnp_Params["vnp_SecureHash"];
+  try {
+    let vnp_Params = req.query;
+    let secureHash = vnp_Params["vnp_SecureHash"];
 
-  delete vnp_Params["vnp_SecureHash"];
-  delete vnp_Params["vnp_SecureHashType"];
+    let paramsToSign = { ...vnp_Params };
+    delete paramsToSign["vnp_SecureHash"];
+    delete paramsToSign["vnp_SecureHashType"];
 
-  vnp_Params = sortObject(vnp_Params);
-  let secretKey = vnp_HashSecret;
+    let sortedParams = sortObject(paramsToSign);
+    let secretKey = vnp_HashSecret;
 
-  let signData = querystring.stringify(vnp_Params, { encode: false });
-  let hmac = crypto.createHmac("sha512", secretKey);
+    let signData = querystring.stringify(sortedParams, { encode: false });
+    let hmac = crypto.createHmac("sha512", secretKey);
+    let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
 
-  let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
-
-  if (secureHash === signed) {
-    console.log("Chữ ký hợp lệ. Mã phản hồi:", vnp_Params["vnp_ResponseCode"]);
-    if (vnp_Params["vnp_ResponseCode"] == "00") {
-      res.json({ code: "00", message: "Giao dịch thành công" });
+    if (secureHash === signed) {
+      console.log(
+        "Chữ ký hợp lệ. Mã phản hồi:",
+        vnp_Params["vnp_ResponseCode"]
+      );
+      if (vnp_Params["vnp_ResponseCode"] == "00") {
+        res.json({ code: "00", message: "Giao dịch thành công" });
+      } else {
+        res.json({
+          code: vnp_Params["vnp_ResponseCode"],
+          message: "Giao dịch thất bại",
+        });
+      }
     } else {
-      res.json({
-        code: vnp_Params["vnp_ResponseCode"],
-        message: "Giao dịch thất bại",
-      });
+      console.log("Chữ ký không hợp lệ.");
+      res.json({ code: "97", message: "Chữ ký không hợp lệ" });
     }
-  } else {
-    console.log("Chữ ký không hợp lệ.");
-    res.json({ code: "97", message: "Chữ ký không hợp lệ" });
+  } catch (error) {
+    console.error("Lỗi nghiêm trọng tại /vnpay_return:", error);
+    res.status(500).json({ code: "99", message: "Lỗi máy chủ" });
   }
 });
 
