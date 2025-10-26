@@ -2,15 +2,17 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useRouter } from 'vue-router'
 
 const users = ref([])
 const formUser = ref({ fullname: "", email: "", phone: "", address: "", role: "", password: "" })
 const isEditing = ref(false)
 const editingId = ref(null)
+const router = useRouter()
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const ngrokHeaderConfig = {
-    headers: { 'ngrok-skip-browser-warning': 'true' },
+  headers: { 'ngrok-skip-browser-warning': 'true' },
 };
 
 const readUser = async () => {
@@ -165,7 +167,8 @@ onMounted(readUser)
                 <button @click="editUser(items)" class="btn btn-outline-warning btn-sm me-2">
                   <i class="fa fa-edit"></i>
                 </button>
-                <button @click="removeUser(items.id)" class="btn btn-outline-danger btn-sm" :disabled="items.role === 'admin'">
+                <button @click="removeUser(items.id)" class="btn btn-outline-danger btn-sm"
+                  :disabled="items.role === 'admin'">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>

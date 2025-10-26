@@ -310,17 +310,17 @@ onMounted(() => {
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Giá</label>
-                                    <input v-model="form.price" type="number" class="form-control"
+                                    <input v-model="form.price" type="number" min="1" class="form-control"
                                         placeholder="Nhập giá" />
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Giá đã giảm</label>
-                                    <input v-model="form.discount" type="number" class="form-control"
+                                    <input v-model="form.discount" type="number" min="1" class="form-control"
                                         placeholder="Nhập giá" />
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Số lượng</label>
-                                    <input v-model="form.quantity" type="number" class="form-control"
+                                    <input v-model="form.quantity" type="number" min="1" class="form-control"
                                         placeholder="Nhập số lượng" />
                                 </div>
                                 <div class="col-md-6">
@@ -374,20 +374,19 @@ onMounted(() => {
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Tên sản phẩm</label>
-                                    <input v-model="form.name" type="text" class="form-control"
-                                        value="Áo Thun Nam Basic" />
+                                    <input v-model="form.name" type="text" class="form-control" />
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Giá</label>
-                                    <input v-model="form.price" type="number" class="form-control" value="250000" />
+                                    <input v-model="form.price" type="number" class="form-control" min="1" />
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Giá đã giảm</label>
-                                    <input v-model="form.discount" type="number" class="form-control" value="250000" />
+                                    <input v-model="form.discount" type="number" class="form-control" min="1" />
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Số lượng</label>
-                                    <input v-model="form.quantity" type="number" class="form-control" value="10" />
+                                    <input v-model="form.quantity" type="number" class="form-control" min="1" />
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Trạng thái</label>
