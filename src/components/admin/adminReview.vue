@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 const reviews = ref([]);
 const searchQuery = ref("");
 const filterRating = ref("");
+const selectedId = ref(null)
+const selectedName = ref("")
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const ngrokHeaderConfig = {
@@ -21,11 +23,34 @@ const readReview = async () => {
     }
 }
 
+const askDelete = (id, name) => {
+    selectedId.value = id,
+    selectedName.value = name
+}
+
+const confirmDelete = async () => {
+    if (!selectedId.value) return
+    try {
+        await axios.delete(`${API_URL}/reviews/${selectedId.value}`, ngrokHeaderConfig)
+        reviews.value = reviews.value.filter(c => c.id !== selectedId.value)
+        selectedName.value = ""
+        Swal.fire({
+            icon: 'success',
+            title: 'Xoá đánh giá thành công',
+            text: `Bạn đã xoá đánh giá thành công`,
+            showConfirmButton: true,
+            confirmButtonColor: '#000'
+        })
+    } catch (err) {
+        console.error("Err: ", err)
+    }
+}
+
 const successReview = async (id) => {
     try {
-        await axios.patch(`${API_URL}/reviews/${id}`, ngrokHeaderConfig, {
+        await axios.patch(`${API_URL}/reviews/${id}`, {
             status: "Approved"
-        })
+        }, ngrokHeaderConfig)
 
         const index = reviews.value.findIndex(c => c.id === id)
         if (index !== -1) reviews.value[index].status = "Approved"
@@ -43,9 +68,9 @@ const successReview = async (id) => {
 
 const RejectedReview = async (id) => {
     try {
-        await axios.patch(`${API_URL}/reviews/${id}`, ngrokHeaderConfig, {
+        await axios.patch(`${API_URL}/reviews/${id}`, {
             status: "Rejected"
-        })
+        }, ngrokHeaderConfig)
 
         const index = reviews.value.findIndex(c => c.id === id)
         if (index !== -1) reviews.value[index].status = "Rejected"
@@ -113,7 +138,7 @@ onMounted(readReview);
                         <th>Nội dung</th>
                         <th>Ngày</th>
                         <th>Trạng thái</th>
-                        <th class="text-center" style="width: 10%;">Hành động</th>
+                        <th class="text-center" style="width: 12%;">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -140,13 +165,19 @@ onMounted(readReview);
                             </span>
                         </td>
                         <td class="text-center">
-                            <button @click="successReview(value.id)" :disabled="value.status === 'Approved' || value.status === 'Rejected'"
+                            <button @click="successReview(value.id)"
+                                :disabled="value.status === 'Approved' || value.status === 'Rejected'"
                                 class="btn btn-outline-success btn-sm me-2">
                                 <i class="fa fa-check"></i>
                             </button>
-                            <button @click="RejectedReview(value.id)" :disabled="value.status === 'Approved' || value.status === 'Rejected'"
+                            <button @click="RejectedReview(value.id)"
+                                :disabled="value.status === 'Approved' || value.status === 'Rejected'"
                                 class="btn btn-outline-danger btn-sm me-2">
                                 <i class="fa fa-times"></i>
+                            </button>
+                            <button @click="askDelete(value.id, value.name)" class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fa fa-trash"></i>
                             </button>
                         </td>
                     </tr>
@@ -159,7 +190,27 @@ onMounted(readReview);
                 </tbody>
             </table>
         </div>
+
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Xác nhận xoá</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center py-4">
+                        <i class="fa fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                        <p>Bạn có chắc muốn xoá <strong>{{ selectedName }}</strong> không?</p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                        <button @click="confirmDelete" data-bs-dismiss="modal" class="btn btn-danger">Xoá</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </template>
 
 <style scoped>

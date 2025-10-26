@@ -6,6 +6,8 @@ import Swal from 'sweetalert2'
 const comment = ref([])
 const searchQuery = ref("")
 const filterStatus = ref("")
+const selectedId = ref(null)
+const selectedName = ref("")
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const ngrokHeaderConfig = {
@@ -18,6 +20,29 @@ const readComment = async () => {
         comment.value = res.data
     } catch (err) {
         console.error("Err admin comment: ", err)
+    }
+}
+
+const askDelete = (id, name) => {
+    selectedId.value = id,
+    selectedName.value = name
+}
+
+const comfirmDelete = async () => {
+    if (!selectedName.value) return
+    try {
+        await axios.delete(`${API_URL}/comment/${selectedId.value}`, ngrokHeaderConfig)
+        comment.value = comment.value.filter(c => c.id !== selectedId.value)
+        selectedName.value = ""
+        Swal.fire({
+            icon: 'success',
+            title: 'Xoá bình luận thành công',
+            text: `Bạn đã xoá bình luận thành công`,
+            showConfirmButton: true,
+            confirmButtonColor: '#000'
+        })
+    } catch (err) {
+        console.error("Err: ", err)
     }
 }
 
@@ -37,9 +62,9 @@ const formatDateTimeVN = (dateString) => {
 
 const successComment = async (id) => {
     try {
-        await axios.patch(`${API_URL}/comment/${id}`, ngrokHeaderConfig, {
+        await axios.patch(`${API_URL}/comment/${id}`, {
             status: "Approved"
-        })
+        }, ngrokHeaderConfig)
 
         const index = comment.value.findIndex(c => c.id === id)
         if (index !== -1) comment.value[index].status = "Approved"
@@ -57,9 +82,9 @@ const successComment = async (id) => {
 
 const RejectedComment = async (id) => {
     try {
-        await axios.patch(`${API_URL}/comment/${id}`, ngrokHeaderConfig, {
+        await axios.patch(`${API_URL}/comment/${id}`, {
             status: "Rejected"
-        })
+        }, ngrokHeaderConfig)
 
         const index = comment.value.findIndex(c => c.id === id)
         if (index !== -1) comment.value[index].status = "Rejected"
@@ -140,6 +165,10 @@ onMounted(readComment)
                                 class="btn btn-outline-danger btn-sm me-2">
                                 <i class="fa fa-times"></i>
                             </button>
+                            <button @click="askDelete(value.id, value.name)" class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
 
@@ -150,6 +179,25 @@ onMounted(readComment)
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Xác nhận xoá</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center py-4">
+                        <i class="fa fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                        <p>Bạn có chắc muốn xoá <strong>{{ selectedName }}</strong> không?</p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                        <button @click="comfirmDelete" data-bs-dismiss="modal" class="btn btn-danger">Xoá</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>

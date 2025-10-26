@@ -503,7 +503,7 @@ onMounted(() => {
                         <td>
                             <div class="text-danger fw-bold">
                                 <i class="fa fa-exclamation-circle me-1"></i>
-                                Sắp hết hàng
+                                {{ p.quantity > 0 ? 'Sắp Hết Hàng' : 'Hết Hàng' }}
                             </div>
                             <div class="progress mt-2" style="height: 6px;">
                                 <div class="progress-bar bg-danger" :style="{ width: p.quantity * 10 + '%' }"></div>
