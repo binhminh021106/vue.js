@@ -33,6 +33,8 @@ const isWishlistLoading = ref(false);
 const aiRecommendedProducts = ref([]);
 const isFetchingAI = ref(false);
 
+const activeImage = ref('');
+
 const isInWishlist = computed(() => {
     if (!product.value) return false;
     return store.getters.isInWishlist(product.value.id);
@@ -45,7 +47,6 @@ const fetchAIRecommendations = async (currentProduct) => {
     aiRecommendedProducts.value = [];
 
     try {
-
         const payload = {
             currentProduct: {
                 id: currentProduct.id,
@@ -123,6 +124,8 @@ const submitReply = async (parentId) => {
             comment: replyText.value,
             date: new Date(),
             status: "Pending",
+            product: product.value.name,
+            email: user.email
         }, {
             headers: { 'ngrok-skip-browser-warning': 'true' },
         });
@@ -258,18 +261,25 @@ const increase = () => {
 watch(() => route.params.id, async (newId) => {
     if (newId) {
         isLoading.value = true;
+
         await store.dispatch('fetchProductData', newId);
+
         isLoading.value = false;
         window.scrollTo(0, 0);
-    } if (product.value) {
-        fetchAIRecommendations(product.value);
+
+        userQuantity.value = 1;
+
+        activeImage.value = product.value?.image?.[0] || '';
+
+        if (product.value) {
+            fetchAIRecommendations(product.value);
+        }
+
+        readComment();
+        readReview();
     }
 }, { immediate: true });
 
-onMounted(() => {
-    readComment()
-    readReview()
-})
 </script>
 
 <template>
@@ -278,10 +288,11 @@ onMounted(() => {
             <!-- Hình ảnh & thông tin chi tiết -->
             <div class="col-md-6">
                 <div class="border rounded p-3 bg-white shadow-sm">
-                    <img :src="product.image?.[0] || ''" class="img-fluid w-100 rounded mb-3 main-img" alt="product" />
+                    <img :src="activeImage || ''" class="img-fluid w-100 rounded mb-3 main-img" alt="product" />
                     <div class="d-flex gap-2 flex-wrap">
-                        <img v-for="(img, idx) in product.image ?? []" :key="idx" :src="img"
-                            class="img-thumbnail small-img" alt="gallery" />
+                        <img v-for="(img, idx) in product.image ?? []" :key="idx" :src="img" @click="activeImage = img"
+                            class="img-thumbnail small-img" :class="{ 'border-dark': activeImage === img }"
+                            alt="gallery" />
                     </div>
                 </div>
             </div>
@@ -342,7 +353,7 @@ onMounted(() => {
                             <span v-if="isAddingToCart" class="spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>
                             <i v-else class="fa fa-shopping-cart me-2"></i>
-                            {{ isAddingToCart ? 'Adding...' : 'Add to cart' }} 
+                            {{ isAddingToCart ? 'Adding...' : 'Add to cart' }}
                         </button>
                         <button v-else class="btn btn-danger" disabled>Out of stock</button>
                         <button @click="handleToggleWishlist" class="btn px-4 py-2"
@@ -402,7 +413,8 @@ onMounted(() => {
             <!-- Comment Form -->
             <div v-if="user" class="comment-form p-3 rounded shadow-sm bg-white mb-4">
                 <div class="d-flex gap-3">
-                    <img :src="user.image" class="avatar flex-shrink-0" alt="user" />
+                    <img :src="user.image || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'"
+                        class="avatar flex-shrink-0" alt="user" />
                     <div class="flex-grow-1">
                         <textarea v-model="comment" class="form-control rounded-3" rows="3"
                             placeholder="Write your comment here..."></textarea>
@@ -515,7 +527,7 @@ onMounted(() => {
                         <div class="card-body text-center p-2">
                             <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
-                            }} ₫</p>
+                                }} ₫</p>
                             <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
                                 <i class="fa fa-eye me-2"></i>View
                             </router-link>
@@ -539,7 +551,7 @@ onMounted(() => {
                         <div class="card-body text-center p-2">
                             <h6 class="fw-semibold small mb-1 text-truncate">{{ items.name }}</h6>
                             <p class="text-danger fw-bold mb-2 small">{{ Number(items.discount).toLocaleString('vi-VN')
-                            }} ₫</p>
+                                }} ₫</p>
                             <router-link :to="`/productDetail/${items.id}`" class="btn btn-outline-dark btn-sm w-100">
                                 <i class="fa fa-eye me-2"></i>View
                             </router-link>
@@ -649,6 +661,25 @@ onMounted(() => {
     }
 }
 
+.small-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 6px;
+    border: 2px solid transparent;
+}
+
+.small-img:hover {
+    transform: scale(1.05);
+    border-color: #aaa;
+}
+
+.small-img.border-dark {
+    border-color: #000;
+    transform: scale(1.05);
+}
 
 .hover-card:hover {
     transform: translateY(-4px);

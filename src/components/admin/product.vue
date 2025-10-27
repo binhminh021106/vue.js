@@ -182,6 +182,47 @@ const editProduct = async () => {
         })
         return
     }
+    if (
+        !form.value.name ||
+        !form.value.price ||
+        !form.value.quantity ||
+        !form.value.status ||
+        !form.value.discount ||
+        !form.value.description ||
+        !form.value.categoryId ||
+        form.value.image.length === 0
+    ) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bạn nhập thiếu thông tin',
+            text: `Vui lòng bạn kiểm tra lại thông tin`,
+            showConfirmButton: false,
+            timer: 2000
+        })
+        return
+    } else if (
+        form.value.quantity < 0 ||
+        form.value.price < 0 ||
+        form.value.discount < 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bạn nhập sai thông tin',
+            text: `Bạn không được nhập số nhỏ hơn 0 hãy nhập lại`,
+            showConfirmButton: false,
+            timer: 2000
+        })
+        return
+    } else if (form.value.discount > form.value.price) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bạn nhập sai thông tin',
+            text: `Bạn không được nhập số tiền giảm giá lớn hơn giá niêm yết hãy nhập lại`,
+            showConfirmButton: false,
+            timer: 2000
+        })
+        return
+    }
+
     try {
         const res = await axios.put(`${API_URL}/products/${selectedId.value}`, form.value, ngrokHeaderConfig)
 

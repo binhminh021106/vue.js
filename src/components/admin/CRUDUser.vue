@@ -9,6 +9,7 @@ const formUser = ref({ fullname: "", email: "", phone: "", address: "", role: ""
 const isEditing = ref(false)
 const editingId = ref(null)
 const router = useRouter()
+const phoneRegex = /^(\+84|0)[235789]\d{8}$/;
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 const ngrokHeaderConfig = {
@@ -45,6 +46,7 @@ const removeUser = async (id) => {
           text: `User ${id} đã bị xoá khỏi hệ thống.`,
           confirmButtonColor: '#000'
         })
+        // localStorage.removeItem("loggedInUser");
       } catch (err) {
         console.error("err: ", err)
       }
@@ -62,7 +64,29 @@ const createUser = async () => {
       showConfirmButton: false
     })
     return
+  } else if (!phoneRegex.test(formUser.value.phone)) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Sai định dạng sđt',
+      text: 'Vui lòng nhập chính xác định dạng sđt',
+      timer: 2000,
+      showConfirmButton: false
+    })
+    return
   }
+
+  const emailExists = users.value.some(user => user.email === formUser.value.email);
+  if (emailExists) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Email đã tồn tại',
+      text: 'Vui lòng sử dụng email khác.',
+      timer: 2000,
+      showConfirmButton: false
+    })
+    return
+  }
+
   try {
     const res = await axios.post(`${API_URL}/user`, formUser.value, ngrokHeaderConfig)
     users.value.push(res.data)
@@ -95,7 +119,29 @@ const updateUser = async () => {
       showConfirmButton: false
     })
     return
+  } else if (!phoneRegex.test(formUser.value.phone)) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Sai định dạng sđt',
+      text: 'Vui lòng nhập chính xác định dạng sđt',
+      timer: 2000,
+      showConfirmButton: false
+    })
+    return
   }
+
+  const emailExists = users.value.some(user => user.email === formUser.value.email);
+  if (emailExists) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Email đã tồn tại',
+      text: 'Vui lòng sử dụng email khác.',
+      timer: 2000,
+      showConfirmButton: false
+    })
+    return
+  }
+
   try {
     const res = await axios.put(`${API_URL}/user/${editingId.value}`, formUser.value, ngrokHeaderConfig)
     const index = users.value.findIndex(p => p.id === editingId.value)

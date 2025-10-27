@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Swal from 'sweetalert2'
 
 const comment = ref([])
@@ -165,7 +165,7 @@ onMounted(readComment)
                                 class="btn btn-outline-danger btn-sm me-2">
                                 <i class="fa fa-times"></i>
                             </button>
-                            <button @click="askDelete(value.id, value.name)" class="btn btn-outline-danger btn-sm"
+                            <button @click="askDelete(value.id, value.username)" class="btn btn-outline-danger btn-sm"
                                 data-bs-toggle="modal" data-bs-target="#deleteModal">
                                 <i class="fa fa-trash"></i>
                             </button>

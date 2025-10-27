@@ -52,7 +52,7 @@ const review = async (product) => {
     }
 
     try {
-        axios.post(`${API_URL}/reviews`, ngrokHeaderConfig, {
+        axios.post(`${API_URL}/reviews`, {
             orderId: order.value.id,
             productId: product.productId,
             username: order.value.fullname,
@@ -62,7 +62,7 @@ const review = async (product) => {
             status: "Pending",
             product: product.name,
             email: order.value.email
-        })
+        }, ngrokHeaderConfig)
         product.alreadyReviewed = true
         toast.success("Successful product review", {
             autoClose: 3000,

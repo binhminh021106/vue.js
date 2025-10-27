@@ -109,7 +109,7 @@ onMounted(readorder)
               </label>
 
               <label class="status-pill">
-                <input v-model="status" type="radio" value="Canceled" />
+                <input v-model="status" type="radio" value="Canceled" :disabled="status === 'Delivered'"/>
                 <span>Đã huỷ</span>
               </label>
             </div>
@@ -202,47 +202,90 @@ onMounted(readorder)
   transform: translateY(-2px);
 }
 
+/* ======================================= */
+/* PHẦN STYLE NÚT TRẠNG THÁI ĐƯỢC LÀM LẠI */
+/* ======================================= */
+
 .status-options {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
+/* Bản thân cái label giờ chỉ là "vỏ"
+  chứa input và span 
+*/
 .status-pill {
-  background-color: #f5f5f5;
-  border-radius: 25px;
-  padding: 6px 14px;
   display: flex;
+  /* Dùng flex để căn giữa */
   align-items: center;
   cursor: pointer;
-  border: 1px solid #ddd;
-  transition: 0.3s ease;
+  /* Bỏ padding và border ở label */
 }
 
+/* Ẩn radio input gốc */
 .status-pill input {
   display: none;
 }
 
+/* Style cho cái SPAN thành cái "pill" thật sự 
+*/
 .status-pill span {
   font-size: 0.9rem;
   font-weight: 500;
   color: #333;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  /* Tăng padding 1 chút */
+  border-radius: 25px;
+  transition: all 0.25s ease;
+  /* Thêm transition mượt mà */
 }
 
-.status-pill:hover {
-  background-color: #eee;
+/* Khi hover vào label, đổi màu cái span */
+.status-pill:hover span {
+  background-color: #e9e9e9;
+  border-color: #ccc;
 }
 
+/* Đây là phần quan trọng:
+  Khi input được CHECKED, style cho cái SPAN 
+*/
 .status-pill input:checked+span {
   color: #fff;
   font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
+  border-color: transparent;
+  /* Bỏ border khi đã chọn */
+  box-shadow: 0 3px 8px -2px rgba(0, 0, 0, 0.2);
+  /* Thêm đổ bóng nhẹ */
 }
 
-/* Màu theo trạng thái */
+/* (MỚI) Style cho trạng thái DISABLED */
+.status-pill input:disabled+span {
+  background-color: #f8f9fa;
+  /* Màu mờ đi */
+  color: #adb5bd;
+  /* Màu text mờ đi */
+  cursor: not-allowed;
+  border-color: #e9ecef;
+  box-shadow: none;
+  /* Bỏ shadow */
+}
+
+/* Không đổi màu khi hover nút disabled 
+*/
+.status-pill:hover input:disabled+span {
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+}
+
+/* Màu theo trạng thái (Áp dụng cho input:checked+span) 
+*/
 .status-pill input[value="Pending"]:checked+span {
   background-color: #ffc107;
+  color: #212529;
+  /* Đổi màu chữ thành đen cho dễ đọc */
 }
 
 .status-pill input[value="Confirmed"]:checked+span {
