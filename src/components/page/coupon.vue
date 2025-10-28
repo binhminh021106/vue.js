@@ -75,30 +75,19 @@ onMounted(readCoupon)
 <style scoped>
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
 
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .coupon-section-wrapper {
-    /* --- BỘ MÀU MỚI CHO GIAO DIỆN SÁNG --- */
     --page-bg: #f4f6f8;
-    /* Nền trang màu xám nhạt (giống hình) */
     --card-bg: #ffffff;
-    /* Nền coupon màu trắng (giống hình) */
     --text-primary: #212529;
-    /* Chữ chính màu đen đậm */
     --text-secondary: #6c757d;
-    /* Chữ phụ màu xám */
     --accent-primary: #000000;
-    /* Màu nút chính (xanh) */
     --accent-primary-hover: #000000;
-    /* Màu nút khi hover */
     --accent-secondary: #ffffff;
-    /* Màu nhấn phụ (cam cho icon) */
-
-    /* Giữ nguyên các thuộc tính cũ */
     font-family: "Be Vietnam Pro", sans-serif;
     background-color: var(--page-bg);
     padding: 25px 15px;
