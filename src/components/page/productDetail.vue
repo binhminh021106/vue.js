@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { toast } from 'vue3-toastify';
@@ -38,10 +38,11 @@ const isInWishlist = computed(() => {
 
 const readReview = async () => {
     try {
-        const res = await axios.get(`${API_URL}/reviews`, {
+        const productId = route.params.id
+        const res = await axios.get(`${API_URL}/reviews?productId=${productId}&status=Approved`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
         })
-        review.value = res.data.filter(r => r.productId == route.params.id && r.status === "Approved")
+        review.value = res.data
     } catch (error) {
         console.error("Err review: ", error)
     }
@@ -49,10 +50,11 @@ const readReview = async () => {
 
 const readComment = async () => {
     try {
-        const res = await axios.get(`${API_URL}/comment`, {
+        const productId = route.params.id
+        const res = await axios.get(`${API_URL}/comment?productId=${productId}&status=Approved`, {
             headers: { 'ngrok-skip-browser-warning': 'true' }
         })
-        product_Comment.value = res.data.filter(r => r.productId == route.params.id && r.status === "Approved").map(c => ({
+        product_Comment.value = res.data.map(c => ({
             ...c,
             likes: c.likes || 0,
             liked: c.liked || false,
@@ -63,13 +65,30 @@ const readComment = async () => {
     }
 }
 
-const toggleLike = (comment) => {
+const toggleLike = async (comment) => {
     const target = product_Comment.value.find(c => c.id === comment.id)
     if (target) {
+        const oldLikes = target.likes
+        const oldLiked = target.liked
+
         target.liked = !target.liked
         target.likes += target.liked ? 1 : -1
+
+        try {
+            await axios.patch(`${API_URL}/comment/${target.id}`, {
+                liked: target.liked,
+                likes: target.likes,
+            })
+        } catch (err) {
+            console.error("Err: ", err)
+
+            toast.error("Cannot like, please try again.", { autoClose: 2000 });
+            target.oldLikes = oldLikes
+            target.oldLiked = oldLiked
+        }
     }
 }
+
 
 const averageRating = computed(() => {
     if (review.value.length === 0) return 0;

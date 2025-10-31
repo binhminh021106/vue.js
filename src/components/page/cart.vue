@@ -184,7 +184,7 @@ onMounted(async () => {
                                             <div>
                                                 <h6 class="mb-0">{{ items.name }}</h6>
                                                 <small class="text-muted">Category: {{ getCategoryName(items.category)
-                                                    }}</small>
+                                                }}</small>
                                             </div>
                                         </div>
                                     </td>
